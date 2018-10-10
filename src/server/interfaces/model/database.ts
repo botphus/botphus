@@ -10,20 +10,13 @@ import {DatabaseType} from '../../types/database';
 export interface IDatabaseModel extends Document {
     name: string;
     type: DatabaseType;
+    config: ConnectionConfig | RedisOptions | ClusterOptions;
 }
 
 /**
- * Mysql database model
+ * Search database Model
  */
-export interface IDatabaseMysqlModel extends IDatabaseModel {
-    type: DatabaseType.MYSQL;
-    config: ConnectionConfig;
-}
-
-/**
- * Redis database model
- */
-export interface IDatabaseRedisModel extends IDatabaseModel {
-    type: DatabaseType.MYSQL;
-    config: RedisOptions | ClusterOptions;
+export interface IDatabaseSearchModel {
+    name?: string;
+    type?: DatabaseType;
 }

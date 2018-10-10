@@ -36,6 +36,7 @@ export default interface ILocalePackage {
             pageType: string;
             mysqlId: string;
             redisId: string;
+            taskId: string;
             excludeOption: string;
         };
         // Task report

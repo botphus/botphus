@@ -4,8 +4,8 @@ import * as validate from 'mongoose-validator';
 import {getLocale} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {urlLength} from '../enums/rules';
 import {ITaskFlowModel} from '../interfaces/model';
+import {urlLength} from '../types/rules';
 
 const localePkg = getLocale();
 const localeTaskFlowPkg = localePkg.Model.TaskFlow;
@@ -42,10 +42,15 @@ const schema = new Schema({
                 validator: 'isLength',
             })
         ]
+    },
+    taskId: {
+        required: [true, `${localeTaskFlowPkg.taskId}: ${localePkg.Model.requiredError}`],
+        type: Schema.Types.ObjectId
     }
 });
 
 schema.plugin(modifyDate);
+schema.index({taskId: -1});
 
 /* tslint:disable:variable-name */
 export const TaskFlow = model<ITaskFlowModel>('TaskFlow', schema);

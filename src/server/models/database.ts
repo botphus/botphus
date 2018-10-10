@@ -4,8 +4,8 @@ import * as validate from 'mongoose-validator';
 import {getLocale} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {strLength} from '../enums/rules';
-import {IDatabaseMysqlModel, IDatabaseRedisModel} from '../interfaces/model';
+import {IDatabaseModel} from '../interfaces/model';
+import {strLength} from '../types/rules';
 
 const localePkg = getLocale();
 const localeDatabasePkg = localePkg.Model.Database;
@@ -35,4 +35,4 @@ const schema = new Schema({
 schema.plugin(modifyDate);
 
 /* tslint:disable:variable-name */
-export const Database = model<IDatabaseMysqlModel | IDatabaseRedisModel>('Task', schema);
+export const Database = model<IDatabaseModel>('Task', schema);

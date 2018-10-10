@@ -33,6 +33,7 @@ const localeData: ILocalePackage = {
             pageType: '页面类型',
             mysqlId: 'MYSQL配置',
             redisId: 'Redis配置',
+            taskId: '所属任务',
             excludeOption: '过滤单元'
         },
         TaskReport: {

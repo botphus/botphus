@@ -11,3 +11,5 @@ export enum SystemCode {
     'REDIS_ERROR' = 112,
     'UNKNOWN_ERROR' = 500,
 }
+
+export const defaultPageSize = 10;

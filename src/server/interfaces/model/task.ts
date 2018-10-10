@@ -10,3 +10,19 @@ export interface ITaskModel extends Document {
     items: TaskRuleTypeItem[];
     createdUser: Schema.Types.ObjectId;
 }
+
+/**
+ * Search task model
+ */
+export interface ITaskSearchModel extends Document {
+    name?: string;
+    userId?: Schema.Types.ObjectId;
+}
+
+/**
+ * Modify task model
+ */
+export interface ITaskModifyModel extends Document {
+    memebers: Schema.Types.ObjectId[];
+    items: TaskRuleTypeItem[];
+}

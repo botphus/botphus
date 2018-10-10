@@ -2,11 +2,13 @@ import {Schema} from 'mongoose';
 
 import {User} from '../models/';
 
-import {IUserCreateModel, IUserModel, IUserUpdateModel} from '../interfaces/model';
-import {SystemCode} from '../types/common';
-import {UserPermissionCode} from '../types/user';
+import {IUserCreateModel, IUserModel, IUserModifyModel, IUserSearchModel} from '../interfaces/model';
 
 import {createSystemError, getLocale, translatePassword} from '../modules/util';
+
+import {SystemCode} from '../types/common';
+import {emailLength, strLength} from '../types/rules';
+import {UserPermissionCode} from '../types/user';
 
 const localePkg = getLocale();
 
@@ -17,7 +19,7 @@ const localePkg = getLocale();
 const defaultFields: string = '_id email nickname permission';
 
 /**
- * Query user's info by user id
+ * Query user's info by user ID
  * @param  {Schema.Types.ObjectId} userId User ID
  * @param  {string}                fields Field list
  * @return {Promise<IUserModel>}          Promise with user info
@@ -27,7 +29,7 @@ export function queryUserById(userId: Schema.Types.ObjectId, fields: string = de
 }
 
 /**
- * Query user's info by user id list
+ * Query user's info by user ID list
  * @param  {Schema.Types.ObjectId[]} userIds User ID list
  * @param  {string}                  fields  Field list
  * @return {Promise<IUserModel[]>}           Promise with user info list
@@ -51,6 +53,35 @@ export function queryUserByEmail(email: string, fields: string = null): Promise<
     return User.findOne({
         email
     }, fields).exec();
+}
+
+/**
+ * Query user list
+ * @param  {IUserSearchModel}                query    Query condition
+ * @param  {number}                          page     Page
+ * @param  {number}                          pageSize Page size
+ * @param  {string}                          fields   Field list
+ * @return {Promise<[number, IUserModel[]]>}          Promise with total number & user info list
+ */
+export function queryUserList(query: IUserSearchModel, page: number, pageSize: number, fields: string): Promise<[number, IUserModel[]]> {
+    const condition: any = {};
+    if (query.nickname && query.nickname.length >= strLength[0] && query.nickname.length <= strLength[0]) {
+        condition.nickname = {
+            $regex: query.nickname
+        };
+    }
+    if (query.email && query.email.length >= emailLength[0] && query.email.length <= emailLength[0]) {
+        condition.email = query.email;
+    }
+    if (typeof query.enable === 'boolean') {
+        condition.enable = query.enable;
+    }
+    return Promise.all([
+        User.count(condition).exec(),
+        User.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
+            _id: -1
+        }).exec()
+    ]);
 }
 
 /**
@@ -102,10 +133,10 @@ export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
 /**
  * Modify user's data by user id
  * @param  {Schema.Types.ObjectId} userId   User ID
- * @param  {IUserUpdateModel}      userData Update user data
+ * @param  {IUserModifyModel}      userData Update user data
  * @return {Promise<IUserModel>}            Promise with user info
  */
-export function modifyUserById(userId: Schema.Types.ObjectId, userData: IUserUpdateModel): Promise<IUserModel> {
+export function modifyUserById(userId: Schema.Types.ObjectId, userData: IUserModifyModel): Promise<IUserModel> {
     let promiseFunc: Promise<IUserModel>;
     // Check if email exists
     if (userData.email) {

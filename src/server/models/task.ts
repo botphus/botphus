@@ -4,8 +4,8 @@ import * as validate from 'mongoose-validator';
 import {getLocale} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {strLength} from '../enums/rules';
 import {ITaskModel} from '../interfaces/model';
+import {strLength} from '../types/rules';
 
 const localePkg = getLocale();
 const localeTaskPkg = localePkg.Model.Task;
@@ -36,7 +36,7 @@ const schema = new Schema({
 });
 
 schema.plugin(modifyDate);
-schema.index({name: 1});
+schema.index({name: -1});
 
 /* tslint:disable:variable-name */
 export const Task = model<ITaskModel>('Task', schema);

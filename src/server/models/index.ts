@@ -14,3 +14,7 @@ mongoose.connect(config.db, {
 });
 
 export * from './user';
+export * from './database';
+export * from './task';
+export * from './task_flow';
+export * from './task_report';

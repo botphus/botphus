@@ -61,3 +61,16 @@ export function createSystemError(message: string, code: SystemCode = SystemCode
     err.code = code;
     return err;
 }
+
+/**
+ * Escape dangerous character
+ * @param  {string} str String
+ * @return {string}     Escape string
+ */
+export function escapeCharacter(str: string): string {
+    let replacedStr = str.trim(); // 去除前后空格
+    replacedStr = str.replace(/[<>'"\\]/g, (e: string) => {
+        return '&#' + e.charCodeAt(0) + ';';
+    });
+    return replacedStr;
+}

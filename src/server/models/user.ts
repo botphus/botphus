@@ -4,8 +4,8 @@ import * as validate from 'mongoose-validator';
 import {getLocale} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {emailLength, strLength} from '../enums/rules';
 import {IUserModel} from '../interfaces/model';
+import {emailLength, strLength} from '../types/rules';
 
 const localePkg = getLocale();
 const localeUserPkg = localePkg.Model.User;

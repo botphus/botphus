@@ -15,5 +15,11 @@ export interface ITaskFlowModel extends Document {
     // redis config id
     redisId?: Schema.Types.ObjectId;
     excludeOption: ITaskExcludeUnit;
+    taskId: Schema.Types.ObjectId;
     createdUser: Schema.Types.ObjectId;
+}
+
+export interface ITaskFlowSearchModel extends Document {
+    taskId: Schema.Types.ObjectId;
+    createdUser?: Schema.Types.ObjectId;
 }

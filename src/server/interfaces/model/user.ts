@@ -21,12 +21,21 @@ export interface IUserCreateModel extends Document {
 }
 
 /**
- * Update user model
+ * Modify user model
  */
-export interface IUserUpdateModel extends Document {
+export interface IUserModifyModel extends Document {
     email?: string;
     nickname?: string;
     permission?: string;
     enable?: boolean;
     password?: string;
+}
+
+/**
+ * Search user model
+ */
+export interface IUserSearchModel extends Document {
+    email?: string;
+    nickname?: string;
+    enable?: boolean;
 }
