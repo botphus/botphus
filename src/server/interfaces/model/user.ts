@@ -1,0 +1,32 @@
+import {Document} from 'mongoose';
+/**
+ * User model
+ */
+export interface IUserModel extends Document {
+    email: string;
+    nickname: string;
+    permission: number; // Binary digit, like 0b010,0b001, set user type: permission
+    password: string;
+    enable: boolean;
+}
+
+/**
+ * Create user model
+ */
+export interface IUserCreateModel extends Document {
+    email: string;
+    nickname: string;
+    permission: number; // Binary digit, like 0b010,0b001, set user type: permission
+    password: string;
+}
+
+/**
+ * Update user model
+ */
+export interface IUserUpdateModel extends Document {
+    email?: string;
+    nickname?: string;
+    permission?: string;
+    enable?: boolean;
+    password?: string;
+}

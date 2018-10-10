@@ -1,0 +1,17 @@
+# files
+.git
+*.log
+*.zip
+*.log
+
+# folders
+node_modules/
+logs/
+coverage/
+.nyc_output/
+cache/
+dist/
+
+# other
+config/override.json
+src/server/hooks/

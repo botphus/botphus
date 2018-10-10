@@ -1,0 +1,60 @@
+import {model, Schema} from 'mongoose';
+import * as validate from 'mongoose-validator';
+
+import {getLocale} from '../modules/util';
+import {modifyDate} from './base_model';
+
+import {emailLength, strLength} from '../enums/rules';
+import {IUserModel} from '../interfaces/model';
+
+const localePkg = getLocale();
+const localeUserPkg = localePkg.Model.User;
+
+const schema = new Schema({
+    email: {
+        required: [true, `${localeUserPkg.email}: ${localePkg.Model.requiredError}`],
+        type: String,
+        unique: true,
+        validate: [
+            validate({
+                arguments: emailLength,
+                message: `${localeUserPkg.email}: ${localePkg.Model.lengthError}`,
+                validator: 'isLength',
+            }),
+            validate({
+                message: `${localeUserPkg.email}: ${localePkg.Model.formatError}`,
+                validator: 'isEmail'
+            })
+        ]
+    },
+    enable: {
+        default: true,
+        type: Boolean
+    },
+    nickname: {
+        required: [true, `${localeUserPkg.nickname}: ${localePkg.Model.requiredError}`],
+        type: String,
+        validate: [
+            validate({
+                arguments: strLength,
+                message: `${localeUserPkg.nickname}: ${localePkg.Model.lengthError}`,
+                validator: 'isLength',
+            })
+        ]
+    },
+    password: {
+        required: [true, `${localeUserPkg.password}: ${localePkg.Model.requiredError}`],
+        type: String
+    },
+    permission: {
+        min: [0, `${localeUserPkg.permission}: ${localePkg.Model.numberMinError}`],
+        required: [true, `${localeUserPkg.permission}: ${localePkg.Model.requiredError}`],
+        type: Number
+    }
+});
+
+schema.plugin(modifyDate);
+schema.index({email: 1});
+
+/* tslint:disable:variable-name */
+export const User = model<IUserModel>('User', schema);
