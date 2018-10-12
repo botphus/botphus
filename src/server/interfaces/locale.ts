@@ -1,6 +1,14 @@
 export default interface ILocalePackage {
     // locale code name
     locale: string;
+    // System code error message
+    SystemCode: {
+        success: string;
+        notFound: string;
+        mongoCastError: string;
+        mongoUniqueError: string;
+        unknownError: string;
+    };
     // Mongoose Model valid info
     Model: {
         requiredError: string;

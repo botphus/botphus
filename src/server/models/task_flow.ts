@@ -1,13 +1,12 @@
 import {model, Schema} from 'mongoose';
 import * as validate from 'mongoose-validator';
 
-import {getLocale} from '../modules/util';
+import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
 import {ITaskFlowModel} from '../interfaces/model';
 import {urlLength} from '../types/rules';
 
-const localePkg = getLocale();
 const localeTaskFlowPkg = localePkg.Model.TaskFlow;
 
 const schema = new Schema({

@@ -3,6 +3,13 @@ import ILocalePackage from '../interfaces/locale';
 /* tslint:disable:object-literal-sort-keys */
 const localeData: ILocalePackage = {
     locale: 'zh-cn',
+    SystemCode: {
+        success: '请求成功',
+        notFound: '找不到该页面',
+        mongoCastError: '参数类型错误',
+        mongoUniqueError: '数据已被占用',
+        unknownError: '未知异常,请联系管理员'
+    },
     Model: {
         requiredError: '必须填写该内容',
         formatError: '该内容不合规',

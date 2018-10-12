@@ -1,13 +1,12 @@
 import {model, Schema} from 'mongoose';
 import * as validate from 'mongoose-validator';
 
-import {getLocale} from '../modules/util';
+import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
 import {IDatabaseModel} from '../interfaces/model';
 import {strLength} from '../types/rules';
 
-const localePkg = getLocale();
 const localeDatabasePkg = localePkg.Model.Database;
 
 const schema = new Schema({

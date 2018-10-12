@@ -5,7 +5,8 @@ export enum SystemCode {
     'SUCCESS'= 200,
     'FORBIDDEN' = 403,
     'NOT_FOUND' = 404,
-    'ERROR' = 110, // Valid Error
+    'REQUEST_TIMEOUT' = 408,
+    'ROUTINE_ERROR' = 110, // Routine error
     'MONGO_ERROR' = 111,
     'MONGO_UNIQUE_ERROR' = 11000,
     'REDIS_ERROR' = 112,

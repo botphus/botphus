@@ -1,13 +1,12 @@
 import {model, Schema} from 'mongoose';
 import * as validate from 'mongoose-validator';
 
-import {getLocale} from '../modules/util';
+import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
 import {IUserModel} from '../interfaces/model';
 import {emailLength, strLength} from '../types/rules';
 
-const localePkg = getLocale();
 const localeUserPkg = localePkg.Model.User;
 
 const schema = new Schema({

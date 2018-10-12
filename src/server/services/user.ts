@@ -4,13 +4,11 @@ import {User} from '../models/';
 
 import {IUserCreateModel, IUserModel, IUserModifyModel, IUserSearchModel} from '../interfaces/model';
 
-import {createSystemError, getLocale, translatePassword} from '../modules/util';
+import {createSystemError, localePkg, translatePassword} from '../modules/util';
 
 import {SystemCode} from '../types/common';
 import {emailLength, strLength} from '../types/rules';
 import {UserPermissionCode} from '../types/user';
-
-const localePkg = getLocale();
 
 /**
  * Default user find fields
@@ -53,6 +51,15 @@ export function queryUserByEmail(email: string, fields: string = null): Promise<
     return User.findOne({
         email
     }, fields).exec();
+}
+
+/**
+ * Query user total count
+ * @param  {IUserSearchModel} query Query condition
+ * @return {Promise<number>}        Promise with total number
+ */
+export function queryUserTotalCount(): Promise<number> {
+    return User.count({}).exec();
 }
 
 /**

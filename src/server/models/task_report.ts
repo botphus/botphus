@@ -1,11 +1,10 @@
 import {model, Schema} from 'mongoose';
 
-import {getLocale} from '../modules/util';
+import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
 import {ITaskReportModel} from '../interfaces/model';
 
-const localePkg = getLocale();
 const localeTaskReportPkg = localePkg.Model.TaskReport;
 
 const schema = new Schema({
