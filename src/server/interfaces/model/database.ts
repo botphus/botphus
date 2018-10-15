@@ -1,4 +1,4 @@
-import {ClusterOptions, RedisOptions} from 'ioredis';
+import {ClusterNode, RedisOptions} from 'ioredis';
 import {Document} from 'mongoose';
 import {ConnectionConfig} from 'mysql';
 
@@ -10,7 +10,7 @@ import {DatabaseType} from '../../types/database';
 export interface IDatabaseModel extends Document {
     name: string;
     type: DatabaseType;
-    config: ConnectionConfig | RedisOptions | ClusterOptions;
+    config: ConnectionConfig | RedisOptions | ClusterNode[];
 }
 
 /**

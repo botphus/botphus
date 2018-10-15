@@ -1,0 +1,109 @@
+import * as fp from 'fastify-plugin';
+import * as uid from 'uid';
+
+import {IAppReply, IAppRequest} from '../interfaces/common';
+
+import cache from '../modules/cache';
+import {createMD5Sign} from '../modules/util';
+
+const sessionIdKeyPrefix: string = 'session-';
+const sessionSecret: string = uid(10);
+const sessionCookieKey: string = 'botphus-session';
+const redisExpire: number = 4 * 60 * 60 * 1000;
+
+/**
+ * Generate session data
+ * @param  {string} id Session ID
+ * @return {any}       Session data
+ */
+function generate(id?: string): any {
+    const session: any = {};
+    if (id) {
+        session.id = id;
+    } else {
+        session.id = `${new Date().getTime()}${uid(18)}`;
+        session.id = sessionIdKeyPrefix + createMD5Sign(session.id, sessionSecret);
+    }
+    return session;
+}
+
+/**
+ * Init session
+ */
+export function init(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => void): void {
+    const id = request.cookies[sessionCookieKey];
+    if (!id) {
+        request.session = generate();
+        next();
+    } else {
+        cache.get(id)
+            .then((data) => {
+                if (data) {
+                    const session = JSON.parse(data);
+                    request.session = request.initSession = session;
+                } else {
+                    request.session = generate();
+                }
+                next();
+            })
+            .catch((err) => {
+                request.log.warn('Get cookie data to redis error', err);
+                request.session = generate();
+                next();
+            });
+    }
+}
+
+/**
+ * Save(create/update) session
+ */
+export function save(request: IAppRequest, reply: IAppReply, _payload: any, next: (err?: Error, value?: any) => void): void {
+    const id = request.session.id;
+    const sessionKeys = Object.keys(request.session);
+    if (sessionKeys.length === 1 // No data need save
+        ||
+        // Not below:
+        // 1. Create session: If doesn't have init session
+        // 2. Update session: If data need update
+        !(!request.initSession || (sessionKeys.length !== Object.keys(request.initSession).length || sessionKeys.some((key) => {
+        return request.session[key] !== request.initSession[key];
+    })))) {
+        return next();
+    }
+    const data = JSON.stringify(request.session);
+    cache.set(id, data, 'EX', redisExpire)
+        .then(() => {
+            reply.setCookie(sessionCookieKey, id);
+            next();
+        })
+        .catch((err) => {
+            request.log.warn('Save cookie data to redis error', err);
+            next();
+        });
+}
+
+/**
+ * Clear session
+ */
+export function clear(request: IAppRequest, reply: IAppReply, next: (err?: Error) => void): void {
+    const id = request.cookies[sessionCookieKey];
+    cache.del(id)
+        .then(() => {
+            reply.setCookie(sessionCookieKey, '', {
+                maxAge: 0
+            });
+            next();
+        })
+        .catch((err) => {
+            request.log.warn('Delete cookie data to redis error', err);
+            next();
+        });
+}
+
+export default fp((fastify, _opts, next) => {
+    // Init session
+    fastify.addHook('preHandler', init);
+    // Save session data
+    fastify.addHook('onSend', save);
+    next();
+});

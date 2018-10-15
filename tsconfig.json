@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "types": ["mocha", "fs-extra", "pino"],
+        "types": ["mocha", "fs-extra", "pino", "serve-static", "serve-favicon", "recursive-readdir"],
         "module": "commonjs",
         "target": "es6",
         "noImplicitAny": true,
