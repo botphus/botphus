@@ -8,6 +8,8 @@ export default interface ILocalePackage {
         mongoCastError: string;
         mongoUniqueError: string;
         unknownError: string;
+        loginForbidden: string;
+        permissionForbidden: string;
     };
     // Mongoose Model valid info
     Model: {
@@ -62,9 +64,7 @@ export default interface ILocalePackage {
         }
         // User info
         User: {
-            loginForbidden: string;
             loginError: string;
-            permissionForbidden: string;
         }
     };
     // Schema Valid Error

@@ -8,7 +8,9 @@ const localeData: ILocalePackage = {
         notFound: '找不到该页面',
         mongoCastError: '参数类型错误',
         mongoUniqueError: '以下数据已被使用,请更换',
-        unknownError: '未知异常,请联系管理员'
+        unknownError: '未知异常,请联系管理员',
+        permissionForbidden: '没有权限使用该功能',
+        loginForbidden: '你需要登录才能使用'
     },
     Model: {
         requiredError: '必须填写该内容',
@@ -55,9 +57,7 @@ const localeData: ILocalePackage = {
             installClose: '已经不能进行安装'
         },
         User: {
-            loginForbidden: '该功能必须登录才能使用',
-            loginError: '登录信息错误',
-            permissionForbidden: '没有权限使用该功能'
+            loginError: '登录信息错误'
         }
     },
     Schema: {

@@ -5,7 +5,7 @@ import {IAppReply, IAppRequest} from '../interfaces/common';
 import {SystemCode} from '../types/common';
 import {userPermissionMap} from '../types/user';
 
-import {createSystemError, localePkg} from '../modules/util';
+import {checkUserPermission, createSystemError, localePkg} from '../modules/util';
 
 function valid(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => void): void {
     const urlInfo = url.parse(request.originalUrl);
@@ -13,12 +13,18 @@ function valid(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => v
     if (urlInfo.pathname.indexOf('/api')) {
         const permissionIndex: string = `${request.method.toLowerCase()}:${urlInfo.pathname.replace('/api', '')}`;
         const permissionCode: number = userPermissionMap[permissionIndex];
+        // Check login status
+        if (permissionCode === 0) {
+            const err = request.session.user ?
+                null : createSystemError(localePkg.SystemCode.loginForbidden, SystemCode.FORBIDDEN);
+            return next(err);
+        }
         // Check permission config
         if (permissionCode) {
             request.log.debug('Check permission code:', permissionCode);
             // Bit operation for permission check
-            const err = request.session.user && (request.session.user.permission & permissionCode) > 0 ?
-                null : createSystemError(localePkg.Service.User.permissionForbidden, SystemCode.FORBIDDEN);
+            const err = request.session.user && checkUserPermission(request.session.user.permission, permissionCode) ?
+                null : createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN);
             return next(err);
         }
         request.log.debug('Check permission end: can\'t find permission code setting');

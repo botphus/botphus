@@ -3,6 +3,7 @@ import * as fastify from 'fastify';
 import * as http from 'http';
 import * as http2 from 'http2';
 import {ClusterNode, RedisOptions} from 'ioredis';
+import {Schema} from 'mongoose';
 
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
@@ -95,7 +96,7 @@ export interface IAppRouterConfig {
 export interface ISessionConfig {
     [index: string]: any;
     user?: {
-        id: string;
+        id: Schema.Types.ObjectId;
         email: string;
         nickname: string;
         permission: number;

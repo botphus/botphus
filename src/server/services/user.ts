@@ -3,12 +3,11 @@ import {Schema} from 'mongoose';
 import {User} from '../models/';
 
 import {IUserCreateModel, IUserModel, IUserModifyModel, IUserSearchModel} from '../interfaces/model';
-
-import {createSystemError, localePkg, translatePassword} from '../modules/util';
-
 import {SystemCode} from '../types/common';
 import {emailLength, strLength} from '../types/rules';
 import {UserPermissionCode} from '../types/user';
+
+import {checkUserPermission, createSystemError, localePkg, translatePassword} from '../modules/util';
 
 /**
  * Default user find fields
@@ -93,23 +92,6 @@ export function queryUserList(query: IUserSearchModel, page: number, pageSize: n
 }
 
 /**
- * verify user permission with userId
- * @param  {Schema.Types.ObjectId} userId         User ID
- * @param  {UserPermissionCode}    permissionCode Permission code
- * @param  {string}                fields         Field list
- * @return {Promise<IUserModel>}                  Promise with user info
- */
-export function verifyPermissionById(userId: Schema.Types.ObjectId, permissionCode: UserPermissionCode, fields: string = defaultFields): Promise<IUserModel> {
-    return queryUserById(userId, fields)
-        .then((data) => {
-            if (data.permission && (data.permission ^ permissionCode) > 0) {
-                return data;
-            }
-            throw createSystemError(localePkg.Service.User.permissionForbidden, SystemCode.FORBIDDEN);
-        });
-}
-
-/**
  * Verify user's password
  * @param  {IUserModel} userInfo User's info
  * @param  {string}     password Password string
@@ -162,27 +144,16 @@ export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
  * @param  {IUserModifyModel}      userData Update user data
  * @return {Promise<IUserModel>}            Promise with user info
  */
-export function modifyUserById(userId: Schema.Types.ObjectId, userData: IUserModifyModel): Promise<IUserModel> {
-    let promiseFunc: Promise<IUserModel>;
-    // Check if email exists
-    if (userData.email) {
-        promiseFunc = queryUserByEmail(userData.email);
-    } else {
-        promiseFunc = Promise.resolve(null);
+export function modifyUserById(userId: Schema.Types.ObjectId, modifyUserId: Schema.Types.ObjectId, modifyUserPermission: number, userData: IUserModifyModel): Promise<IUserModel> {
+    // Check permission for profile edit & special field
+    if ((modifyUserId !== userId || userData.permission || userData.enable) && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
+        return Promise.reject(createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN));
     }
-    return promiseFunc
-        // Check email
-        .then((searchUser) => {
-            if (searchUser && searchUser._id !== userId) {
-                throw createSystemError(localePkg.Service.User.permissionForbidden, SystemCode.MONGO_UNIQUE_ERROR);
-            }
-            return null;
-        })
-        .then(() => {
-            // Update password
-            if (userData.password) {
-                userData.password = translatePassword(userData.password);
-            }
-            return User.findByIdAndUpdate(userId, userData).exec();
-        });
+    // Update password
+    if (userData.password) {
+        userData.password = translatePassword(userData.password);
+    }
+    return User.updateOne({
+        _id: userId
+    }, userData).exec();
 }

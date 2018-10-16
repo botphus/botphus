@@ -1,3 +1,7 @@
+/**
+ * Create schema
+ * @type {Object}
+ */
 export const createSchema = {
     properties: {
         email: {
@@ -17,6 +21,10 @@ export const createSchema = {
     type: 'object'
 };
 
+/**
+ * Login schema
+ * @type {Object}
+ */
 export const loginSchema = {
     properties: {
         email: {
@@ -27,5 +35,33 @@ export const loginSchema = {
         }
     },
     required: ['email', 'password'],
+    type: 'object'
+};
+
+/**
+ * Modify schema
+ * @type {Object}
+ */
+export const modifySchema = {
+    properties: {
+        email: {
+            type: 'string'
+        },
+        enable: {
+            type: 'boolean'
+        },
+        nickname: {
+            type: 'string'
+        },
+        password: {
+            type: 'string'
+        },
+        permission: {
+            type: 'number'
+        },
+        userId: {
+            type: 'string'
+        }
+    },
     type: 'object'
 };

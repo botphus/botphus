@@ -1,10 +1,11 @@
+import {Schema} from 'mongoose';
 import * as assert from 'power-assert';
 import * as request from 'supertest';
 
 import {SystemCode} from '../../server/types/common';
 import {IRequestData} from '../interfaces';
 
-import {testAdminEmail, testAdminNickname, testEmail, testNickname, testPwd} from '../const';
+import {testAdminEmail, testAdminNickname, testEmail, testEmail2, testNickname, testPwd} from '../const';
 
 import cacheClient, {getRedisKey} from '../../server/modules/cache';
 import config from '../../server/modules/config';
@@ -16,9 +17,10 @@ const sessionReg = new RegExp(`^${config.sessionCookieKey}=([^;]*)(;|)[\\S\\s]*$
 
 export default function() {
     let cookieKey: string = '';
-    describe('User#/api/user/', () => {
-        it('/admin/', (done) => {
-            client.post('/api/user/admin/')
+    let createUserId: Schema.Types.ObjectId;
+    describe('User', () => {
+        it('Install', (done) => {
+            client.post('/api/user/install/')
                 .send({
                     email: testAdminEmail,
                     nickname: testAdminNickname,
@@ -33,7 +35,7 @@ export default function() {
                 })
                 .end(done);
         });
-        it('/login/', (done) => {
+        it('Login', (done) => {
             client.post('/api/user/login/')
                 .send({
                     email: testAdminEmail,
@@ -58,8 +60,8 @@ export default function() {
                 })
                 .catch(done);
         });
-        it('/create/', (done) => {
-            client.post('/api/user/create/')
+        it('Create', (done) => {
+            client.post('/api/user/')
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .send({
                     email: testEmail,
@@ -71,11 +73,44 @@ export default function() {
                     assert(res.body.rid);
                     assert(res.body.code === SystemCode.SUCCESS);
                     assert(res.body.message === localePkg.SystemCode.success);
+                    assert(res.body.data);
+                    createUserId = res.body.data;
+                })
+                .end(done);
+        });
+        it('Update user', (done) => {
+            client.patch('/api/user/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .send({
+                    email: testEmail2,
+                    userId: createUserId
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assert(res.body.rid);
+                    assert(res.body.code === SystemCode.SUCCESS);
+                    assert(res.body.message === localePkg.SystemCode.success);
                     assert(!res.body.data);
                 })
                 .end(done);
         });
-        it('/logout/', (done) => {
+        it('Login with new email', (done) => {
+            client.post('/api/user/login/')
+                .send({
+                    email: testEmail2,
+                    password: testPwd
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
+                    assert(res.body.rid);
+                    assert(res.body.code === SystemCode.SUCCESS);
+                    assert(res.body.message === localePkg.SystemCode.success);
+                    assert(!res.body.data);
+                })
+                .end(done);
+        });
+        it('Logout', (done) => {
             client.get('/api/user/logout/')
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)

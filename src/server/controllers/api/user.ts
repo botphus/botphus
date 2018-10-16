@@ -5,7 +5,7 @@ import * as userSchema from '../../schema/user';
 import {SystemCode} from '../../types/common';
 
 import {checkInstallStatus} from '../../services/install';
-import {createUser, verifyUserLogin} from '../../services/user';
+import {createUser, modifyUserById, verifyUserLogin} from '../../services/user';
 
 import {createSystemError, getHttpMsg, localePkg} from '../../modules/util';
 
@@ -13,7 +13,7 @@ import {clear} from '../../middlewares/session';
 
 module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     // Create admin user when install
-    app.post('/admin/', {
+    app.post('/install/', {
         schema: {
             body: userSchema.createSchema
         }
@@ -64,12 +64,23 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         reply.send(getHttpMsg(request, null));
     });
     // Create user account
-    app.post('/create/', {
+    app.post('/', {
         schema: {
             body: userSchema.createSchema
         }
     }, (request, reply) => {
         return createUser(request.body)
+            .then((user) => {
+                reply.send(getHttpMsg(request, user._id));
+            });
+    });
+    // Modify user account
+    app.patch('/', {
+        schema: {
+            body: userSchema.modifySchema
+        }
+    }, (request: IAppRequest, reply) => {
+        return modifyUserById(request.body.userId || request.session.user.id, request.session.user.id, request.session.user.permission, request.body)
             .then(() => {
                 reply.send(getHttpMsg(request, null));
             });

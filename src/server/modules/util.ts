@@ -7,6 +7,8 @@ import logger from './logger';
 import {IAppRequest, IHttpResponseMessage, ISystemError} from '../interfaces/common';
 import ILocalePackage from '../interfaces/locale';
 import {SystemCode} from '../types/common';
+import {UserPermissionCode} from '../types/user';
+
 /**
  * Disable require limit
  */
@@ -242,4 +244,14 @@ export function isObjEmpty(obj: any): boolean {
     }
 
     return true;
+}
+
+/**
+ * Check user's permission
+ * @param  {number}             userPermission User's permission
+ * @param  {UserPermissionCode} permissionCode Permission code
+ * @return {boolean}                           Pass or not
+ */
+export function checkUserPermission(userPermission: number, permissionCode: UserPermissionCode): boolean {
+    return (userPermission & permissionCode) > 0;
 }
