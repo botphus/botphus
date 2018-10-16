@@ -1,20 +1,20 @@
 import {Schema} from 'mongoose';
 
-import {Database} from '../models/';
+import {Connection} from '../models/';
 
-import {IDatabaseModel, IDatabaseSearchModel} from '../interfaces/model';
+import {IConnectionModel, IConnectionSearchModel} from '../interfaces/model';
 
-import {DatabaseType} from '../types/database';
+import {ConnectionType} from '../types/database';
 import {strLength} from '../types/rules';
 
 /**
  * Query database info config by ID
- * @param  {Schema.Types.ObjectId}   databaseId Database ID
+ * @param  {Schema.Types.ObjectId}   databaseId Connection ID
  * @param  {string}                  fields     Field list
- * @return {Promise<IDatabaseModel>}            Promise with Database Info
+ * @return {Promise<IConnectionModel>}            Promise with Connection Info
  */
-export function queryDatabaseById(databaseId: Schema.Types.ObjectId, fields: string = null): Promise<IDatabaseModel> {
-    return Database.findById(databaseId, fields).exec();
+export function queryConnectionById(databaseId: Schema.Types.ObjectId, fields: string = null): Promise<IConnectionModel> {
+    return Connection.findById(databaseId, fields).exec();
 }
 
 /**
@@ -23,21 +23,21 @@ export function queryDatabaseById(databaseId: Schema.Types.ObjectId, fields: str
  * @param  {number}                              page     Page
  * @param  {number}                              pageSize Page size
  * @param  {string}                              fields   Field list
- * @return {Promise<[number, IDatabaseModel[]]>}          Promise with total number & database info list
+ * @return {Promise<[number, IConnectionModel[]]>}          Promise with total number & database info list
  */
-export function queryDatabaseList(query: IDatabaseSearchModel, page: number, pageSize: number, fields: string): Promise<[number, IDatabaseModel[]]> {
+export function queryConnectionList(query: IConnectionSearchModel, page: number, pageSize: number, fields: string): Promise<[number, IConnectionModel[]]> {
     const condition: any = {};
     if (query.name && query.name.length >= strLength[0] && query.name.length <= strLength[0]) {
         condition.name = {
             $regex: query.name
         };
     }
-    if (query.type && DatabaseType[query.type]) {
+    if (query.type && ConnectionType[query.type]) {
         condition.type = query.type;
     }
     return Promise.all([
-        Database.count(condition).exec(),
-        Database.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
+        Connection.count(condition).exec(),
+        Connection.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()
     ]);
@@ -45,20 +45,20 @@ export function queryDatabaseList(query: IDatabaseSearchModel, page: number, pag
 
 /**
  * Createa database info
- * @param  {IDatabaseModel}          databaseData Database data
- * @return {Promise<IDatabaseModel>}              Promise with database Info
+ * @param  {IConnectionModel}          databaseData Connection data
+ * @return {Promise<IConnectionModel>}              Promise with database Info
  */
-export function createDatabase(databaseData: IDatabaseModel): Promise<IDatabaseModel> {
-    const database = Object.assign(new Database(), databaseData);
+export function createConnection(databaseData: IConnectionModel): Promise<IConnectionModel> {
+    const database = Object.assign(new Connection(), databaseData);
     return database.save();
 }
 
 /**
  * Modify database info
- * @param  {Schema.Types.ObjectId}   databaseId   Database ID
- * @param  {IDatabaseModel}          databaseData Database data
- * @return {Promise<IDatabaseModel>}              Promise with database Info
+ * @param  {Schema.Types.ObjectId}   databaseId   Connection ID
+ * @param  {IConnectionModel}          databaseData Connection data
+ * @return {Promise<IConnectionModel>}              Promise with database Info
  */
-export function modifyDatabaseById(databaseId: Schema.Types.ObjectId, databaseData: IDatabaseModel): Promise<IDatabaseModel> {
-    return Database.findByIdAndUpdate(databaseId, databaseData).exec();
+export function modifyConnectionById(databaseId: Schema.Types.ObjectId, databaseData: IConnectionModel): Promise<IConnectionModel> {
+    return Connection.findByIdAndUpdate(databaseId, databaseData).exec();
 }

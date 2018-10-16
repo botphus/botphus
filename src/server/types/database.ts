@@ -1,7 +1,7 @@
 /**
- * Database Type
+ * Connection Type
  */
-export enum DatabaseType {
+export enum ConnectionType {
     'MYSQL' = 1,
     'REDIS' = 2
 }

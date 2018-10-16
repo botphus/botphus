@@ -7,9 +7,22 @@ import {ClusterNode, RedisOptions} from 'ioredis';
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
 
+interface ISchemaErrorData {
+    keyword: string;
+    dataPath: string;
+    schemaPath: string;
+    params: any[];
+    message: string;
+}
+
+/**
+ * System Error
+ */
 export interface ISystemError extends Error {
     code?: SystemCode;
     errors?: any;
+    type?: string; // Mongo field
+    validation?: ISchemaErrorData[]; // JSON-schema field
 }
 
 /**
@@ -20,11 +33,12 @@ export interface ISystemConfig {
     locale: string; // Locale package name for site & antd, check detail: https://ant.design/docs/react/i18n-cn & locale dir: "/src/server/locale"
     // Logger
     logPath: string; // If not set, will be show in console. Like: /var/log/botphus/
-    logType: 'console' | 'file';
+    logType: 'console' | 'file' | 'close';
     logLevel: 'fatal'| 'error' | 'warn' | 'info' | 'debug' | 'trace'; // Log level, check detail: https://www.npmjs.com/package/abstract-logging
     logPretty: boolean; // Open pretty log or default json
-    // Database & cache
+    // Connection & cache
     redis: RedisOptions | ClusterNode[]; // Ioredis setting, check detail: https://github.com/luin/ioredis/blob/master/API.md
+    redisNamespace: string; // redis key namespace
     db: string; // Mongoose setting, check detail: https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect
     // Socket
     socket: string; // Socket url
@@ -32,36 +46,43 @@ export interface ISystemConfig {
     // Salt
     serverSalt: string; // Password salt for server sign
     clientSalt: string; // Password salt for client login & register
+    // Session cookie key
+    sessionCookieKey: string;
+    sessionRedisExpire: number; // Hours
+    // Page
+    pageSize: number;
+    maxPageSize: number;
 }
 
 /**
  * Http response message
  */
-export interface IHttpErrorMessage {
+export interface IHttpResponseMessage {
     code: SystemCode;
     message: string;
+    // Request ID
+    rid: string;
+    data: any;
 }
 
 /**
  * App request
  */
 export interface IAppRequest extends fastify.FastifyRequest<http.IncomingMessage | http2.Http2ServerRequest> {
-    cookies: {
+    cookies?: {
         [index: string]: any
     };
-    session: {
-        [index: string]: any
-    };
-    initSession: {
-        [index: string]: any
-    };
+    session?: ISessionConfig;
+    initSession?: ISessionConfig;
+    originalUrl?: string;
+    method?: fastify.HTTPMethod;
 }
 
 /**
  * App replay
  */
 export interface IAppReply extends fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse> {
-    setCookie: (name: string, value: string, options?: cookie.CookieSerializeOptions) => fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse>;
+    setCookie?: (name: string, value: string, options?: cookie.CookieSerializeOptions) => fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse>;
 }
 
 /**
@@ -69,4 +90,14 @@ export interface IAppReply extends fastify.FastifyReply<http.ServerResponse | ht
  */
 export interface IAppRouterConfig {
     [index: string]: UserPermissionCode;
+}
+
+export interface ISessionConfig {
+    [index: string]: any;
+    user?: {
+        id: string;
+        email: string;
+        nickname: string;
+        permission: number;
+    };
 }

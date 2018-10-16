@@ -26,8 +26,8 @@ export default interface ILocalePackage {
             permission: string;
             password: string;
         };
-        // Database fields name
-        Database: {
+        // Connection fields name
+        Connection: {
             name: string;
             type: string;
             config: string;
@@ -57,11 +57,20 @@ export default interface ILocalePackage {
     };
     // Service Error
     Service: {
+        Install: {
+            installClose: string;
+        }
         // User info
         User: {
-            loginForbidden: string,
-            permissionForbidden: string,
-            emailVerifyError: string
+            loginForbidden: string;
+            loginError: string;
+            permissionForbidden: string;
         }
+    };
+    // Schema Valid Error
+    Schema: {
+        typeError: string;
+        requiredError: string;
+        commonError: string;
     };
 }

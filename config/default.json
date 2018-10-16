@@ -9,9 +9,14 @@
         "port": 6379,
         "host": "127.0.0.1"
     },
+    "redisNamespace": "botphus",
     "db": "mongodb://127.0.0.1:27017/botphus",
     "socket": "local",
     "socketPort": 8110,
     "serverSalt": "botphus",
-    "clientSalt": "botphus-client"
+    "clientSalt": "botphus-client",
+    "sessionCookieKey": "botphus-session",
+    "sessionRedisExpire": 4,
+    "pageSize": 10,
+    "maxPageSize": 100
 }

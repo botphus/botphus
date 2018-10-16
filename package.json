@@ -7,12 +7,12 @@
     "test": "dist/test/"
   },
   "scripts": {
-    "start": "node ./dist/server/app",
+    "start": "node www",
     "build": "npm run lint && tsc",
     "commit": "npm run test",
     "test": "npm run build && npm run test:cover",
-    "test:unit": "mocha ./dist/test/",
-    "test:cover": "nyc --reporter=lcov npm run test:unit",
+    "test:unit": "node ./test/create_config && mocha ./dist/test/ && node ./test/remove_config",
+    "test:cover": "node ./test/create_config && nyc --reporter=lcov npm run test:unit && node ./test/remove_config",
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "nyc": {
@@ -49,13 +49,16 @@
     "@types/mocha": "^5.2.5",
     "@types/mongoose": "^5.2.18",
     "@types/pino": "^5.6.0",
+    "@types/power-assert": "^1.5.0",
     "@types/recursive-readdir": "^2.2.0",
     "@types/serve-static": "^1.13.2",
+    "@types/supertest": "^2.0.6",
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "power-assert": "^1.6.0",
     "pre-commit": "^1.2.2",
+    "supertest": "^3.3.0",
     "tslint": "^5.11.0",
     "type-schema": "^0.1.0",
     "typescript": "^2.9.2"

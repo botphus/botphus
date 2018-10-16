@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "types": ["mocha", "fs-extra", "pino", "serve-static", "serve-favicon", "recursive-readdir"],
+        "types": ["mocha", "fs-extra", "pino", "serve-static", "serve-favicon", "recursive-readdir", "power-assert", "supertest"],
         "module": "commonjs",
         "target": "es6",
         "noImplicitAny": true,

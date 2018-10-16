@@ -49,7 +49,8 @@ export function queryUserByIds(userIds: Schema.Types.ObjectId[], fields: string 
  */
 export function queryUserByEmail(email: string, fields: string = null): Promise<IUserModel> {
     return User.findOne({
-        email
+        email,
+        enable: true
     }, fields).exec();
 }
 
@@ -59,7 +60,7 @@ export function queryUserByEmail(email: string, fields: string = null): Promise<
  * @return {Promise<number>}        Promise with total number
  */
 export function queryUserTotalCount(): Promise<number> {
-    return User.count({}).exec();
+    return User.countDocuments({}).exec();
 }
 
 /**
@@ -112,7 +113,7 @@ export function verifyPermissionById(userId: Schema.Types.ObjectId, permissionCo
  * Verify user's password
  * @param  {IUserModel} userInfo User's info
  * @param  {string}     password Password string
- * @return {IUserModel}          if true return User's info, else return null
+ * @return {IUserModel}          If true return User's info, else return null
  */
 export function verifyUserPassword(userInfo: IUserModel, password: string): IUserModel {
     if (userInfo.password === translatePassword(password)) {
@@ -122,19 +123,37 @@ export function verifyUserPassword(userInfo: IUserModel, password: string): IUse
 }
 
 /**
+ * Verify user login info
+ * @param  {string}              email    User's email
+ * @param  {string}              password User's password
+ * @return {Promise<IUserModel>}          If true return User's info, else return null
+ */
+export function verifyUserLogin(email: string, password: string): Promise<IUserModel> {
+    return queryUserByEmail(email)
+        .then((user) => {
+            if (user) {
+                return verifyUserPassword(user, password);
+            }
+            return null;
+        })
+        .then((user) => {
+            if (user) {
+                return user;
+            }
+            throw createSystemError(localePkg.Service.User.loginError, SystemCode.ROUTINE_ERROR);
+        });
+}
+
+/**
  * Create user
  * @param  {IUserCreateModel}    userData Create user data
  * @return {Promise<IUserModel>}          Promise with user info
  */
 export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
-    return queryUserByEmail(userData.email)
-        .then((data) => {
-            if (data) {
-                throw createSystemError(localePkg.Service.User.emailVerifyError, SystemCode.MONGO_UNIQUE_ERROR);
-            }
-            const user = Object.assign(new User(), userData);
-            return user.save();
-        });
+    const user = Object.assign(new User(), userData, {
+        password: translatePassword(userData.password)
+    });
+    return user.save();
 }
 
 /**
@@ -155,7 +174,7 @@ export function modifyUserById(userId: Schema.Types.ObjectId, userData: IUserMod
         // Check email
         .then((searchUser) => {
             if (searchUser && searchUser._id !== userId) {
-                throw createSystemError(localePkg.Service.User.emailVerifyError, SystemCode.MONGO_UNIQUE_ERROR);
+                throw createSystemError(localePkg.Service.User.permissionForbidden, SystemCode.MONGO_UNIQUE_ERROR);
             }
             return null;
         })

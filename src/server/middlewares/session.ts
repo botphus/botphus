@@ -3,13 +3,13 @@ import * as uid from 'uid';
 
 import {IAppReply, IAppRequest} from '../interfaces/common';
 
-import cache from '../modules/cache';
+import cache, {getRedisKey} from '../modules/cache';
+import config from '../modules/config';
 import {createMD5Sign} from '../modules/util';
 
-const sessionIdKeyPrefix: string = 'session-';
 const sessionSecret: string = uid(10);
-const sessionCookieKey: string = 'botphus-session';
-const redisExpire: number = 4 * 60 * 60 * 1000;
+const sessionCookieKey: string = config.sessionCookieKey;
+const sessionRedisExpire: number = config.sessionRedisExpire * 60 * 60 * 1000;
 
 /**
  * Generate session data
@@ -22,7 +22,7 @@ function generate(id?: string): any {
         session.id = id;
     } else {
         session.id = `${new Date().getTime()}${uid(18)}`;
-        session.id = sessionIdKeyPrefix + createMD5Sign(session.id, sessionSecret);
+        session.id = createMD5Sign(session.id, sessionSecret);
     }
     return session;
 }
@@ -36,13 +36,13 @@ export function init(request: IAppRequest, _reply: IAppReply, next: (err?: Error
         request.session = generate();
         next();
     } else {
-        cache.get(id)
+        cache.get(getRedisKey(id))
             .then((data) => {
                 if (data) {
                     const session = JSON.parse(data);
                     request.session = request.initSession = session;
                 } else {
-                    request.session = generate();
+                    request.session = generate(id);
                 }
                 next();
             })
@@ -58,9 +58,12 @@ export function init(request: IAppRequest, _reply: IAppReply, next: (err?: Error
  * Save(create/update) session
  */
 export function save(request: IAppRequest, reply: IAppReply, _payload: any, next: (err?: Error, value?: any) => void): void {
+    if (!request.session) {
+        return next();
+    }
     const id = request.session.id;
     const sessionKeys = Object.keys(request.session);
-    if (sessionKeys.length === 1 // No data need save
+    if (id && sessionKeys.length === 1 // No data need save
         ||
         // Not below:
         // 1. Create session: If doesn't have init session
@@ -71,7 +74,7 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
         return next();
     }
     const data = JSON.stringify(request.session);
-    cache.set(id, data, 'EX', redisExpire)
+    cache.set(getRedisKey(id), data, 'EX', sessionRedisExpire)
         .then(() => {
             reply.setCookie(sessionCookieKey, id);
             next();
@@ -87,9 +90,10 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
  */
 export function clear(request: IAppRequest, reply: IAppReply, next: (err?: Error) => void): void {
     const id = request.cookies[sessionCookieKey];
-    cache.del(id)
+    cache.del(getRedisKey(id))
         .then(() => {
             reply.setCookie(sessionCookieKey, '', {
+                expires: new Date(),
                 maxAge: 0
             });
             next();

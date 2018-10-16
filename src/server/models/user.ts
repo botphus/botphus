@@ -33,6 +33,7 @@ const schema = new Schema({
     nickname: {
         required: [true, `${localeUserPkg.nickname}: ${localePkg.Model.requiredError}`],
         type: String,
+        unique: true,
         validate: [
             validate({
                 arguments: strLength,
@@ -46,6 +47,7 @@ const schema = new Schema({
         type: String
     },
     permission: {
+        default: 0,
         min: [0, `${localeUserPkg.permission}: ${localePkg.Model.numberMinError}`],
         required: [true, `${localeUserPkg.permission}: ${localePkg.Model.requiredError}`],
         type: Number

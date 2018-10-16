@@ -11,3 +11,9 @@ export enum UserPermissionCode {
     // Task execution flow
     'TASK_FLOW' = 0b1000
 }
+
+export const userPermissionMap: {
+    [index: string]: number
+} = {
+    'post:/user/create/': UserPermissionCode.SYSTEM
+};

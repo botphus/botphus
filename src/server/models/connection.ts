@@ -4,29 +4,29 @@ import * as validate from 'mongoose-validator';
 import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {IDatabaseModel} from '../interfaces/model';
+import {IConnectionModel} from '../interfaces/model';
 import {strLength} from '../types/rules';
 
-const localeDatabasePkg = localePkg.Model.Database;
+const localeConnectionPkg = localePkg.Model.Connection;
 
 const schema = new Schema({
     config: {
-        required: [true, `${localeDatabasePkg.config}: ${localePkg.Model.requiredError}`],
+        required: [true, `${localeConnectionPkg.config}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.Mixed
     },
     name: {
-        required: [true, `${localeDatabasePkg.name}: ${localePkg.Model.requiredError}`],
+        required: [true, `${localeConnectionPkg.name}: ${localePkg.Model.requiredError}`],
         type: String,
         validate: [
             validate({
                 arguments: strLength,
-                message: `${localeDatabasePkg.name}: ${localePkg.Model.lengthError}`,
+                message: `${localeConnectionPkg.name}: ${localePkg.Model.lengthError}`,
                 validator: 'isLength',
             })
         ]
     },
     type: {
-        required: [true, `${localeDatabasePkg.type}: ${localePkg.Model.requiredError}`],
+        required: [true, `${localeConnectionPkg.type}: ${localePkg.Model.requiredError}`],
         type: Number
     }
 });
@@ -34,4 +34,4 @@ const schema = new Schema({
 schema.plugin(modifyDate);
 
 /* tslint:disable:variable-name */
-export const Database = model<IDatabaseModel>('Task', schema);
+export const Connection = model<IConnectionModel>('Connection', schema);

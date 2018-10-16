@@ -33,7 +33,7 @@ const schema = new Schema({
         validate: [
             validate({
                 message: `${localeTaskFlowPkg.startPage}: ${localePkg.Model.urlError}`,
-                validator: 'isUrl',
+                validator: 'isURL',
             }),
             validate({
                 arguments: urlLength,

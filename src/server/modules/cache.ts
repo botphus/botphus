@@ -11,3 +11,12 @@ if (Array.isArray(config.redis)) {
 }
 
 export default redisClient;
+
+/**
+ * get Redis key with namespace
+ * @param  {string} key Redis key
+ * @return {string}     Redis key with namespace
+ */
+export function getRedisKey(key: string): string {
+    return `${config.redisNamespace}:${key}`;
+}

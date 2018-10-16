@@ -4,7 +4,7 @@ import * as fastify from 'fastify';
 import config from './config';
 import logger from './logger';
 
-import {IHttpErrorMessage, ISystemError} from '../interfaces/common';
+import {IAppRequest, IHttpResponseMessage, ISystemError} from '../interfaces/common';
 import ILocalePackage from '../interfaces/locale';
 import {SystemCode} from '../types/common';
 /**
@@ -14,7 +14,7 @@ import {SystemCode} from '../types/common';
 export const localePkg: ILocalePackage = require(`../locale/${config.locale}`).default;
 /* tslint:enable */
 export const app = fastify({
-    logger
+    logger: config.logType === 'close' ? false : logger
 });
 
 /**
@@ -97,13 +97,56 @@ export function escapeData(data: any): any {
 }
 
 /**
- * Get http error message
- * @param  {ISystemError}      err Error
- * @return {IHttpErrorMessage}     Error message
+ * Create/rewrite page info
+ * @param {IAppRequest} request request
  */
-export function getHttpErrorMsg(err: ISystemError): IHttpErrorMessage {
+export function buildPageInfo(request: IAppRequest) {
+    request.query.page = parseInt(request.query.page, 10);
+    request.query.pageSize = parseInt(request.query.pageSize, 10);
+    if (!request.query.page || request.query.page < 0) {
+        request.query.page = 1;
+    }
+    if (!request.query.pageSize || request.query.pageSize > config.maxPageSize) {
+        request.query.pageSize = config.pageSize;
+    }
+}
+
+/**
+ * Get http message
+ * @param  {IAppRequest}          request  Request
+ * @param  {any}                  data     Send data
+ * @param  {string}               message  Message
+ * @return {IHttpResponseMessage}          Return message
+ */
+export function getHttpMsg(request: IAppRequest, data: any, message: string = localePkg.SystemCode.success): IHttpResponseMessage {
+    return {
+        code: SystemCode.SUCCESS,
+        // Check list data
+        data: Array.isArray(data) ? {
+            content: data[1],
+            page: request.query.page,
+            pageSize: request.query.pageSize,
+            total: data[0]
+        } : data,
+        message,
+        rid: request.id
+    };
+}
+
+/**
+ * Get http error message
+ * @param  {ISystemError}         err Error
+ * @return {IHttpResponseMessage}     Error message
+ */
+/**
+ * Get http error message
+ * @param  {IAppRequest}          request Request
+ * @param  {ISystemError}         err     Error
+ * @return {IHttpResponseMessage}         Error message
+ */
+export function getHttpErrorMsg(request: IAppRequest, err: ISystemError): IHttpResponseMessage {
     const systemCodePkg = localePkg.SystemCode;
-    let code = err.code || SystemCode.UNKNOWN_ERROR;
+    let code = err.code || (err.name !== 'Error' ? SystemCode.MONGO_ERROR : SystemCode.UNKNOWN_ERROR); // Default code > Mongo error > unknown
     let message = err.message || err.stack;
     // Set Not Found
     if (err.message === 'Not Found') {
@@ -115,28 +158,47 @@ export function getHttpErrorMsg(err: ISystemError): IHttpErrorMessage {
         message = systemCodePkg.notFound;
         break;
     case SystemCode.UNKNOWN_ERROR:
-        message = systemCodePkg.unknownError;
-        // Save error log
-        app.log.error(err);
+        // Schema error
+        if (err.validation) {
+            code = SystemCode.ROUTINE_ERROR;
+            const curValidMsg = err.validation[0];
+            switch (curValidMsg.keyword) {
+                case 'type':
+                    message = localePkg.Schema.typeError;
+                    break;
+                case 'required':
+                    message = localePkg.Schema.requiredError;
+                default:
+                    message = localePkg.Schema.commonError;
+            }
+        } else {
+            message = systemCodePkg.unknownError;
+            // Save error log
+            app.log.error(err);
+        }
         break;
     case SystemCode.MONGO_ERROR:
         if (err.errors) {
-            const errorName = Object.keys(err.errors)[0];
-            if (err.errors[errorName].name === 'CastError') {
+            const errorField = Object.keys(err.errors)[0];
+            if (err.errors[errorField].name === 'CastError') {
                 message = systemCodePkg.mongoCastError;
             } else {
-                message = err.errors[errorName].message;
+                message = err.errors[errorField].message;
             }
+        } else {
+            message = err.message;
         }
         break;
     case SystemCode.MONGO_UNIQUE_ERROR:
         code = SystemCode.MONGO_ERROR;
-        message = systemCodePkg.mongoUniqueError + ':' + message.replace(/^[\S\s]+\"([\S\s]+)\"[\S\s]+$/, '$1');
+        message = localePkg.SystemCode.mongoUniqueError + ':' + message.replace(/^[\S\s]+\"([\S\s]+)\"[\S\s]+$/, '$1');
         break;
     }
     return {
         code,
-        message
+        data: null,
+        message,
+        rid: request.id
     };
 }
 

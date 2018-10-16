@@ -7,7 +7,7 @@ const localeData: ILocalePackage = {
         success: '请求成功',
         notFound: '找不到该页面',
         mongoCastError: '参数类型错误',
-        mongoUniqueError: '数据已被占用',
+        mongoUniqueError: '以下数据已被使用,请更换',
         unknownError: '未知异常,请联系管理员'
     },
     Model: {
@@ -25,10 +25,10 @@ const localeData: ILocalePackage = {
             permission: '权限',
             password: '密码'
         },
-        Database: {
+        Connection: {
             name: '名称',
             type: '类型',
-            config: '配置文件'
+            config: '配置'
         },
         Task: {
             name: '名称',
@@ -51,11 +51,19 @@ const localeData: ILocalePackage = {
         }
     },
     Service: {
+        Install: {
+            installClose: '已经不能进行安装'
+        },
         User: {
             loginForbidden: '该功能必须登录才能使用',
-            permissionForbidden: '没有权限使用该功能',
-            emailVerifyError: '该邮箱已存在'
+            loginError: '登录信息错误',
+            permissionForbidden: '没有权限使用该功能'
         }
+    },
+    Schema: {
+        typeError: '不合规的类型',
+        requiredError: '缺少必填项',
+        commonError: '数据不合规'
     }
 };
 

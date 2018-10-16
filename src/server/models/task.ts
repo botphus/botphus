@@ -35,7 +35,6 @@ const schema = new Schema({
 });
 
 schema.plugin(modifyDate);
-schema.index({name: -1});
 
 /* tslint:disable:variable-name */
 export const Task = model<ITaskModel>('Task', schema);

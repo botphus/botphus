@@ -4,7 +4,10 @@ import * as path from 'path';
 import * as favicon from 'serve-favicon';
 import * as serveStatic from 'serve-static';
 
-import session from '../middlewares/session';
+import {IAppRequest} from '../interfaces/common';
+
+import permissionMid from '../middlewares/permission';
+import sessionMid from '../middlewares/session';
 
 import {app, escapeData, filterSensitiveFields, isObjEmpty} from '../modules/util';
 
@@ -12,11 +15,15 @@ import {app, escapeData, filterSensitiveFields, isObjEmpty} from '../modules/uti
 app.use(favicon(path.join(process.cwd(), 'favicon.ico')));
 app.register(helmet);
 app.use('/public/', serveStatic(path.join(process.cwd(), '/dist/client/')));
+// Cookie parse & set
 app.register(cookie);
-app.register(session);
+// Session init
+app.register(sessionMid);
+// Permission valid
+app.register(permissionMid);
 
 // Set log handle
-app.addHook('preHandler', (request, _reply, next) => {
+app.addHook('preHandler', (request: IAppRequest, _reply, next) => {
     // Escape Data
     if (!isObjEmpty(request.body)) {
         escapeData(request.body);
@@ -27,6 +34,12 @@ app.addHook('preHandler', (request, _reply, next) => {
     }
     if (isObjEmpty(request.params)) {
         escapeData(request.params);
+    }
+    // Print user info
+    if (request.session.user) {
+        request.log.info(`Request user: ${request.session.user.nickname}`);
+    } else {
+        request.log.info('Request user: Guest');
     }
     return next();
 });
