@@ -84,7 +84,7 @@ export function queryUserList(query: IUserSearchModel, page: number, pageSize: n
         condition.enable = query.enable;
     }
     return Promise.all([
-        User.count(condition).exec(),
+        User.countDocuments(condition).exec(),
         User.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()

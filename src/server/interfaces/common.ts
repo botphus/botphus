@@ -63,7 +63,12 @@ export interface IHttpResponseMessage {
     message: string;
     // Request ID
     rid: string;
-    data: any;
+    data: {
+        content: any[];
+        page: number;
+        pageSize: number;
+        total: number;
+    } | any;
 }
 
 /**

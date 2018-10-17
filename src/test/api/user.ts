@@ -10,6 +10,7 @@ import {testAdminEmail, testAdminNickname, testEmail, testEmail2, testNickname, 
 import cacheClient, {getRedisKey} from '../../server/modules/cache';
 import config from '../../server/modules/config';
 import {app, localePkg} from '../../server/modules/util';
+import {assertResMessage} from '../util';
 
 const client = request(app.server);
 
@@ -29,9 +30,7 @@ export default function() {
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
+                    assertResMessage(res);
                     assert(res.body.data);
                     adminUserId = res.body.data;
                 })
@@ -45,11 +44,9 @@ export default function() {
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
+                    assertResMessage(res);
                     assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
                     cookieKey = res.header['set-cookie'][0].replace(sessionReg, '$1');
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
                     assert(!res.body.data);
                 })
                 .end(done);
@@ -72,9 +69,7 @@ export default function() {
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
+                    assertResMessage(res);
                     assert(res.body.data);
                     createUserId = res.body.data;
                 })
@@ -89,9 +84,7 @@ export default function() {
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
+                    assertResMessage(res);
                     assert(!res.body.data);
                 })
                 .end(done);
@@ -104,10 +97,8 @@ export default function() {
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
+                    assertResMessage(res);
                     assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
                     assert(!res.body.data);
                 })
                 .end(done);
@@ -117,9 +108,7 @@ export default function() {
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)
                 .expect((res: IRequestData) => {
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
+                    assertResMessage(res);
                     assert(res.body.data);
                     assert(res.body.data._id === adminUserId);
                     assert(res.body.data.email === testAdminEmail);
@@ -132,13 +121,25 @@ export default function() {
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)
                 .expect((res: IRequestData) => {
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
+                    assertResMessage(res);
                     assert(res.body.data);
                     assert(res.body.data._id === createUserId);
                     assert(res.body.data.email === testEmail2);
                     assert(res.body.data.nickname === testNickname);
+                })
+                .end(done);
+        });
+        it('Get user list', (done) => {
+            client.get(`/api/user/`)
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.page === 1);
+                    assert(res.body.data.pageSize === 10);
+                    assert(res.body.data.total === 2);
+                    assert(res.body.data.content.length === 2);
                 })
                 .end(done);
         });
@@ -147,11 +148,9 @@ export default function() {
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)
                 .expect((res: IRequestData) => {
+                    assertResMessage(res);
                     assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
                     assert(res.header['set-cookie'][0].replace(sessionReg, '$1') === '');
-                    assert(res.body.rid);
-                    assert(res.body.code === SystemCode.SUCCESS);
-                    assert(res.body.message === localePkg.SystemCode.success);
                     assert(!res.body.data);
                 })
                 .end(done);
