@@ -1,17 +1,38 @@
-import {ClusterNode, RedisOptions} from 'ioredis';
+import {NodeConfiguration, RedisOptions} from 'ioredis';
 import {Document} from 'mongoose';
 import {ConnectionConfig} from 'mysql';
 
 import {ConnectionType} from '../../types/connection';
 
 /**
- * Connection model
+ * Connection base model
  */
-export interface IConnectionModel extends Document {
+export interface IConnectionBaseModel extends Document {
     name: string;
     type: ConnectionType;
-    config: ConnectionConfig | RedisOptions | ClusterNode[];
+    config: ConnectionConfig | RedisOptions | NodeConfiguration[];
 }
+
+/**
+ * Mysql connection model
+ */
+export interface IMysqlConnectionModel extends IConnectionBaseModel {
+    type: ConnectionType.MYSQL;
+    config: ConnectionConfig;
+}
+
+/**
+ * Redis connection model
+ */
+export interface IRedisConnectionModel extends IConnectionBaseModel {
+    type: ConnectionType.REDIS;
+    config: RedisOptions | NodeConfiguration[];
+}
+
+/**
+ * Connection model
+ */
+export type IConnectionModel = IMysqlConnectionModel | IRedisConnectionModel;
 
 /**
  * Search connection Model

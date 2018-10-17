@@ -81,12 +81,12 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
             body: userSchema.modifySchema
         }
     }, (request: IAppRequest, reply) => {
-        return modifyUserById(request.body.userId || request.session.user.id, request.session.user.id, request.session.user.permission, request.body)
+        return modifyUserById(request.body.modifyId || request.session.user.id, request.session.user.id, request.session.user.permission, request.body)
             .then(() => {
                 reply.send(getHttpMsg(request, null));
             });
     });
-    // Search uesr list
+    // Search uesr
     app.get('/', {
         schema: {
             querystring: userSchema.searchSchema

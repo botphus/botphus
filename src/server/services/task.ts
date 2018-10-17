@@ -42,7 +42,7 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
         ];
     }
     return Promise.all([
-        Task.count(condition).exec(),
+        Task.countDocuments(condition).exec(),
         Task.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()

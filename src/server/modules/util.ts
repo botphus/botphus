@@ -4,7 +4,7 @@ import * as fastify from 'fastify';
 import config from './config';
 import logger from './logger';
 
-import {IAppRequest, IHttpResponseMessage, ISystemError} from '../interfaces/common';
+import {IAppRequest, IHttpResponseMessage, INumEnumValue, ISystemError} from '../interfaces/common';
 import ILocalePackage from '../interfaces/locale';
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
@@ -47,7 +47,7 @@ export function translatePassword(password: string): string {
  */
 export function filterSensitiveFields(data: object): string {
     const result = JSON.stringify(data);
-    return result.replace(/"(email|password)":"([^"]{2})[^"]+([^"]{2})"/ig, '"$1":"$2****$3"');
+    return result.replace(/"(email|password|user)":"([^"]{2})[^"]+([^"]{2})"/ig, '"$1":"$2****$3"');
 }
 
 /**
@@ -265,4 +265,20 @@ export function isObjEmpty(obj: any): boolean {
  */
 export function checkUserPermission(userPermission: number, permissionCode: UserPermissionCode): boolean {
     return (userPermission & permissionCode) > 0;
+}
+
+/**
+ * Get number enums list
+ * @param  {Object}          enums Enums value
+ * @return {INumEnumValue[]}       Enum List
+ */
+export function getNumEnumsList(enums: any): INumEnumValue[] {
+    return Object.keys(enums).filter((key) => {
+        return typeof key === 'string';
+    }).map((key) => {
+        return {
+            key,
+            value: enums[key]
+        };
+    });
 }

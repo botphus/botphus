@@ -2,19 +2,16 @@ import {Schema} from 'mongoose';
 import * as assert from 'power-assert';
 import * as request from 'supertest';
 
-import {SystemCode} from '../../server/types/common';
 import {IRequestData} from '../interfaces';
 
-import {testAdminEmail, testAdminNickname, testEmail, testEmail2, testNickname, testPwd} from '../const';
+import {sessionReg, testAdminEmail, testAdminNickname, testEmail, testEmail2, testNickname, testPwd} from '../const';
 
 import cacheClient, {getRedisKey} from '../../server/modules/cache';
 import config from '../../server/modules/config';
-import {app, localePkg} from '../../server/modules/util';
+import {app} from '../../server/modules/util';
 import {assertResMessage} from '../util';
 
 const client = request(app.server);
-
-const sessionReg = new RegExp(`^${config.sessionCookieKey}=([^;]*)(;|)[\\S\\s]*$`);
 
 export default function() {
     let cookieKey: string = '';
@@ -80,7 +77,7 @@ export default function() {
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .send({
                     email: testEmail2,
-                    userId: createUserId
+                    modifyId: createUserId
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {

@@ -4,7 +4,7 @@ import * as validate from 'mongoose-validator';
 import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
-import {IConnectionModel} from '../interfaces/model';
+import {IConnectionBaseModel} from '../interfaces/model';
 import {strLength} from '../types/rules';
 
 const localeConnectionPkg = localePkg.Model.Connection;
@@ -34,4 +34,4 @@ const schema = new Schema({
 schema.plugin(modifyDate);
 
 /* tslint:disable:variable-name */
-export const Connection = model<IConnectionModel>('Connection', schema);
+export const Connection = model<IConnectionBaseModel>('Connection', schema);

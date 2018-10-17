@@ -28,3 +28,15 @@ export const queryDetailSchema = {
     },
     type: 'object'
 };
+
+/**
+ * Modify schema
+ * @type {Object}
+ */
+export const modifyCommonSchema = {
+    modifyId: {
+        type: 'string'
+    }
+};
+
+export const modifyCommonRequiredField = ['modifyId'];

@@ -98,6 +98,9 @@ export interface IAppRouterConfig {
     [index: string]: UserPermissionCode;
 }
 
+/**
+ * Session
+ */
 export interface ISessionConfig {
     [index: string]: any;
     user?: {
@@ -106,4 +109,12 @@ export interface ISessionConfig {
         nickname: string;
         permission: number;
     };
+}
+
+/**
+ * Number enum list value
+ */
+export interface INumEnumValue {
+    key: string;
+    value: number;
 }

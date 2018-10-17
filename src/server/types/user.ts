@@ -18,9 +18,15 @@ export enum UserPermissionCode {
 export const userPermissionMap: {
     [index: string]: number
 } = {
+    // User
     'post:/user/': UserPermissionCode.SYSTEM,
     'patch:/user/': UserPermissionCode.LOGIN,
     'get:/user/': UserPermissionCode.LOGIN,
     'get:/user/profile/my/': UserPermissionCode.LOGIN,
-    'get:/user/profile/': UserPermissionCode.SYSTEM
+    'get:/user/profile/': UserPermissionCode.SYSTEM,
+    // Connection
+    'post:/connection/': UserPermissionCode.SYSTEM,
+    'patch:/connection/': UserPermissionCode.SYSTEM,
+    'get:/connection/': UserPermissionCode.LOGIN,
+    'get:/connection/profile/': UserPermissionCode.LOGIN
 };

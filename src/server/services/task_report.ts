@@ -27,7 +27,7 @@ export function queryTaskReportListByFlowId(taskFlowId: Schema.Types.ObjectId, p
         flowId: taskFlowId
     };
     return Promise.all([
-        TaskReport.count(condition).exec(),
+        TaskReport.countDocuments(condition).exec(),
         TaskReport.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: 1
         }).exec()

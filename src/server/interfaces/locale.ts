@@ -55,17 +55,20 @@ export default interface ILocalePackage {
             success: string;
             message: string;
             flowId: string;
-        }
+        };
     };
     // Service Error
     Service: {
         Install: {
             installClose: string;
-        }
+        };
         // User info
         User: {
             loginError: string;
-        }
+        };
+        Connection: {
+            configValidError: string;
+        };
     };
     // Schema Valid Error
     Schema: {

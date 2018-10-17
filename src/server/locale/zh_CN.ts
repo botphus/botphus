@@ -58,6 +58,9 @@ const localeData: ILocalePackage = {
         },
         User: {
             loginError: '登录信息错误'
+        },
+        Connection: {
+            configValidError: '配置信息不正确'
         }
     },
     Schema: {

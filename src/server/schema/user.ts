@@ -1,4 +1,4 @@
-import {pageInfo} from './common';
+import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
 /**
  * Search schema
@@ -7,6 +7,7 @@ import {pageInfo} from './common';
 export const searchSchema = {
     properties: Object.assign({
         email: {
+            format: 'email',
             type: 'string'
         },
         enable: {
@@ -26,6 +27,7 @@ export const searchSchema = {
 export const createSchema = {
     properties: {
         email: {
+            format: 'email',
             type: 'string'
         },
         nickname: {
@@ -49,6 +51,7 @@ export const createSchema = {
 export const loginSchema = {
     properties: {
         email: {
+            format: 'email',
             type: 'string'
         },
         password: {
@@ -64,8 +67,9 @@ export const loginSchema = {
  * @type {Object}
  */
 export const modifySchema = {
-    properties: {
+    properties: Object.assign({
         email: {
+            format: 'email',
             type: 'string'
         },
         enable: {
@@ -79,10 +83,8 @@ export const modifySchema = {
         },
         permission: {
             type: 'integer'
-        },
-        userId: {
-            type: 'string'
         }
-    },
+    }, modifyCommonSchema),
+    required: modifyCommonRequiredField,
     type: 'object'
 };

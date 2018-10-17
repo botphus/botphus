@@ -31,7 +31,7 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
         condition.createdUser = query.createdUser;
     }
     return Promise.all([
-        TaskFlow.count(condition).exec(),
+        TaskFlow.countDocuments(condition).exec(),
         TaskFlow.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()
