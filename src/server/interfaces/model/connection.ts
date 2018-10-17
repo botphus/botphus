@@ -2,7 +2,7 @@ import {ClusterNode, RedisOptions} from 'ioredis';
 import {Document} from 'mongoose';
 import {ConnectionConfig} from 'mysql';
 
-import {ConnectionType} from '../../types/database';
+import {ConnectionType} from '../../types/connection';
 
 /**
  * Connection model
@@ -14,7 +14,7 @@ export interface IConnectionModel extends Document {
 }
 
 /**
- * Search database Model
+ * Search connection Model
  */
 export interface IConnectionSearchModel {
     name?: string;

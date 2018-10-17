@@ -9,7 +9,7 @@ export interface IModifyDateModel extends Document {
 }
 
 export * from './user';
-export * from './database';
+export * from './connection';
 export * from './task';
 export * from './task_flow';
 export * from './task_report';

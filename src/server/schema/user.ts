@@ -1,3 +1,24 @@
+import {pageInfo} from './common';
+
+/**
+ * Search schema
+ * @type {Object}
+ */
+export const searchSchema = {
+    properties: Object.assign({
+        email: {
+            type: 'string'
+        },
+        enable: {
+            type: 'string'
+        },
+        nickname: {
+            type: 'string'
+        }
+    }, pageInfo),
+    type: 'object'
+};
+
 /**
  * Create schema
  * @type {Object}
@@ -14,7 +35,7 @@ export const createSchema = {
             type: 'string'
         },
         permission: {
-            type: 'number'
+            type: 'integer'
         }
     },
     required: ['email', 'nickname', 'password'],
@@ -57,7 +78,7 @@ export const modifySchema = {
             type: 'string'
         },
         permission: {
-            type: 'number'
+            type: 'integer'
         },
         userId: {
             type: 'string'

@@ -19,5 +19,8 @@ export const userPermissionMap: {
     [index: string]: number
 } = {
     'post:/user/': UserPermissionCode.SYSTEM,
-    'patch:/user/': UserPermissionCode.LOGIN
+    'patch:/user/': UserPermissionCode.LOGIN,
+    'get:/user/': UserPermissionCode.LOGIN,
+    'get:/user/profile/my/': UserPermissionCode.LOGIN,
+    'get:/user/profile/': UserPermissionCode.SYSTEM
 };

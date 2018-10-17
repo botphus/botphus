@@ -114,6 +114,17 @@ export function buildPageInfo(request: IAppRequest) {
 }
 
 /**
+ * Get list query data
+ * @param {Object} data Query data
+ */
+export function getListQueryData(data: any) {
+    const queryData = Object.assign({}, data);
+    delete queryData.page;
+    delete queryData.pageSize;
+    return queryData;
+}
+
+/**
  * Get http message
  * @param  {IAppRequest}          request  Request
  * @param  {any}                  data     Send data

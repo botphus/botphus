@@ -82,5 +82,7 @@ export function createTask(taskData: ITaskModel): Promise<ITaskModel> {
  * @return {Promise<ITaskModel>}            Promise with task Info
  */
 export function modifyTaskById(taskId: Schema.Types.ObjectId, taskData: ITaskModifyModel): Promise<ITaskModel> {
-    return Task.findByIdAndUpdate(taskId, taskData).exec();
+    return Task.updateOne({
+        _id: taskId
+    }, taskData).exec();
 }

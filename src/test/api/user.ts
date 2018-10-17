@@ -17,6 +17,7 @@ const sessionReg = new RegExp(`^${config.sessionCookieKey}=([^;]*)(;|)[\\S\\s]*$
 
 export default function() {
     let cookieKey: string = '';
+    let adminUserId: Schema.Types.ObjectId;
     let createUserId: Schema.Types.ObjectId;
     describe('User', () => {
         it('Install', (done) => {
@@ -31,7 +32,8 @@ export default function() {
                     assert(res.body.rid);
                     assert(res.body.code === SystemCode.SUCCESS);
                     assert(res.body.message === localePkg.SystemCode.success);
-                    assert(!res.body.data);
+                    assert(res.body.data);
+                    adminUserId = res.body.data;
                 })
                 .end(done);
         });
@@ -107,6 +109,36 @@ export default function() {
                     assert(res.body.code === SystemCode.SUCCESS);
                     assert(res.body.message === localePkg.SystemCode.success);
                     assert(!res.body.data);
+                })
+                .end(done);
+        });
+        it('Get self profile', (done) => {
+            client.get('/api/user/profile/my/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assert(res.body.rid);
+                    assert(res.body.code === SystemCode.SUCCESS);
+                    assert(res.body.message === localePkg.SystemCode.success);
+                    assert(res.body.data);
+                    assert(res.body.data._id === adminUserId);
+                    assert(res.body.data.email === testAdminEmail);
+                    assert(res.body.data.nickname === testAdminNickname);
+                })
+                .end(done);
+        });
+        it('Get user profile', (done) => {
+            client.get(`/api/user/profile/?id=${createUserId}`)
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assert(res.body.rid);
+                    assert(res.body.code === SystemCode.SUCCESS);
+                    assert(res.body.message === localePkg.SystemCode.success);
+                    assert(res.body.data);
+                    assert(res.body.data._id === createUserId);
+                    assert(res.body.data.email === testEmail2);
+                    assert(res.body.data.nickname === testNickname);
                 })
                 .end(done);
         });

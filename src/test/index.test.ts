@@ -32,7 +32,7 @@ describe('Botphus', () => {
     });
     apiTest();
     clearData();
-    after('Close database connection', (done) => {
+    after('Close connection connection', (done) => {
         Promise.all([mongoose.disconnect(), cacheClient.quit()])
             .then(() => {
                 done();

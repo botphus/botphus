@@ -70,7 +70,7 @@ export function queryUserTotalCount(): Promise<number> {
  * @param  {string}                          fields   Field list
  * @return {Promise<[number, IUserModel[]]>}          Promise with total number & user info list
  */
-export function queryUserList(query: IUserSearchModel, page: number, pageSize: number, fields: string): Promise<[number, IUserModel[]]> {
+export function queryUserList(query: IUserSearchModel, page: number, pageSize: number, fields: string = defaultFields): Promise<[number, IUserModel[]]> {
     const condition: any = {};
     if (query.nickname && query.nickname.length >= strLength[0] && query.nickname.length <= strLength[0]) {
         condition.nickname = {

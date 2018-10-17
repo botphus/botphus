@@ -1,13 +1,14 @@
 import * as fastify from 'fastify';
 
 import {IAppRequest} from '../../interfaces/common';
+import {queryDetailSchema} from '../../schema/common';
 import * as userSchema from '../../schema/user';
 import {SystemCode} from '../../types/common';
 
 import {checkInstallStatus} from '../../services/install';
-import {createUser, modifyUserById, verifyUserLogin} from '../../services/user';
+import {createUser, modifyUserById, queryUserById, queryUserList, verifyUserLogin} from '../../services/user';
 
-import {createSystemError, getHttpMsg, localePkg} from '../../modules/util';
+import {buildPageInfo, createSystemError, getHttpMsg, getListQueryData, localePkg} from '../../modules/util';
 
 import {clear} from '../../middlewares/session';
 
@@ -29,8 +30,8 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
                 }, request.body);
                 return createUser(saveData);
             })
-            .then(() => {
-                reply.send(getHttpMsg(request, null));
+            .then((user) => {
+                reply.send(getHttpMsg(request, user._id));
             });
     });
     // User login
@@ -83,6 +84,36 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         return modifyUserById(request.body.userId || request.session.user.id, request.session.user.id, request.session.user.permission, request.body)
             .then(() => {
                 reply.send(getHttpMsg(request, null));
+            });
+    });
+    // Search uesr list
+    app.get('/', {
+        schema: {
+            querystring: userSchema.searchSchema
+        }
+    }, (request, reply) => {
+        buildPageInfo(request);
+        return queryUserList(getListQueryData(request.query), request.query.page, request.query.pageSize)
+            .then((data) => {
+                reply.send(getHttpMsg(request, data));
+            });
+    });
+    // Get self profile
+    app.get('/profile/my/', (request: IAppRequest, reply) => {
+        return queryUserById(request.session.user.id)
+            .then((data) => {
+                reply.send(getHttpMsg(request, data));
+            });
+    });
+    // Get user profile
+    app.get('/profile/', {
+        schema: {
+            querystring: queryDetailSchema
+        }
+    }, (request, reply) => {
+        return queryUserById(request.query.id)
+            .then((data) => {
+                reply.send(getHttpMsg(request, data));
             });
     });
     next();
