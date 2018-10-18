@@ -53,6 +53,7 @@
     "@types/recursive-readdir": "^2.2.0",
     "@types/serve-static": "^1.13.2",
     "@types/supertest": "^2.0.6",
+    "@types/ws": "^6.0.1",
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
@@ -66,6 +67,7 @@
   "dependencies": {
     "@types/serve-favicon": "^2.2.30",
     "botphus-core": "^0.1.2",
+    "cookie": "^0.3.1",
     "fastify": "^1.12.1",
     "fastify-cookie": "^2.0.2",
     "fastify-helmet": "^2.1.0",
@@ -78,6 +80,7 @@
     "pino-pretty": "^2.2.1",
     "serve-favicon": "^2.5.0",
     "serve-static": "^1.13.2",
-    "uid": "0.0.2"
+    "uid": "0.0.2",
+    "ws": "^6.1.0"
   }
 }

@@ -3,6 +3,7 @@ import * as fastify from 'fastify';
 import * as http from 'http';
 import * as http2 from 'http2';
 import {ClusterNode, RedisOptions} from 'ioredis';
+import * as WebSocket from 'ws';
 
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
@@ -41,7 +42,7 @@ export interface ISystemConfig {
     redisNamespace: string; // redis key namespace
     db: string; // Mongoose setting, check detail: https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect
     // Socket
-    socket: string; // Socket url
+    socket: 'local' | string; // Socket url
     socketPort: number; // Socket port, will use when socket is "local"
     // Salt
     serverSalt: string; // Password salt for server sign
@@ -116,4 +117,11 @@ export interface ISessionConfig {
 export interface INumEnumValue {
     key: string;
     value: number;
+}
+
+/**
+ * Socket client
+ */
+export interface ISocketClient extends WebSocket {
+    userId?: string;
 }
