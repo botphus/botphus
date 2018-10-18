@@ -11,13 +11,10 @@ const localeTaskPkg = localePkg.Model.Task;
 
 const schema = new Schema({
     createdUser: {
+        required: [true, `${localePkg.Model.Common.createdUser}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.ObjectId
     },
-    items: {
-        required: [true, `${localeTaskPkg.items}: ${localePkg.Model.requiredError}`],
-        type: Schema.Types.Mixed
-    },
-    memebers: {
+    members: {
         type: [Schema.Types.ObjectId]
     },
     name: {
@@ -31,6 +28,10 @@ const schema = new Schema({
                 validator: 'isLength',
             })
         ]
+    },
+    ruleItems: {
+        required: [true, `${localeTaskPkg.ruleItems}: ${localePkg.Model.requiredError}`],
+        type: Schema.Types.Mixed
     }
 });
 

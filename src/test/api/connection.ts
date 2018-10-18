@@ -48,7 +48,7 @@ export default function() {
                 })
                 .end(done);
         });
-        it('Get user data', (done) => {
+        it('Get connection data', (done) => {
             client.get(`/api/connection/profile/?id=${connectionId}`)
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)
@@ -80,6 +80,20 @@ export default function() {
                 })
                 .end(done);
         });
+        it('Get connection data', (done) => {
+            client.get(`/api/connection/profile/?id=${connectionId}`)
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.name === connectionName);
+                    assert(res.body.data.type === ConnectionType.REDIS);
+                    assert(res.body.data.config.host === connectionRedisConfig.host);
+                    assert(res.body.data.config.port === connectionRedisConfig.port);
+                })
+                .end(done);
+        });
         it('Modify data to redis cluster config', (done) => {
             client.patch('/api/connection/')
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
@@ -93,6 +107,22 @@ export default function() {
                 .expect((res: IRequestData) => {
                     assertResMessage(res);
                     assert(!res.body.data);
+                })
+                .end(done);
+        });
+        it('Get connection data', (done) => {
+            client.get(`/api/connection/profile/?id=${connectionId}`)
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.name === connectionName);
+                    assert(res.body.data.type === ConnectionType.REDIS);
+                    assert(res.body.data.config.length === connectionRedisClusterConfig.length);
+                    assert(connectionRedisClusterConfig.every((item, index) => {
+                        return item.host === res.body.data.config[index].host && item.port === res.body.data.config[index].port;
+                    }));
                 })
                 .end(done);
         });

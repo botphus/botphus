@@ -81,6 +81,9 @@ export function escapeCharacter(str: string): string {
  * @return {any}      Escaped data
  */
 export function escapeData(data: any): any {
+    if (!data) {
+        return data;
+    }
     // Check array
     if (Array.isArray(data)) {
         return data.map(escapeData);

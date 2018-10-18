@@ -5,7 +5,7 @@ import {localePkg} from '../modules/util';
 import {modifyDate} from './base_model';
 
 import {ITaskFlowModel} from '../interfaces/model';
-import {urlLength} from '../types/rules';
+import {strLength, urlLength} from '../types/rules';
 
 const localeTaskFlowPkg = localePkg.Model.TaskFlow;
 
@@ -20,6 +20,17 @@ const schema = new Schema({
     mysqlId: {
         type: Schema.Types.ObjectId
     },
+    name: {
+        required: [true, `${localeTaskFlowPkg.name}: ${localePkg.Model.requiredError}`],
+        type: String,
+        validate: [
+            validate({
+                arguments: strLength,
+                message: `${localeTaskFlowPkg.name}: ${localePkg.Model.lengthError}`,
+                validator: 'isLength',
+            })
+        ]
+    },
     pageType: {
         required: [true, `${localeTaskFlowPkg.pageType}: ${localePkg.Model.requiredError}`],
         type: Number
@@ -28,7 +39,6 @@ const schema = new Schema({
         type: Schema.Types.ObjectId
     },
     startPage: {
-        required: [true, `${localeTaskFlowPkg.startPage}: ${localePkg.Model.requiredError}`],
         type: String,
         validate: [
             validate({

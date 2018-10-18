@@ -28,5 +28,14 @@ export const userPermissionMap: {
     'post:/connection/': UserPermissionCode.SYSTEM,
     'patch:/connection/': UserPermissionCode.SYSTEM,
     'get:/connection/': UserPermissionCode.LOGIN,
-    'get:/connection/profile/': UserPermissionCode.LOGIN
+    'get:/connection/profile/': UserPermissionCode.LOGIN,
+    // Task
+    'post:/task/': UserPermissionCode.TASK_MANAGE,
+    'patch:/task/': UserPermissionCode.TASK_MANAGE,
+    'get:/task/': UserPermissionCode.LOGIN,
+    'get:/task/profile/': UserPermissionCode.LOGIN,
+    // Task follow
+    'post:/task-follow/': UserPermissionCode.TASK_FLOW,
+    'get:/task-follow/': UserPermissionCode.TASK_FLOW,
+    'get:/task-follow/profile/': UserPermissionCode.TASK_FLOW,
 };

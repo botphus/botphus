@@ -1,5 +1,7 @@
 import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
+import {emailLength, strLength} from '../types/rules';
+
 /**
  * Search schema
  * @type {Object}
@@ -8,12 +10,16 @@ export const searchSchema = {
     properties: Object.assign({
         email: {
             format: 'email',
+            maxLength: emailLength[1],
+            minLength: emailLength[0],
             type: 'string'
         },
         enable: {
-            type: 'string'
+            type: 'boolean'
         },
         nickname: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         }
     }, pageInfo),
@@ -28,12 +34,18 @@ export const createSchema = {
     properties: {
         email: {
             format: 'email',
+            maxLength: emailLength[1],
+            minLength: emailLength[0],
             type: 'string'
         },
         nickname: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         },
         password: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         },
         permission: {
@@ -52,9 +64,13 @@ export const loginSchema = {
     properties: {
         email: {
             format: 'email',
+            maxLength: emailLength[1],
+            minLength: emailLength[0],
             type: 'string'
         },
         password: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         }
     },
@@ -70,15 +86,21 @@ export const modifySchema = {
     properties: Object.assign({
         email: {
             format: 'email',
+            maxLength: emailLength[1],
+            minLength: emailLength[0],
             type: 'string'
         },
         enable: {
             type: 'boolean'
         },
         nickname: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         },
         password: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         },
         permission: {

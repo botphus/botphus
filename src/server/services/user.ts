@@ -2,9 +2,8 @@ import {Schema} from 'mongoose';
 
 import {User} from '../models/';
 
-import {IUserCreateModel, IUserModel, IUserModifyModel, IUserSearchModel} from '../interfaces/model';
+import {IUserCreateModel, IUserModel, IUserModifyModel, IUserReferMap, IUserSearchModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
-import {emailLength, strLength} from '../types/rules';
 import {UserPermissionCode} from '../types/user';
 
 import {checkUserPermission, createSystemError, localePkg, translatePassword} from '../modules/util';
@@ -17,11 +16,11 @@ const defaultFields: string = '_id email nickname permission';
 
 /**
  * Query user's info by user ID
- * @param  {Schema.Types.ObjectId} userId User ID
- * @param  {string}                fields Field list
- * @return {Promise<IUserModel>}          Promise with user info
+ * @param  {string}              userId User ID
+ * @param  {string}              fields Field list
+ * @return {Promise<IUserModel>}        Promise with user info
  */
-export function queryUserById(userId: Schema.Types.ObjectId, fields: string = defaultFields): Promise<IUserModel> {
+export function queryUserById(userId: string, fields: string = defaultFields): Promise<IUserModel> {
     return User.findById(userId, fields).exec();
 }
 
@@ -35,8 +34,25 @@ export function queryUserByIds(userIds: Schema.Types.ObjectId[], fields: string 
     return User.find({
         _id: {
             $in: userIds
-        }
+        },
+        enable: true
     }, fields).exec();
+}
+
+/**
+ * Query user's info by user ID, and rebuild with map
+ * @param  {Schema.Types.ObjectId[]} userIds User ID list
+ * @return {Promise<IUserReferMap>}          User refer map
+ */
+export function queryUserByIdsWithReferMap(userIds: Schema.Types.ObjectId[]): Promise<IUserReferMap> {
+    return queryUserByIds(userIds, '_id nickname')
+        .then((users) => {
+            const userReferMap: IUserReferMap = {};
+            users.forEach((user) => {
+                userReferMap[user._id] = user;
+            });
+            return userReferMap;
+        });
 }
 
 /**
@@ -72,12 +88,12 @@ export function queryUserTotalCount(): Promise<number> {
  */
 export function queryUserList(query: IUserSearchModel, page: number, pageSize: number, fields: string = defaultFields): Promise<[number, IUserModel[]]> {
     const condition: any = {};
-    if (query.nickname && query.nickname.length >= strLength[0] && query.nickname.length <= strLength[0]) {
+    if (query.nickname) {
         condition.nickname = {
             $regex: query.nickname
         };
     }
-    if (query.email && query.email.length >= emailLength[0] && query.email.length <= emailLength[0]) {
+    if (query.email) {
         condition.email = query.email;
     }
     if (typeof query.enable === 'boolean') {
@@ -140,13 +156,13 @@ export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
 
 /**
  * Modify user's data by user id
- * @param  {Schema.Types.ObjectId} userId   User ID
- * @param  {IUserModifyModel}      userData Update user data
- * @return {Promise<IUserModel>}            Promise with user info
+ * @param  {string}              userId   User ID
+ * @param  {string}              userData Update user data
+ * @return {Promise<IUserModel>}          Promise with user info
  */
-export function modifyUserById(userId: Schema.Types.ObjectId, modifyUserId: Schema.Types.ObjectId, modifyUserPermission: number, userData: IUserModifyModel): Promise<IUserModel> {
+export function modifyUserById(userId: string, modifyUserId: string, modifyUserPermission: number, userData: IUserModifyModel): Promise<any> {
     // Check permission for profile edit & special field
-    if ((modifyUserId !== userId || userData.permission || userData.enable) && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
+    if ((modifyUserId.toString() !== userId || userData.permission || userData.enable) && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
         return Promise.reject(createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN));
     }
     // Update password

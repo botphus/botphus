@@ -1,6 +1,7 @@
 import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
 import {ConnectionType} from '../types/connection';
+import {strLength} from '../types/rules';
 
 import {getNumEnumsList} from '../modules/util';
 
@@ -11,9 +12,14 @@ import {getNumEnumsList} from '../modules/util';
 export const searchSchema = {
     properties: Object.assign({
         name: {
+            maxLength: strLength[1],
+            minLength: strLength[0],
             type: 'string'
         },
         type: {
+            enum: getNumEnumsList(ConnectionType).map((item) => {
+                return item.value;
+            }),
             type: 'string'
         }
     }, pageInfo),
@@ -24,7 +30,7 @@ export const searchSchema = {
  * Config list for oneof
  * @type {Array}
  */
-const configList = [
+const configItemList = [
     // Mysql
     {
         properties: {
@@ -35,9 +41,12 @@ const configList = [
                 type: 'string'
             },
             password: {
+                maxLength: strLength[1],
                 type: 'string'
             },
             user: {
+                maxLength: strLength[1],
+                minLength: strLength[0],
                 type: 'string'
             }
         },
@@ -76,14 +85,16 @@ const configList = [
 ];
 
 /**
- * Create props
+ * Base props
  * @type {Object}
  */
 const baseProperties = {
     config: {
-        oneOf: configList,
+        oneOf: configItemList,
     },
     name: {
+        maxLength: strLength[1],
+        minLength: strLength[0],
         type: 'string'
     },
     type: {
@@ -94,14 +105,22 @@ const baseProperties = {
     }
 };
 
+/**
+ * Create schema
+ * @type {Object}
+ */
 export const createSchema = {
     properties: baseProperties,
     required: ['name', 'type', 'config'],
     type: 'object'
 };
 
+/**
+ * Modify schema
+ * @type {Object}
+ */
 export const modifySchema = {
     properties: Object.assign({}, baseProperties, modifyCommonSchema),
-    required: ['name', 'type', 'config'].concat(modifyCommonRequiredField),
+    required: ['type', 'config'].concat(modifyCommonRequiredField),
     type: 'object'
 };

@@ -37,11 +37,12 @@ export default interface ILocalePackage {
         // Task fields name
         Task: {
             name: string;
-            memebers: string;
-            items: string;
+            members: string;
+            ruleItems: string;
         };
         // Task flow fields name
         TaskFlow: {
+            name: string;
             startPage: string;
             pageType: string;
             mysqlId: string;
@@ -59,6 +60,9 @@ export default interface ILocalePackage {
     };
     // Service Error
     Service: {
+        Common: {
+            visitForbidden: string;
+        };
         Install: {
             installClose: string;
         };
@@ -66,6 +70,7 @@ export default interface ILocalePackage {
         User: {
             loginError: string;
         };
+        // Connection info
         Connection: {
             configValidError: string;
         };

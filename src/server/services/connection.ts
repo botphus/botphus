@@ -4,7 +4,6 @@ import {Connection} from '../models/';
 
 import {IConnectionBaseModel, IConnectionModel, IConnectionSearchModel} from '../interfaces/model';
 import {ConnectionType} from '../types/connection';
-import {strLength} from '../types/rules';
 
 import {createSystemError, localePkg} from '../modules/util';
 
@@ -61,7 +60,7 @@ export function queryConnectionById(connectionId: Schema.Types.ObjectId, fields:
  */
 export function queryConnectionList(query: IConnectionSearchModel, page: number, pageSize: number, fields: string = defaultFields): Promise<[number, IConnectionBaseModel[]]> {
     const condition: any = {};
-    if (query.name && query.name.length >= strLength[0] && query.name.length <= strLength[0]) {
+    if (query.name) {
         condition.name = {
             $regex: query.name
         };
@@ -97,7 +96,7 @@ export function createConnection(connectionData: IConnectionBaseModel): Promise<
  * @param  {IConnectionBaseModel}          connectionData Connection data
  * @return {Promise<IConnectionBaseModel>}              Promise with connection Info
  */
-export function modifyConnectionById(connectionId: Schema.Types.ObjectId, connectionData: IConnectionBaseModel): Promise<IConnectionBaseModel> {
+export function modifyConnectionById(connectionId: Schema.Types.ObjectId, connectionData: IConnectionBaseModel): Promise<any> {
     // @ts-ignore:next
     return validConnectionConfig(connectionData)
         .then(() => {

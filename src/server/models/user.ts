@@ -44,7 +44,14 @@ const schema = new Schema({
     },
     password: {
         required: [true, `${localeUserPkg.password}: ${localePkg.Model.requiredError}`],
-        type: String
+        type: String,
+        validate: [
+            validate({
+                arguments: strLength,
+                message: `${localeUserPkg.nickname}: ${localePkg.Model.lengthError}`,
+                validator: 'isLength',
+            })
+        ]
     },
     permission: {
         default: 0,

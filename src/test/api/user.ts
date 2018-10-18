@@ -2,6 +2,7 @@ import {Schema} from 'mongoose';
 import * as assert from 'power-assert';
 import * as request from 'supertest';
 
+import {UserPermissionCode} from '../../server/types/user';
 import {IRequestData} from '../interfaces';
 
 import {sessionReg, testAdminEmail, testAdminNickname, testEmail, testEmail2, testNickname, testPwd} from '../const';
@@ -62,7 +63,8 @@ export default function() {
                 .send({
                     email: testEmail,
                     nickname: testNickname,
-                    password: testPwd
+                    password: testPwd,
+                    permission: UserPermissionCode.TASK_FLOW
                 })
                 .expect(200)
                 .expect((res: IRequestData) => {
@@ -127,7 +129,7 @@ export default function() {
                 .end(done);
         });
         it('Get user list', (done) => {
-            client.get(`/api/user/`)
+            client.get('/api/user/')
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .expect(200)
                 .expect((res: IRequestData) => {

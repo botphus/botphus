@@ -34,10 +34,11 @@ const localeData: ILocalePackage = {
         },
         Task: {
             name: '名称',
-            memebers: '成员',
-            items: '规则列表'
+            members: '成员',
+            ruleItems: '规则列表'
         },
         TaskFlow: {
+            name: '名称',
             startPage: '起始页',
             pageType: '页面类型',
             mysqlId: 'MYSQL配置',
@@ -53,6 +54,9 @@ const localeData: ILocalePackage = {
         }
     },
     Service: {
+        Common: {
+            visitForbidden: '你没有权限查询/操作该数据'
+        },
         Install: {
             installClose: '已经不能进行安装'
         },

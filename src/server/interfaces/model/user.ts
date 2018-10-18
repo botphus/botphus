@@ -1,4 +1,4 @@
-import {Document} from 'mongoose';
+import {Document, Schema} from 'mongoose';
 /**
  * User model
  */
@@ -8,6 +8,21 @@ export interface IUserModel extends Document {
     permission: number; // Binary digit, like 0b010,0b001, set user type: permission
     password: string;
     enable: boolean;
+}
+
+/**
+ * User refer model
+ */
+export interface IUserReferModel {
+    _id: Schema.Types.ObjectId;
+    nickname: string;
+}
+
+/**
+ * User refer map
+ */
+export interface IUserReferMap {
+    [index: string]: IUserReferModel;
 }
 
 /**

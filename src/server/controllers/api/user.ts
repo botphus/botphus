@@ -44,7 +44,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
             .then((user) => {
                 request.session.user = {
                     email: user.email,
-                    id: user._id,
+                    id: user._id.toString(),
                     nickname: user.nickname,
                     permission: user.permission
                 };

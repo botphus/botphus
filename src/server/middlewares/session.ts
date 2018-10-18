@@ -47,7 +47,8 @@ export function init(request: IAppRequest, _reply: IAppReply, next: (err?: Error
                 next();
             })
             .catch((err) => {
-                request.log.warn('Get cookie data to redis error', err);
+                request.log.warn('Get cookie data to redis error');
+                request.log.warn(err);
                 request.session = generate();
                 next();
             });
@@ -80,7 +81,8 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
             next();
         })
         .catch((err) => {
-            request.log.warn('Save cookie data to redis error', err);
+            request.log.warn('Save cookie data to redis error');
+            request.log.warn(err);
             next();
         });
 }
@@ -99,7 +101,8 @@ export function clear(request: IAppRequest, reply: IAppReply, next: (err?: Error
             next();
         })
         .catch((err) => {
-            request.log.warn('Delete cookie data to redis error', err);
+            request.log.warn('Delete cookie data to redis error');
+            request.log.warn(err);
             next();
         });
 }
