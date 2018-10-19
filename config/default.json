@@ -1,4 +1,6 @@
 {
+    "title": "Botphus manangement site",
+    "templateCache": false,
     "port": 8080,
     "locale": "zh_CN",
     "logPath": "/var/log/botphus/",

@@ -81,4 +81,10 @@ export default interface ILocalePackage {
         requiredError: string;
         commonError: string;
     };
+    // Client
+    Client: {
+        Title: {
+            Install: string;
+        };
+    };
 }

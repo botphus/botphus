@@ -30,6 +30,8 @@ export interface ISystemError extends Error {
  * Botphus system config
  */
 export interface ISystemConfig {
+    title: string; // Site title
+    templateCache: string; // Template cache
     port: number; // Server listen port;
     locale: string; // Locale package name for site & antd, check detail: https://ant.design/docs/react/i18n-cn & locale dir: "/src/server/locale"
     // Logger
@@ -42,7 +44,7 @@ export interface ISystemConfig {
     redisNamespace: string; // redis key namespace
     db: string; // Mongoose setting, check detail: https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect
     // Socket
-    socket: 'local' | string; // Socket url
+    socket: 'local' | string; // Socket url, local or full socket server path
     socketPort: number; // Socket port, will use when socket is "local"
     // Salt
     serverSalt: string; // Password salt for server sign

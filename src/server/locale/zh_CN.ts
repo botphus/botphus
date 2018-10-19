@@ -71,6 +71,11 @@ const localeData: ILocalePackage = {
         typeError: '不合规的类型',
         requiredError: '缺少必填项',
         commonError: '数据不合规'
+    },
+    Client: {
+        Title: {
+            Install: '创建管理员帐号'
+        }
     }
 };
 
