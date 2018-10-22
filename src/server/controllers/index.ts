@@ -7,13 +7,14 @@ import getTemplate from '../modules/template';
 
 import {checkInstallStatus} from '../services/install';
 
-function renderData(_request: IAppRequest, reply: IAppReply) {
+function renderData(request: IAppRequest, reply: IAppReply) {
     reply.header('Content-Type', 'text/html; charset=utf-8');
     return getTemplate().then((template) => {
         reply.send(template({
             salt: config.clientSalt,
             socketServer: config.socket === 'local' ? config.socketPort : config.socket,
             title: config.title,
+            user: JSON.stringify(request.session && request.session.user ? request.session.user : {})
         }));
     });
 }
@@ -24,12 +25,25 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         return checkInstallStatus()
         .then((closeInstall) => {
             if (closeInstall) {
-                return reply.redirect(301, 'client');
+                return reply.redirect(301, '/login/');
             }
             reply.redirect(302, '/install/');
         });
     });
-    app.get('/client/*', renderData);
+    app.get('/dashboard/*', (request: IAppRequest, reply: IAppReply) => {
+        if (!(request.session && request.session.user && request.session.user.id)) {
+            reply.redirect(302, '/login/');
+            return;
+        }
+        return renderData(request, reply);
+    });
+    app.get('/login/', (request: IAppRequest, reply: IAppReply) => {
+        if (request.session && request.session.user && request.session.user.id) {
+            reply.redirect(302, '/dashboard/');
+            return;
+        }
+        return renderData(request, reply);
+    });
     app.get('/install/', renderData);
     next();
 };

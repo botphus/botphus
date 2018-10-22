@@ -30,6 +30,9 @@ module.exports = {
         // Add `.ts` and `.tsx` as a resolvable extension.
         extensions: [".ts", ".tsx", ".js"]
     },
+    externals:{
+        user: 'user'
+    },
     module: {
         rules: [
             {
@@ -42,7 +45,7 @@ module.exports = {
                         before: [ tsImportPluginFactory({
                             libraryDirectory: 'es',
                             libraryName: 'antd',
-                            style: 'css',
+                            style: true,
                         })]
                     })
                 }
@@ -79,6 +82,7 @@ module.exports = {
             }
         }),
         new HtmlWebpackPlugin({
+            chunksSortMode: 'none',
             inject: false,
             filename: '../views/index.html',
             template: './client/views/index.html'

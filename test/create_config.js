@@ -1,5 +1,14 @@
 'use strict';
-const fs = require('fs-extra');
+const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 
-fs.copySync(path.join(__dirname, './override.json'), path.join(__dirname, '../config/override.json'));
+const overridePath = path.join(__dirname, '../config/override.json');
+const overrideBackupPath = path.join(__dirname, '../config/override.json.bak');
+
+// If override has been existed, rename it
+if (fs.existsSync(overridePath) && !fs.existsSync(overrideBackupPath)) {
+    fse.moveSync(overridePath, overrideBackupPath);
+}
+
+fse.copySync(path.join(__dirname, './override.json'), overridePath);

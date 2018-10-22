@@ -1,0 +1,92 @@
+@import './variables.less';
+html,body,.app,.app-layout,.app-layout>.ant-layout{
+    height: 100%;
+}
+
+// APP
+.app-layout, .app-welcome {
+    height: 100%;
+}
+.app {
+    &>.ant-spin-nested-loading {
+        height: 100%;
+        &>.ant-spin-container {
+            height: 100%;
+        }
+    }
+}
+.app-page-loading {
+    text-align: center;
+    animation: shaking 4s infinite linear;
+    .loading {
+        font-size: 4em;
+    }
+}
+.app-tip {
+    text-align: center;
+    .icon {
+        font-size: 4em;
+    }
+    .text {
+        font-size: 2em;
+    }
+}
+.app-sidebar {
+    color: #FFF;
+    .logo {
+        background: rgba(255,255,255,.2);
+        line-height: 40px;
+        margin: 15px;
+        border-radius: 5px;
+        font-size: 1.5em;
+        text-align: center;
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: url('../images/logo.png');
+            vertical-align: text-top;
+        }
+    }
+}
+
+// Other App style
+a.ant-btn{
+    line-height: @btn-height-base;
+}
+a.ant-btn-lg{
+    line-height: @btn-height-lg;
+}
+a.ant-btn-sm{
+    line-height: @btn-height-sm;
+}
+
+.ant-advanced-search-form {
+    margin: 10px 0;
+    padding: 10px;
+    background: #FBFBFB;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+}
+
+// Anime
+@keyframes shaking {
+    @number-opacity: 0.2;
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: @number-opacity;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: @number-opacity;
+    }
+    100% {
+        opacity: 1;
+    }
+}

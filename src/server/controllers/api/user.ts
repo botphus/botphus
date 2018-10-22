@@ -48,7 +48,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
                     nickname: user.nickname,
                     permission: user.permission
                 };
-                reply.send(getHttpMsg(request, null));
+                reply.send(getHttpMsg(request, request.session.user));
             });
     });
     // User logout

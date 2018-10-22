@@ -4,13 +4,13 @@ import {connect} from 'react-redux';
 
 import {IModalData, IReduxConnectProps, IReduxStoreState} from '../interfaces/redux';
 
-import {postInstallData} from '../actions/user';
+import {postLoginData} from '../actions/user';
 import {localePkg, welcomePageLayout} from '../lib/const';
 import {routerHistory} from '../router';
 
-import InstallForm from '../components/form/install';
+import LoginForm from '../components/form/login';
 
-interface IInstallProps extends IReduxConnectProps {
+interface ILoginProps extends IReduxConnectProps {
     modal: IModalData;
 }
 
@@ -20,14 +20,14 @@ function mapStateToProps({modal}: IReduxStoreState) {
     };
 }
 
-class InstallPage extends React.Component<IInstallProps> {
+class LoginPage extends React.Component<ILoginProps> {
     public render() {
         const {modal} = this.props;
         return (
             <Row className="app-welcome" type="flex" align="middle" justify="center">
                 <Col {...welcomePageLayout}>
-                    <Card title={localePkg.Client.Title.Install}>
-                        <InstallForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} />
+                    <Card title={localePkg.Client.Title.Login}>
+                        <LoginForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} />
                     </Card>
                 </Col>
             </Row>
@@ -35,10 +35,10 @@ class InstallPage extends React.Component<IInstallProps> {
     }
     private handleSubmit = (data) => {
         const {dispatch} = this.props;
-        dispatch(postInstallData(data, () => {
-            routerHistory.push('/login/');
+        dispatch(postLoginData(data, () => {
+            routerHistory.push('/dashboard/');
         }));
     }
 }
 
-export default connect(mapStateToProps)(InstallPage);
+export default connect(mapStateToProps)(LoginPage);

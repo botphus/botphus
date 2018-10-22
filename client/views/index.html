@@ -8,6 +8,9 @@
 </head>
 <body>
     <div id="app" class="app" data-salt="{{salt}}" data-socket="{{socketServer}}"></div>
+    <script type="text/javascript">
+        const user = {{{user}}};
+    </script>
     <% for (let js in htmlWebpackPlugin.files.js) { %>
     <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
     <% } %>

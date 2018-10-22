@@ -1,4 +1,4 @@
-import { Layout, LocaleProvider } from 'antd';
+import { LocaleProvider } from 'antd';
 import {createBrowserHistory} from 'history';
 import * as React from 'react';
 import {Provider} from 'react-redux';
@@ -15,21 +15,29 @@ import store from './store';
 
 export const routerHistory = createBrowserHistory();
 
-import NotFound from './pages/not_found';
+import LayoutPage from './pages/layout';
+import LayoutDashboardPage from './pages/layout_dashboard';
+import NotFoundPage from './pages/not_found';
 
 import asyncLoadComponent from './components/page_loader';
 
 export default (
     <LocaleProvider locale={localeAntd}>
         <Provider store={store}>
-            <Router history={routerHistory}>
-                <Layout className="app-layout">
+            <LayoutPage>
+                <Router history={routerHistory}>
                     <Switch>
                         <Route path="/install/" component={asyncLoadComponent('install')} />
-                        <Route component={NotFound} />
+                        <Route path="/login/" component={asyncLoadComponent('login')} />
+                        <LayoutDashboardPage>
+                            <Switch>
+                                <Route component={NotFoundPage} />
+                            </Switch>
+                        </LayoutDashboardPage>
+                        <Route component={NotFoundPage} />
                     </Switch>
-                </Layout>
-            </Router>
+                </Router>
+            </LayoutPage>
         </Provider>
     </LocaleProvider>
 );

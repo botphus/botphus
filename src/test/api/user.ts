@@ -45,7 +45,10 @@ export default function() {
                     assertResMessage(res);
                     assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
                     cookieKey = res.header['set-cookie'][0].replace(sessionReg, '$1');
-                    assert(!res.body.data);
+                    assert(res.body.data);
+                    assert(res.body.data.id === adminUserId);
+                    assert(res.body.data.email === testAdminEmail);
+                    assert(res.body.data.nickname === testAdminNickname);
                 })
                 .end(done);
         });
@@ -98,7 +101,10 @@ export default function() {
                 .expect((res: IRequestData) => {
                     assertResMessage(res);
                     assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
-                    assert(!res.body.data);
+                    assert(res.body.data);
+                    assert(res.body.data.id === createUserId);
+                    assert(res.body.data.email === testEmail2);
+                    assert(res.body.data.nickname === testNickname);
                 })
                 .end(done);
         });

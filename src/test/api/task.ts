@@ -29,7 +29,7 @@ export default function() {
                         assertResMessage(res);
                         assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
                         cookieKey = res.header['set-cookie'][0].replace(sessionReg, '$1');
-                        assert(!res.body.data);
+                        assert(res.body.data);
                     })
                     .end((err) => {
                         if (err) {

@@ -1,27 +1,30 @@
-import { Dispatch } from 'react-redux';
-
-import {ActionType} from '../types/action';
+import {FormComponentProps} from 'antd/lib/form/Form';
 
 /**
- * Action data
+ * Form Props
  */
-export interface IActionData<T = any> {
-    type: ActionType;
-    data?: T;
-}
-
-/**
- * Model data
- * @type {Object}
- */
-export interface IModelData {
+export interface IFormProps extends FormComponentProps {
     loading: boolean;
-    loadingForm: boolean;
-    loadingPage: boolean;
-    loadingTable: boolean;
-    pageWarn: string;
+    defaultValue: {
+        [index: string]: any
+    };
+    onSubmit: (data: any) => void;
 }
 
-export interface IReduxConnectProps {
-    dispath: Dispatch<IActionData>;
+/**
+ * Form Error message valid fields
+ */
+/**
+ * Reqired
+ */
+export interface IFormErrorMsgRequiredFields {
+    type: 'required';
+}
+
+/**
+ * Length
+ */
+export interface IFormErrorMsgLengthFields {
+    type: 'length';
+    args: [number, number];
 }

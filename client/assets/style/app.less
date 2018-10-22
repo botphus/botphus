@@ -3,56 +3,7 @@ html,body,.app,.app-layout,.app-layout>.ant-layout{
     height: 100%;
 }
 
-// APP
-.app-welcome {
-    height: 100%;
-    .loading {
-        font-size: 50px;
-    }
-}
-.app-page-loading {
-    text-align: center;
-    animation: shaking 4s infinite linear;
-}
-
-// Other App style
-a.ant-btn{
-    line-height: @btn-height-base;
-}
-a.ant-btn-lg{
-    line-height: @btn-height-lg;
-}
-a.ant-btn-sm{
-    line-height: @btn-height-sm;
-}
-
-.ant-advanced-search-form {
-    margin: 10px 0;
-    padding: 10px;
-    background: #FBFBFB;
-    border: 1px solid #D9D9D9;
-    border-radius: 4px;
-}
-
-// Anime
-@keyframes shaking {
-    @number-opacity: 0.2;
-    0% {
-        opacity: 1;
-    }
-    25% {
-        opacity: @number-opacity;
-    }
-    50% {
-        opacity: 1;
-    }
-    75% {
-        opacity: @number-opacity;
-    }
-    100% {
-        opacity: 1;
-    }
-}
+@import './page.less';
 
 // Text align & size
 .text-left{

@@ -77,7 +77,9 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
     const data = JSON.stringify(request.session);
     cache.set(getRedisKey(id), data, 'EX', sessionRedisExpire)
         .then(() => {
-            reply.setCookie(sessionCookieKey, id);
+            reply.setCookie(sessionCookieKey, id, {
+                path: '/'
+            });
             next();
         })
         .catch((err) => {
@@ -96,7 +98,8 @@ export function clear(request: IAppRequest, reply: IAppReply, next: (err?: Error
         .then(() => {
             reply.setCookie(sessionCookieKey, '', {
                 expires: new Date(),
-                maxAge: 0
+                maxAge: 0,
+                path: '/'
             });
             next();
         })

@@ -1,13 +1,19 @@
+import {Col, Icon, Row} from 'antd';
 import * as React from 'react';
 
-class NotFound extends React.Component {
+import {welcomePageLayout} from '../lib/const';
+
+class NotFoundPage extends React.Component {
     public render() {
         return (
-            <div>
-                Not Found
-            </div>
+            <Row className="app-welcome app-tip" type="flex" align="middle" justify="center">
+                <Col {...welcomePageLayout}>
+                    <div className="icon"><Icon type="stop" theme="outlined" /></div>
+                    <p className="m-t text">404 NOT FOUND</p>
+                </Col>
+            </Row>
         );
     }
 }
 
-export default NotFound;
+export default NotFoundPage;

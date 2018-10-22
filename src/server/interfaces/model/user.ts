@@ -1,4 +1,5 @@
 import {Document, Schema} from 'mongoose';
+
 /**
  * User model
  */

@@ -1,8 +1,9 @@
 // Import action
-import {IActionData, IModelData} from '../interfaces/common';
-import {ActionType} from '../types/action';
+import {IActionData, IModalData} from '../interfaces/redux';
 
-const INIT_STATE: IModelData = {
+import {ActionType} from '../types/redux';
+
+const INIT_STATE: IModalData = {
     loading: false, // Fetch data loading
     loadingForm: false, // Form submit loading
     loadingPage: false, // Page change loading
@@ -10,7 +11,7 @@ const INIT_STATE: IModelData = {
     pageWarn: '' // page warn
 };
 
-export default function(state = INIT_STATE, action: IActionData<IModelData>) {
+export default function(state = INIT_STATE, action: IActionData<IModalData>) {
     switch (action.type) {
     case ActionType.UPDATE_MODAL:
         return Object.assign({}, state, action.data);

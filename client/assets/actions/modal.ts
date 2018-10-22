@@ -1,12 +1,13 @@
-import {IActionData, IModelData} from '../interfaces/common';
-import {ActionType} from '../types/action';
+import {IActionData, IModalUpdateData} from '../interfaces/redux';
+import {ActionType} from '../types/redux';
 
 // actions
 /**
  * Update model data
- * @param {IModelData} data Update data
+ * @param  {IModalUpdateData}              data Update data
+ * @return {IActionData<IModalUpdateData>}      Action
  */
-export function updateModel(data: IModelData): IActionData<IModelData> {
+export function updateModel(data: IModalUpdateData): IActionData<IModalUpdateData> {
     return {
         data,
         type: ActionType.UPDATE_MODAL

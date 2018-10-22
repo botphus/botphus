@@ -8,9 +8,9 @@ import {ConnectionType} from '../../types/connection';
  * Connection base model
  */
 export interface IConnectionBaseModel extends Document {
-    name: string;
-    type: ConnectionType;
-    config: ConnectionConfig | RedisOptions | NodeConfiguration[];
+    name?: string;
+    type?: ConnectionType;
+    config?: ConnectionConfig | RedisOptions | NodeConfiguration[];
 }
 
 /**

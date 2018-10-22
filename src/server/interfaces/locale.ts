@@ -83,8 +83,24 @@ export default interface ILocalePackage {
     };
     // Client
     Client: {
+        Common: {
+            submitOk: string;
+        };
         Title: {
             Install: string;
+            Login: string;
+            Connection: string;
+            Task: string;
+            TaskFlow: string;
+            TaskReport: string;
+            User: string;
+        };
+        Desc: {
+            Connection: string;
+            Task: string;
+            TaskFlow: string;
+            TaskReport: string;
+            User: string;
         };
     };
 }
