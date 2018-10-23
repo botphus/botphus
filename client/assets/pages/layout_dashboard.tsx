@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
 const {Sider, Content} = Layout;
 
-import {IContentData, IReduxConnectProps, IReduxStoreState} from '../interfaces/redux';
+import {IReduxConnectProps, IReduxStoreState, IUserContentData} from '../interfaces/redux';
 import {UserPermissionCode} from '../types/common';
 
 import {postLogout} from '../actions/user';
@@ -13,7 +13,7 @@ import {checkUserPermission} from '../lib/util';
 import {routerHistory} from '../router';
 
 interface ILayoutDashboardPage extends IReduxConnectProps {
-    user: IContentData;
+    user: IUserContentData;
     children?: React.ReactChild;
 }
 
@@ -34,9 +34,9 @@ class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteCo
                         <Link to="/dashboard/"><span className="text">{localePkg.Client.Title.Home}</span></Link>
                     </div>
                     <div className="user-profile">
-                        <a onClick={this.handleLogout} className="logout"><Icon type="logout" theme="outlined" /></a>
+                        <a onClick={this.handleLogout} className="logout"><Icon type="logout" theme="outlined" title={localePkg.Client.Action.logout} /></a>
                         <div className="nickname">
-                            {user.detail.nickname}
+                            {user.owner.nickname}
                         </div>
                     </div>
                     <Menu theme="dark" onClick={this.handleClickMenu} selectedKeys={curKey ? [curKey[1]] : []}>
@@ -44,25 +44,25 @@ class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteCo
                             <Icon type="user" theme="outlined" />
                             <span className="title">{localePkg.Client.Title.Profile}</span>
                         </Menu.Item>
-                        {checkUserPermission(user.detail.permission, UserPermissionCode.SYSTEM) ? (
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.SYSTEM) ? (
                             <Menu.Item key="user">
                                 <Icon type="usergroup-add" theme="outlined" />
                                 <span className="title">{localePkg.Client.Title.User}</span>
                             </Menu.Item>
                         ) : null}
-                        {checkUserPermission(user.detail.permission, UserPermissionCode.SYSTEM) ? (
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.SYSTEM) ? (
                             <Menu.Item key="connection">
                                 <Icon type="link" theme="outlined" />
                                 <span className="title">{localePkg.Client.Title.Connection}</span>
                             </Menu.Item>
                         ) : null}
-                        {checkUserPermission(user.detail.permission, UserPermissionCode.TASK_MANAGE) ? (
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.TASK_MANAGE) ? (
                             <Menu.Item key="task">
                                 <Icon type="hdd" theme="outlined" />
                                 <span className="title">{localePkg.Client.Title.Task}</span>
                             </Menu.Item>
                         ) : null}
-                        {checkUserPermission(user.detail.permission, UserPermissionCode.TASK_FLOW) ? (
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.TASK_FLOW) ? (
                             <Menu.Item key="task-flow">
                                 <Icon type="code" theme="outlined" />
                                 <span className="title">{localePkg.Client.Title.TaskFlow}</span>

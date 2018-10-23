@@ -94,7 +94,7 @@ class ModifyProfileForm extends React.Component<IFormProps> {
                     )}
                 </Item>
                 <Item className="text-right" {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Common.submitOk}</Button>
+                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Action.modify}</Button>
                 </Item>
             </Form>
         );

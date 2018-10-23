@@ -7,7 +7,7 @@ import {localePkg} from '../../lib/const';
 class NotFoundPage extends React.Component {
     public render() {
         return (
-            <div>
+            <div className="app-dashboard">
                 <h1>{localePkg.Client.Desc.Home}</h1>
                 <Steps progressDot>
                     <Step title={localePkg.Client.Title.Connection} description={localePkg.Client.Desc.Connection} status="finish" />

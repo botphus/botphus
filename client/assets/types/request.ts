@@ -3,5 +3,6 @@ export enum RequestAction {
     'LOGIN' = '/api/user/login/',
     'LOGOUT' = '/api/user/logout/',
     'USER' = '/api/user/',
-    'GET_SELF_PROFILE' = '/api/user/profile/my/'
+    'USER_PROFILE' = '/api/user/profile/',
+    'USER_SELF_PROFILE' = '/api/user/profile/my/'
 }

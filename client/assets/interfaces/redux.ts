@@ -45,6 +45,13 @@ export interface IContentData<T = any> {
 }
 
 /**
+ * User content data
+ */
+export interface IUserContentData extends IContentData {
+    owner: any;
+}
+
+/**
  * Redux connect props
  */
 export interface IReduxConnectProps {

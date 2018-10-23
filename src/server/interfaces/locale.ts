@@ -1,6 +1,15 @@
 export default interface ILocalePackage {
     // locale code name
     locale: string;
+    // Enum
+    Enum: {
+        UserPermissionCode: {
+            'ROOT': string;
+            'SYSTEM': string;
+            'TASK_MANAGE': string;
+            'TASK_FLOW': string;
+        }
+    };
     // System code error message
     SystemCode: {
         success: string;
@@ -84,9 +93,18 @@ export default interface ILocalePackage {
     };
     // Client
     Client: {
-        Common: {
-            submitOk: string;
+        // Action
+        Action: {
+            title: string;
+            create: string;
+            detail: string;
+            modify: string;
+            login: string;
+            logout: string;
+            submit: string;
+            search: string;
         };
+        // Title
         Title: {
             Install: string;
             Login: string;
@@ -98,6 +116,7 @@ export default interface ILocalePackage {
             TaskReport: string;
             User: string;
         };
+        // Description
         Desc: {
             Home: string;
             Connection: string;

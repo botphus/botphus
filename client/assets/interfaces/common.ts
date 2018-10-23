@@ -1,5 +1,7 @@
 import {FormComponentProps} from 'antd/lib/form/Form';
 
+export {INumEnumValue} from '../../../src/server/interfaces/common';
+
 /**
  * Form Props
  */

@@ -33,6 +33,7 @@ export default (
                             <Switch>
                                 <Route exact path="/dashboard/" component={asyncLoadComponent('dashboard/index')}/>
                                 <Route exact path="/dashboard/profile/" component={asyncLoadComponent('dashboard/profile')}/>
+                                <Route exact path="/dashboard/user/" component={asyncLoadComponent('dashboard/user/index')}/>
                                 <Route component={NotFoundPage} />
                             </Switch>
                         </LayoutDashboardPage>

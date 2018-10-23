@@ -58,7 +58,7 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
                 dispatch(updateModel({
                     loadingForm: false
                 }));
-                dispatch(updateUserDetail(res.data));
+                dispatch(updateUserOwner(res.data));
                 if (callback) {
                     callback(res);
                 }
@@ -133,15 +133,42 @@ export function modifyUserData(query: any, callback?: ActionCallbackFunc): Actio
 }
 
 /**
- * Query self data
+ * Query user self data
  * @return {ActionThunkFunc} [description]
  */
-export function querySelfData(): ActionThunkFunc {
+export function queryUserOwnerData(): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
         }));
-        request(RequestAction.GET_SELF_PROFILE)
+        request(RequestAction.USER_SELF_PROFILE)
+            .then((res) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                dispatch(updateUserOwner(res.data));
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
+ * Query user detail data
+ * @param  {string}          userId User ID
+ * @return {ActionThunkFunc}        Thunk fuction
+ */
+export function queryUserDetailData(userId: string): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loading: true
+        }));
+        request(RequestAction.USER_PROFILE, {
+            id: userId
+        })
             .then((res) => {
                 dispatch(updateModel({
                     loading: false
@@ -150,6 +177,30 @@ export function querySelfData(): ActionThunkFunc {
             }).catch((err) => {
                 dispatch(updateModel({
                     loading: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
+ * Query user list data
+ * @return {ActionThunkFunc} [description]
+ */
+export function queryUserListData(query: any): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loadingTable: true
+        }));
+        request(RequestAction.USER, query)
+            .then((res) => {
+                dispatch(updateModel({
+                    loadingTable: false
+                }));
+                dispatch(updateUserList(res.data));
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loadingTable: false
                 }));
                 message.error(err.message);
             });
@@ -197,5 +248,17 @@ export function updateUserDetail(data: any): IActionData {
 export function cleanUserDetail(): IActionData {
     return {
         type: ActionType.CLEAN_USER_DETAIL
+    };
+}
+
+/**
+ * Update user owner info
+ * @param  {Any}         data Update data
+ * @return {IActionData}      Action
+ */
+export function updateUserOwner(data: any): IActionData {
+    return {
+        data,
+        type: ActionType.UPDATE_USER_OWNER,
     };
 }

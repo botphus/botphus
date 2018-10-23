@@ -1,5 +1,8 @@
+import {PaginationConfig} from 'antd/lib/pagination';
 import md5 from 'blueimp-md5';
 
+import {INumEnumValue} from '../interfaces/common';
+import {IContentData} from '../interfaces/redux';
 import {UserPermissionCode} from '../types/common';
 
 import {salt} from './const';
@@ -78,4 +81,35 @@ export function translatePwd(pwd: string): string {
  */
 export function checkUserPermission(userPermission: number, permissionCode: UserPermissionCode): boolean {
     return (userPermission & permissionCode) > 0;
+}
+
+/**
+ * Get page data
+ * @param  {IContentData}     data Content Data
+ * @return {PaginationConfig}      Page config
+ */
+export function getPageData(data: IContentData): PaginationConfig {
+    return {
+        current: data.page,
+        pageSize: data.pageSize,
+        pageSizeOptions: ['10', '50', '100'],
+        showSizeChanger: true,
+        total: data.total,
+    };
+}
+
+/**
+ * Get number enums list
+ * @param  {Object}          enums Enums value
+ * @return {INumEnumValue[]}       Enum List
+ */
+export function getNumEnumsList(enums: any): INumEnumValue[] {
+    return Object.keys(enums).filter((key) => {
+        return typeof key === 'string';
+    }).map((key) => {
+        return {
+            key,
+            value: enums[key]
+        };
+    });
 }

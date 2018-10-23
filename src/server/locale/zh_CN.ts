@@ -3,6 +3,14 @@ import ILocalePackage from '../interfaces/locale';
 /* tslint:disable:object-literal-sort-keys */
 const localeData: ILocalePackage = {
     locale: 'zh-cn',
+    Enum: {
+        UserPermissionCode: {
+            ROOT: '管理员',
+            SYSTEM: '系统配置',
+            TASK_MANAGE: '任务管理',
+            TASK_FLOW: '任务流水执行'
+        }
+    },
     SystemCode: {
         success: '请求成功',
         notFound: '找不到该页面',
@@ -74,8 +82,15 @@ const localeData: ILocalePackage = {
         commonError: '数据不合规'
     },
     Client: {
-        Common: {
-            submitOk: '提交'
+        Action: {
+            title: '操作',
+            create: '创建数据',
+            detail: '详情',
+            modify: '编辑',
+            login: '登录',
+            logout: '登出',
+            submit: '提交',
+            search: '搜索'
         },
         Title: {
             Install: '创建管理员帐号',

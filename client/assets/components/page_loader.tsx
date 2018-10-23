@@ -1,21 +1,7 @@
-import {Col, Icon, Row} from 'antd';
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
 
-import {welcomePageLayout} from '../lib/const';
-
-class Loading extends React.Component {
-    public render() {
-        return (
-            <Row className="app-welcome app-page-loading" type="flex" align="middle" justify="center">
-                <Col {...welcomePageLayout}>
-                    <div><Icon className="loading" type="robot" /></div>
-                    <p className="m-t">LOADING...</p>
-                </Col>
-            </Row>
-        );
-    }
-}
+import Loading from './loading';
 
 /**
  * Load component page
@@ -25,6 +11,8 @@ class Loading extends React.Component {
 export default function asyncLoadComponent(pagePath: string):
 (React.ComponentClass<any> & Loadable.LoadableComponent) | (React.StatelessComponent<any> & Loadable.LoadableComponent) {
     return Loadable({
+        // Complie to es6, so ignore this error
+        // @ts-ignore:next
         loader: () => import(`../pages/${pagePath}`),
         loading: () => <Loading />
     });

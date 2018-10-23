@@ -7,7 +7,7 @@ import {IFormProps} from '../../interfaces/common';
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
 
-class InstallForm extends React.Component<IFormProps> {
+class CreateProfileForm extends React.Component<IFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -95,7 +95,7 @@ class InstallForm extends React.Component<IFormProps> {
                     )}
                 </Item>
                 <Item className="text-right" {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Common.submitOk}</Button>
+                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Action.create}</Button>
                 </Item>
             </Form>
         );
@@ -112,4 +112,4 @@ class InstallForm extends React.Component<IFormProps> {
     }
 }
 
-export default Form.create()(InstallForm);
+export default Form.create()(CreateProfileForm);
