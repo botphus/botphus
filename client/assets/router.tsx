@@ -1,8 +1,8 @@
-import { LocaleProvider } from 'antd';
+import {LocaleProvider} from 'antd';
 import {createBrowserHistory} from 'history';
 import * as React from 'react';
 import {Provider} from 'react-redux';
-import { Route, Router, Switch } from 'react-router';
+import {Route, Router, Switch} from 'react-router';
 
 // Set language package: pack in "webpack.config.js" alias
 // @ts-ignore: next
@@ -31,6 +31,8 @@ export default (
                         <Route path="/login/" component={asyncLoadComponent('login')} />
                         <LayoutDashboardPage>
                             <Switch>
+                                <Route exact path="/dashboard/" component={asyncLoadComponent('dashboard/index')}/>
+                                <Route exact path="/dashboard/profile/" component={asyncLoadComponent('dashboard/profile')}/>
                                 <Route component={NotFoundPage} />
                             </Switch>
                         </LayoutDashboardPage>

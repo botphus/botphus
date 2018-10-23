@@ -162,8 +162,15 @@ export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
  */
 export function modifyUserById(userId: string, modifyUserId: string, modifyUserPermission: number, userData: IUserModifyModel): Promise<any> {
     // Check permission for profile edit & special field
-    if ((modifyUserId.toString() !== userId || userData.permission || userData.enable) && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
+    if ((modifyUserId !== userId || userData.permission >= 0 || typeof userData.enable === 'boolean')
+        && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
         return Promise.reject(createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN));
+    }
+    // Check permission, root permission can't change
+    // 1. Current user is root
+    // 2. Update permission has root
+    if (userData.permission > 0 && ((modifyUserPermission & UserPermissionCode.ROOT) || (userData.permission & UserPermissionCode.ROOT))) {
+        return Promise.reject(createSystemError(localePkg.Service.User.permissionDefineError, SystemCode.FORBIDDEN));
     }
     // Update password
     if (userData.password) {

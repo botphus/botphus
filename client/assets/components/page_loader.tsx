@@ -22,7 +22,8 @@ class Loading extends React.Component {
  * @param  {[type]} pagePath: string        [description]
  * @return {[type]}           [description]
  */
-export default function asyncLoadComponent(pagePath: string): React.ReactNode {
+export default function asyncLoadComponent(pagePath: string):
+(React.ComponentClass<any> & Loadable.LoadableComponent) | (React.StatelessComponent<any> & Loadable.LoadableComponent) {
     return Loadable({
         loader: () => import(`../pages/${pagePath}`),
         loading: () => <Loading />

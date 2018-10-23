@@ -1,4 +1,4 @@
-import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
+import {modifyCommonSchema, pageInfo} from './common';
 
 import {emailLength, strLength} from '../types/rules';
 
@@ -107,6 +107,5 @@ export const modifySchema = {
             type: 'integer'
         }
     }, modifyCommonSchema),
-    required: modifyCommonRequiredField,
     type: 'object'
 };

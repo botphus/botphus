@@ -42,7 +42,7 @@ export interface IUserCreateModel extends Document {
 export interface IUserModifyModel extends Document {
     email?: string;
     nickname?: string;
-    permission?: string;
+    permission?: number;
     enable?: boolean;
     password?: string;
 }

@@ -7,6 +7,10 @@ html,body,.app,.app-layout,.app-layout>.ant-layout{
 .app-layout, .app-welcome {
     height: 100%;
 }
+.ant-layout-content {
+    background: #FFF;
+    padding: 20px;
+}
 .app {
     &>.ant-spin-nested-loading {
         height: 100%;
@@ -31,23 +35,67 @@ html,body,.app,.app-layout,.app-layout>.ant-layout{
         font-size: 2em;
     }
 }
-.app-sidebar {
+.app-menu {
     color: #FFF;
+    .clear();
     .logo {
         background: rgba(255,255,255,.2);
-        line-height: 40px;
-        margin: 15px;
+        margin: 15px 15px 0;
+        padding: 5px 0;
         border-radius: 5px;
-        font-size: 1.5em;
         text-align: center;
-        &::before {
-            content: '';
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            background: url('../images/logo.png');
-            vertical-align: text-top;
+        line-height: 30px;
+        a {
+            color: @text-color-secondary-dark;
+            text-decoration: none;
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                background: url('../images/logo.png');
+                vertical-align: top;
+            }
+            &:hover {
+                color: @menu-dark-highlight-color;
+            }
+            .text {
+                margin-left: 10px;
+            }
+        }
+    }
+    .user-profile {
+        background: rgba(255,255,255,.3);
+        margin: 0 20px 15px;
+        padding: 2px 10px;
+        border-radius: 0 0 5px 5px;
+        text-align: center;
+        .clear();
+        .nickname {
+            .ellipsis();
+        }
+        .logout {
+            color: #FFF;
+            .pull-right();
+        }
+    }
+    .ant-menu {
+        line-height: 65px;
+        font-size: 1.2em;
+    }
+    &.ant-layout-sider-collapsed {
+        .logo {
+            .text {
+                display: none;
+            }
+        }
+        .user-profile {
+            .nickname {
+                display: none;
+            }
+            .logout {
+                float: none;
+            }
         }
     }
 }

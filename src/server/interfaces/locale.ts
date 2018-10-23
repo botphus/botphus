@@ -69,6 +69,7 @@ export default interface ILocalePackage {
         // User info
         User: {
             loginError: string;
+            permissionDefineError: string;
         };
         // Connection info
         Connection: {
@@ -89,6 +90,8 @@ export default interface ILocalePackage {
         Title: {
             Install: string;
             Login: string;
+            Home: string;
+            Profile: string;
             Connection: string;
             Task: string;
             TaskFlow: string;
@@ -96,6 +99,7 @@ export default interface ILocalePackage {
             User: string;
         };
         Desc: {
+            Home: string;
             Connection: string;
             Task: string;
             TaskFlow: string;

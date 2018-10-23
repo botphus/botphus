@@ -58,9 +58,10 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         }
     }, (request: IAppRequest, reply) => {
         if (request.session.user) {
-            return clear(request, reply, () => {
-                reply.send(getHttpMsg(request, null));
-            });
+            return clear(request, reply)
+                .then(() => {
+                    reply.send(getHttpMsg(request, null));
+                });
         }
         reply.send(getHttpMsg(request, null));
     });
@@ -83,6 +84,25 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     }, (request: IAppRequest, reply) => {
         return modifyUserById(request.body.modifyId || request.session.user.id, request.session.user.id, request.session.user.permission, request.body)
             .then(() => {
+                // Update session info when self update
+                if (!request.body.modifyId || (request.body.modifyId === request.session.user.id)) {
+                    // If password change, need relogin
+                    if (request.body.password) {
+                        return clear(request, reply);
+                    }
+                    if (request.body.email) {
+                        request.session.user.email = request.body.email;
+                    }
+                    if (request.body.nickname) {
+                        request.session.user.nickname = request.body.nickname;
+                    }
+                    if (request.body.permission) {
+                        request.session.user.permission = request.body.permission;
+                    }
+                }
+                return null;
+            })
+            .then(() => {
                 reply.send(getHttpMsg(request, null));
             });
     });
@@ -100,10 +120,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     });
     // Get self profile
     app.get('/profile/my/', (request: IAppRequest, reply) => {
-        return queryUserById(request.session.user.id)
-            .then((data) => {
-                reply.send(getHttpMsg(request, data));
-            });
+        reply.send(getHttpMsg(request, request.session.user));
     });
     // Get user profile
     app.get('/profile/', {

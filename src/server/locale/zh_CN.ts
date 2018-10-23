@@ -61,7 +61,8 @@ const localeData: ILocalePackage = {
             installClose: '已经不能进行安装'
         },
         User: {
-            loginError: '登录信息错误'
+            loginError: '登录信息错误',
+            permissionDefineError: '权限定义错误',
         },
         Connection: {
             configValidError: '配置信息不正确'
@@ -79,6 +80,8 @@ const localeData: ILocalePackage = {
         Title: {
             Install: '创建管理员帐号',
             Login: '登录帐号',
+            Home: '首页',
+            Profile: '个人资料',
             Connection: '数据库配置',
             Task: '测试任务',
             TaskFlow: '测试任务流水',
@@ -86,10 +89,11 @@ const localeData: ILocalePackage = {
             User: '用户管理'
         },
         Desc: {
+            Home: '了解如何使用',
             Connection: '(可选)创建数据库配置以便进行数据库验证',
             Task: '创建一个测试任务并分配成员',
-            TaskFlow: '成员根据测试任务生成流水并进行测试',
-            TaskReport: '完成测试并生成测试报告',
+            TaskFlow: '测试任务成员按任务生成测试流水',
+            TaskReport: '测试流水执行并生成测试报告',
             User: '管理所有平台用户'
         }
     }

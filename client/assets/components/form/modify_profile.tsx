@@ -7,12 +7,13 @@ import {IFormProps} from '../../interfaces/common';
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
 
-class InstallForm extends React.Component<IFormProps> {
+class ModifyProfileForm extends React.Component<IFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
     }
     public render() {
+        const {defaultValue} = this.props;
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
         const emailError = isFieldTouched('email') && getFieldError('email');
         const nicknameError = isFieldTouched('nickname') && getFieldError('nickname');
@@ -26,6 +27,7 @@ class InstallForm extends React.Component<IFormProps> {
                     {...formItemLayout}
                 >
                     {getFieldDecorator('email', {
+                        initialValue: defaultValue.email ? defaultValue.email.toString() : '',
                         rules: [{
                             max: formValidRules.emailLength[1],
                             message: getFormFieldErrorMsg(localePkg.Model.User.email, [
@@ -51,6 +53,7 @@ class InstallForm extends React.Component<IFormProps> {
                     {...formItemLayout}
                 >
                     {getFieldDecorator('nickname', {
+                        initialValue: defaultValue.nickname ? defaultValue.nickname.toString() : '',
                         rules: [{
                             max: formValidRules.strLength[1],
                             message: getFormFieldErrorMsg(localePkg.Model.User.nickname, [
@@ -80,15 +83,11 @@ class InstallForm extends React.Component<IFormProps> {
                             max: formValidRules.strLength[1],
                             message: getFormFieldErrorMsg(localePkg.Model.User.password, [
                                 {
-                                    type: 'required'
-                                },
-                                {
                                     args: formValidRules.strLength,
                                     type: 'length',
                                 }
                             ]),
-                            min: formValidRules.strLength[0],
-                            required: true
+                            min: formValidRules.strLength[0]
                         }],
                     })(
                         <Input type="password" />
@@ -112,4 +111,4 @@ class InstallForm extends React.Component<IFormProps> {
     }
 }
 
-export default Form.create()(InstallForm);
+export default Form.create()(ModifyProfileForm);

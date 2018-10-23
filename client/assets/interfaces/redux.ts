@@ -1,4 +1,4 @@
-import { Dispatch } from 'react-redux';
+import {ThunkDispatch} from 'redux-thunk';
 
 import {ActionType} from '../types/redux';
 
@@ -48,7 +48,7 @@ export interface IContentData<T = any> {
  * Redux connect props
  */
 export interface IReduxConnectProps {
-    dispatch: Dispatch<IActionData>;
+    dispatch: ThunkDispatch<IReduxStoreState, any, IActionData>;
 }
 
 /**

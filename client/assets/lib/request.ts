@@ -16,7 +16,6 @@ const customHeader = {
 export default function request(action: RequestAction, data: any = null, method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE' = 'GET', opts: any = null) {
     let path: string = action;
     const option: any = {
-        body: '',
         credentials: 'include',
         headers: customHeader,
         method,

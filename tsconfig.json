@@ -8,14 +8,14 @@
         "sourceMap": false,
         "outDir": "dist",
         "baseUrl": ".",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "paths": {
             "*": [
                 "node_modules/*",
                 "src/types/*"
             ]
-        },
-        "noUnusedLocals": true,
-        "noUnusedParameters": true
+        }
     },
     "include": [
         "src/**/*.ts"

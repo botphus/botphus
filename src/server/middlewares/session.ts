@@ -69,9 +69,7 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
         // Not below:
         // 1. Create session: If doesn't have init session
         // 2. Update session: If data need update
-        !(!request.initSession || (sessionKeys.length !== Object.keys(request.initSession).length || sessionKeys.some((key) => {
-        return request.session[key] !== request.initSession[key];
-    })))) {
+        !(!request.initSession || JSON.stringify(request.session) === JSON.stringify(request.initSession))) {
         return next();
     }
     const data = JSON.stringify(request.session);
@@ -92,21 +90,20 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
 /**
  * Clear session
  */
-export function clear(request: IAppRequest, reply: IAppReply, next: (err?: Error) => void): void {
+export function clear(request: IAppRequest, reply: IAppReply): Promise<void> {
     const id = request.cookies[sessionCookieKey];
-    cache.del(getRedisKey(id))
+    request.session = null;
+    return cache.del(getRedisKey(id))
         .then(() => {
             reply.setCookie(sessionCookieKey, '', {
                 expires: new Date(),
                 maxAge: 0,
                 path: '/'
             });
-            next();
         })
         .catch((err) => {
             request.log.warn('Delete cookie data to redis error');
             request.log.warn(err);
-            next();
         });
 }
 

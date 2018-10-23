@@ -1,12 +1,12 @@
-import { Dispatch } from 'react-redux';
+import {ThunkAction} from 'redux-thunk';
 
-import {IActionData} from '../interfaces/redux';
+import {IActionData, IReduxStoreState} from '../interfaces/redux';
 
 /**
  * Redux Thunk func
  * @type {function}
  */
-export type ActionThunkFunc = (dispatch: Dispatch<IActionData>) => void;
+export type ActionThunkFunc = ThunkAction<void, IReduxStoreState, any, IActionData>;
 
 /**
  * Redux callback function

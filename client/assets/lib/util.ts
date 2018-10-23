@@ -1,6 +1,6 @@
 import md5 from 'blueimp-md5';
 
-import {PermissionCode} from '../types/common';
+import {UserPermissionCode} from '../types/common';
 
 import {salt} from './const';
 
@@ -76,6 +76,6 @@ export function translatePwd(pwd: string): string {
  * @param  {PermissionCode} permissionCode Permission code
  * @return {boolean}                       Pass or not
  */
-export function checkUserPermission(userPermission: number, permissionCode: PermissionCode): boolean {
+export function checkUserPermission(userPermission: number, permissionCode: UserPermissionCode): boolean {
     return (userPermission & permissionCode) > 0;
 }

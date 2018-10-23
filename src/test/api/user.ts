@@ -115,7 +115,7 @@ export default function() {
                 .expect((res: IRequestData) => {
                     assertResMessage(res);
                     assert(res.body.data);
-                    assert(res.body.data._id === adminUserId);
+                    assert(res.body.data.id === adminUserId);
                     assert(res.body.data.email === testAdminEmail);
                     assert(res.body.data.nickname === testAdminNickname);
                 })

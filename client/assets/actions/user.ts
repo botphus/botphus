@@ -58,12 +58,98 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
                 dispatch(updateModel({
                     loadingForm: false
                 }));
+                dispatch(updateUserDetail(res.data));
                 if (callback) {
                     callback(res);
                 }
             }).catch((err) => {
                 dispatch(updateModel({
                     loadingForm: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
+ * Logout
+ * @param  {ActionCallbackFunc} callback Callback function
+ * @return {ActionThunkFunc}             Thunk fuction
+ */
+export function postLogout(callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loading: true
+        }));
+        request(RequestAction.LOGOUT)
+            .then((res) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
+ * Update user data
+ * @param  {any}                query    User data
+ * @param  {ActionCallbackFunc} callback Callback function
+ * @return {ActionThunkFunc}             Thunk fuction
+ */
+export function modifyUserData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loadingForm: true
+        }));
+        const sendData = Object.assign({}, query);
+        if (sendData.password) {
+            sendData.password = translatePwd(query.password);
+        } else {
+            delete sendData.password;
+        }
+        request(RequestAction.USER, sendData, 'PATCH')
+            .then((res) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
+ * Query self data
+ * @return {ActionThunkFunc} [description]
+ */
+export function querySelfData(): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loading: true
+        }));
+        request(RequestAction.GET_SELF_PROFILE)
+            .then((res) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                dispatch(updateUserDetail(res.data));
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loading: false
                 }));
                 message.error(err.message);
             });
@@ -97,7 +183,7 @@ export function cleanUserList(): IActionData {
  * @param  {Any}         data Update data
  * @return {IActionData}      Action
  */
-export function updateCostRecordDetail(data: any): IActionData {
+export function updateUserDetail(data: any): IActionData {
     return {
         data,
         type: ActionType.UPDATE_USER_DETAIL,
@@ -108,7 +194,7 @@ export function updateCostRecordDetail(data: any): IActionData {
  * Clean user detail
  * @return {IActionData} Action
  */
-export function cleanCostRecordDetail(): IActionData {
+export function cleanUserDetail(): IActionData {
     return {
         type: ActionType.CLEAN_USER_DETAIL
     };

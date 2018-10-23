@@ -27,10 +27,11 @@ export const pageSize = defaultPageSize;
 export const formValidRules = rules;
 
 export const welcomePageLayout = {
-    hg: 8,
     lg: 12,
     md: 16,
     span: 20,
+    xl: 10,
+    xxl: 8
 };
 
 // Form item laytout
