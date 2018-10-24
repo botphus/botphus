@@ -7,9 +7,11 @@ import {Link} from 'react-router-dom';
 import {IModalData, IReduxConnectProps, IReduxStoreState, IUserContentData} from '../../../interfaces/redux';
 import {UserPermissionCode} from '../../../types/common';
 
-import {queryUserListData} from '../../../actions/user';
+import {cleanUserList, queryUserListData} from '../../../actions/user';
 import {localePkg} from '../../../lib/const';
 import {getNumEnumsList, getPageData} from '../../../lib/util';
+
+import SearchProfileForm from '../../../components/form/search_profile';
 
 interface IUserProps extends IReduxConnectProps {
     modal: IModalData;
@@ -24,6 +26,10 @@ function mapStateToProps({modal, user}: IReduxStoreState) {
 }
 
 class DashboardUserPage extends React.Component<IUserProps> {
+    public componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch(cleanUserList());
+    }
     public componentDidMount() {
         this.handleGetList();
     }
@@ -58,7 +64,7 @@ class DashboardUserPage extends React.Component<IUserProps> {
                 title: localePkg.Client.Action.title,
                 width: 100,
                 render(row) {
-                    return <Link to={`/dashboard/user/profile/?id=${row._id}`}>{localePkg.Client.Action.modify}</Link>;
+                    return <Link to={`/dashboard/user/profile/${row._id}`}>{localePkg.Client.Action.modify}</Link>;
                 }
             }
         ];
@@ -70,11 +76,12 @@ class DashboardUserPage extends React.Component<IUserProps> {
                         <p className="text-light">{localePkg.Client.Desc.User}</p>
                     </Col>
                     <Col className="text-right" span={12}>
-                        <Link className="ant-btn ant-btn-primary" to="/dashboard/user/profile/">
+                        <Link className="ant-btn ant-btn-primary" to="/dashboard/user/profile/create">
                             <Icon type="plus-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.create}
                         </Link>
                     </Col>
                 </Row>
+                <SearchProfileForm onSubmit={this.handleSearch} defaultValue={{}} loading={modal.loadingTable} />
                 <Table
                     columns={columns}
                     dataSource={user.content}
@@ -96,6 +103,11 @@ class DashboardUserPage extends React.Component<IUserProps> {
             page: page.current,
             pageSize: page.pageSize
         });
+    }
+    private handleSearch = (data) => {
+        this.handleGetList(Object.assign({}, data, {
+            page: 1
+        }));
     }
 }
 

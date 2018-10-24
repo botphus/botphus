@@ -7,7 +7,7 @@ const {Sider, Content} = Layout;
 import {IReduxConnectProps, IReduxStoreState, IUserContentData} from '../interfaces/redux';
 import {UserPermissionCode} from '../types/common';
 
-import {postLogout} from '../actions/user';
+import {cleanUserOwner, postLogoutData} from '../actions/user';
 import {localePkg} from '../lib/const';
 import {checkUserPermission} from '../lib/util';
 import {routerHistory} from '../router';
@@ -24,6 +24,10 @@ function mapStateToProps({user}: IReduxStoreState) {
 }
 
 class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteComponentProps> {
+    public componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch(cleanUserOwner());
+    }
     public render() {
         const {user, children, location} = this.props;
         const curKey = location.pathname.match(/^\/dashboard\/([^\/]+)\//);
@@ -82,7 +86,7 @@ class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteCo
     private handleLogout = (e) => {
         const {dispatch} = this.props;
         e.preventDefault();
-        dispatch(postLogout(() => {
+        dispatch(postLogoutData(() => {
             routerHistory.push('/login/');
         }));
     }

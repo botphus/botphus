@@ -49,8 +49,14 @@ export default function(state = Object.assign({}, INIT_STATE, {owner: user}), ac
         return Object.assign({}, state, {
             detail: {}
         });
+    case ActionType.CLEAN_USER_OWNER:
+        return Object.assign({}, state, {
+            owner: {}
+        });
     case ActionType.CLEAN_USER_LIST:
-        return Object.assign({}, INIT_STATE);
+        return Object.assign({}, INIT_STATE, {
+            owner: state.owner
+        });
     default:
         return state;
     }

@@ -27,7 +27,7 @@ class DashboardProfilePage extends React.Component<IUserProfileProps> {
         return (
             <div className="app-dashboard-profile">
                 <h1>{localePkg.Client.Title.Profile}</h1>
-                <ModifyProfileForm defaultValue={user.owner} onSubmit={this.handleSubmit} loading={modal.loadingForm} />
+                <ModifyProfileForm defaultValue={user.owner} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={false} />
             </div>
         );
     }

@@ -113,3 +113,18 @@ export function getNumEnumsList(enums: any): INumEnumValue[] {
         };
     });
 }
+
+/**
+ * Filter empty field
+ * @param  {object} data Filter data
+ * @return {any}         Filtered data
+ */
+export function filterEmptyFields(data: object): any {
+    const returnData = Object.assign({}, data);
+    for (const key in data) {
+        if (data[key] === null || data[key] === undefined || data[key] === '') {
+            delete returnData[key];
+        }
+    }
+    return returnData;
+}

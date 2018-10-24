@@ -55,10 +55,10 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
             password: translatePwd(query.password)
         }), 'POST')
             .then((res) => {
+                dispatch(updateUserOwner(res.data));
                 dispatch(updateModel({
                     loadingForm: false
                 }));
-                dispatch(updateUserOwner(res.data));
                 if (callback) {
                     callback(res);
                 }
@@ -76,7 +76,7 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
  * @param  {ActionCallbackFunc} callback Callback function
  * @return {ActionThunkFunc}             Thunk fuction
  */
-export function postLogout(callback?: ActionCallbackFunc): ActionThunkFunc {
+export function postLogoutData(callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
@@ -99,6 +99,36 @@ export function postLogout(callback?: ActionCallbackFunc): ActionThunkFunc {
 }
 
 /**
+ * Create an account
+ * @param  {any}                query    Create data
+ * @param  {ActionCallbackFunc} callback Callback function
+ * @return {ActionThunkFunc}             Thunk fuction
+ */
+export function postCreateUserData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loadingForm: true
+        }));
+        request(RequestAction.USER, Object.assign({}, query, {
+            password: translatePwd(query.password)
+        }), 'POST')
+            .then((res) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
  * Update user data
  * @param  {any}                query    User data
  * @param  {ActionCallbackFunc} callback Callback function
@@ -112,8 +142,6 @@ export function modifyUserData(query: any, callback?: ActionCallbackFunc): Actio
         const sendData = Object.assign({}, query);
         if (sendData.password) {
             sendData.password = translatePwd(query.password);
-        } else {
-            delete sendData.password;
         }
         request(RequestAction.USER, sendData, 'PATCH')
             .then((res) => {
@@ -143,10 +171,10 @@ export function queryUserOwnerData(): ActionThunkFunc {
         }));
         request(RequestAction.USER_SELF_PROFILE)
             .then((res) => {
+                dispatch(updateUserOwner(res.data));
                 dispatch(updateModel({
                     loading: false
                 }));
-                dispatch(updateUserOwner(res.data));
             }).catch((err) => {
                 dispatch(updateModel({
                     loading: false
@@ -170,10 +198,10 @@ export function queryUserDetailData(userId: string): ActionThunkFunc {
             id: userId
         })
             .then((res) => {
+                dispatch(updateUserDetail(res.data));
                 dispatch(updateModel({
                     loading: false
                 }));
-                dispatch(updateUserDetail(res.data));
             }).catch((err) => {
                 dispatch(updateModel({
                     loading: false
@@ -194,10 +222,10 @@ export function queryUserListData(query: any): ActionThunkFunc {
         }));
         request(RequestAction.USER, query)
             .then((res) => {
+                dispatch(updateUserList(res.data));
                 dispatch(updateModel({
                     loadingTable: false
                 }));
-                dispatch(updateUserList(res.data));
             }).catch((err) => {
                 dispatch(updateModel({
                     loadingTable: false
@@ -260,5 +288,15 @@ export function updateUserOwner(data: any): IActionData {
     return {
         data,
         type: ActionType.UPDATE_USER_OWNER,
+    };
+}
+
+/**
+ * Clean user owner info
+ * @return {IActionData} [description]
+ */
+export function cleanUserOwner(): IActionData {
+    return {
+        type: ActionType.CLEAN_USER_OWNER,
     };
 }

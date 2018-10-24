@@ -36,6 +36,7 @@ export default interface ILocalePackage {
             nickname: string;
             permission: string;
             password: string;
+            enable: string;
         };
         // Connection fields name
         Connection: {
@@ -78,7 +79,7 @@ export default interface ILocalePackage {
         // User info
         User: {
             loginError: string;
-            permissionDefineError: string;
+            rootPermissionError: string;
         };
         // Connection info
         Connection: {
@@ -99,6 +100,7 @@ export default interface ILocalePackage {
             create: string;
             detail: string;
             modify: string;
+            cancel: string;
             login: string;
             logout: string;
             submit: string;

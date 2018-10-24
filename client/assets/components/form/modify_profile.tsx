@@ -1,23 +1,37 @@
-import {Button, Form, Input} from 'antd';
+import {Button, Checkbox, Form, Input, Switch} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
 import {IFormProps} from '../../interfaces/common';
+import {UserPermissionCode} from '../../types/common';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
+import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
-class ModifyProfileForm extends React.Component<IFormProps> {
+interface ICreateProfileProps extends IFormProps {
+    permission?: boolean;
+    isCreate: boolean;
+}
+
+const permissionList = getNumEnumsList(UserPermissionCode).filter((item) => {
+    // Filter root & login
+    return item.value > 1;
+});
+
+class ModifyProfileForm extends React.Component<ICreateProfileProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
     }
     public render() {
-        const {defaultValue} = this.props;
+        const {defaultValue, permission, isCreate, loading} = this.props;
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
         const emailError = isFieldTouched('email') && getFieldError('email');
         const nicknameError = isFieldTouched('nickname') && getFieldError('nickname');
         const passwordError = isFieldTouched('password') && getFieldError('password');
+        const permissionError = isFieldTouched('permission') && getFieldError('permission');
+        const enableError = isFieldTouched('enable') && getFieldError('enable');
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Item
@@ -27,7 +41,7 @@ class ModifyProfileForm extends React.Component<IFormProps> {
                     {...formItemLayout}
                 >
                     {getFieldDecorator('email', {
-                        initialValue: defaultValue.email ? defaultValue.email.toString() : '',
+                        initialValue: defaultValue.email || '',
                         rules: [{
                             max: formValidRules.emailLength[1],
                             message: getFormFieldErrorMsg(localePkg.Model.User.email, [
@@ -53,7 +67,7 @@ class ModifyProfileForm extends React.Component<IFormProps> {
                     {...formItemLayout}
                 >
                     {getFieldDecorator('nickname', {
-                        initialValue: defaultValue.nickname ? defaultValue.nickname.toString() : '',
+                        initialValue: defaultValue.nickname || '',
                         rules: [{
                             max: formValidRules.strLength[1],
                             message: getFormFieldErrorMsg(localePkg.Model.User.nickname, [
@@ -81,20 +95,80 @@ class ModifyProfileForm extends React.Component<IFormProps> {
                     {getFieldDecorator('password', {
                         rules: [{
                             max: formValidRules.strLength[1],
-                            message: getFormFieldErrorMsg(localePkg.Model.User.password, [
+                            message: getFormFieldErrorMsg(localePkg.Model.User.password, isCreate ? [
+                                {
+                                    type: 'required'
+                                },
+                                {
+                                    args: formValidRules.strLength,
+                                    type: 'length',
+                                }
+                            ] : [
                                 {
                                     args: formValidRules.strLength,
                                     type: 'length',
                                 }
                             ]),
-                            min: formValidRules.strLength[0]
+                            min: formValidRules.strLength[0],
+                            required: isCreate
                         }],
                     })(
                         <Input type="password" />
                     )}
                 </Item>
+                {permission ? (
+                    <Item
+                        validateStatus={permissionError ? 'error' : 'success'}
+                        help={permissionError || ''}
+                        label={localePkg.Model.User.permission}
+                        {...formItemLayout}
+                    >
+                        {getFieldDecorator('permission', {
+                            initialValue: defaultValue.permission ? permissionList.filter((item) => {
+                                return (defaultValue.permission & item.value) > 0;
+                            }).map((item) => {
+                                return item.value;
+                            }) : []
+                        })(
+                            <Checkbox.Group>
+                                {permissionList.map((item, index) => {
+                                    return (
+                                        <Checkbox key={index} value={item.value}>
+                                            {localePkg.Enum.UserPermissionCode[item.key]}
+                                        </Checkbox>
+                                    );
+                                })}
+                            </Checkbox.Group>
+                        )}
+                    </Item>
+                ) : null}
+                {permission ? (
+                    <Item
+                        validateStatus={enableError ? 'error' : 'success'}
+                        help={enableError || ''}
+                        label={localePkg.Model.User.enable}
+                        {...formItemLayout}
+                    >
+                        {getFieldDecorator('enable', {
+                            initialValue: typeof defaultValue.enable === 'boolean' ? defaultValue.enable : true,
+                            rules: [{
+                                message: getFormFieldErrorMsg(localePkg.Model.User.enable, [
+                                    {
+                                        type: 'required'
+                                    }
+                                ]),
+                                required: true
+                            }],
+                            valuePropName: 'checked',
+                        })(
+                            <Switch />
+                        )}
+                    </Item>
+                ) : null}
                 <Item className="text-right" {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Action.modify}</Button>
+                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>
+                        {isCreate ? localePkg.Client.Action.create : localePkg.Client.Action.modify}
+                    </Button>
                 </Item>
             </Form>
         );
@@ -105,7 +179,15 @@ class ModifyProfileForm extends React.Component<IFormProps> {
         e.stopPropagation();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                onSubmit(values);
+                const result = Object.assign({}, values);
+                if (values.permission) {
+                    let permission: number = 0;
+                    values.permission.forEach((permissionCode) => {
+                        permission = permission ^ permissionCode;
+                    });
+                    result.permission = permission;
+                }
+                onSubmit(filterEmptyFields(result));
             }
         });
     }

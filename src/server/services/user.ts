@@ -12,7 +12,7 @@ import {checkUserPermission, createSystemError, localePkg, translatePassword} fr
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id email nickname permission';
+const defaultFields: string = '_id email nickname permission enable';
 
 /**
  * Query user's info by user ID
@@ -170,7 +170,7 @@ export function modifyUserById(userId: string, modifyUserId: string, modifyUserP
     // 1. Current user is root
     // 2. Update permission has root
     if (userData.permission > 0 && ((modifyUserPermission & UserPermissionCode.ROOT) || (userData.permission & UserPermissionCode.ROOT))) {
-        return Promise.reject(createSystemError(localePkg.Service.User.permissionDefineError, SystemCode.FORBIDDEN));
+        return Promise.reject(createSystemError(localePkg.Service.User.rootPermissionError, SystemCode.FORBIDDEN));
     }
     // Update password
     if (userData.password) {

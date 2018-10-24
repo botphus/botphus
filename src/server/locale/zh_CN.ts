@@ -33,7 +33,8 @@ const localeData: ILocalePackage = {
             email: '邮箱',
             nickname: '昵称',
             permission: '权限',
-            password: '密码'
+            password: '密码',
+            enable: '访问权限'
         },
         Connection: {
             name: '名称',
@@ -70,7 +71,7 @@ const localeData: ILocalePackage = {
         },
         User: {
             loginError: '登录信息错误',
-            permissionDefineError: '权限定义错误',
+            rootPermissionError: '站点管理员账户不能被修改任何内容,修改请转至个人资料',
         },
         Connection: {
             configValidError: '配置信息不正确'
@@ -87,6 +88,7 @@ const localeData: ILocalePackage = {
             create: '创建数据',
             detail: '详情',
             modify: '编辑',
+            cancel: '返回',
             login: '登录',
             logout: '登出',
             submit: '提交',

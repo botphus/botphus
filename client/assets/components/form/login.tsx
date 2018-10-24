@@ -13,7 +13,7 @@ class LoginForm extends React.Component<IFormProps> {
         this.props.form.validateFields();
     }
     public render() {
-        const {defaultValue} = this.props;
+        const {defaultValue, loading} = this.props;
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
         const emailError = isFieldTouched('email') && getFieldError('email');
         const passwordError = isFieldTouched('password') && getFieldError('password');
@@ -72,7 +72,7 @@ class LoginForm extends React.Component<IFormProps> {
                     )}
                 </Item>
                 <Item className="text-right" {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())}>{localePkg.Client.Action.login}</Button>
+                    <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>{localePkg.Client.Action.login}</Button>
                 </Item>
             </Form>
         );

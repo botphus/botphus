@@ -65,3 +65,10 @@ export interface IReduxStoreState {
     modal: IModalData;
     user: IContentData;
 }
+
+/**
+ * Detail page's match route component props for withRouter function is exported by "react-router-dom"
+ */
+export interface IDetailPageRouteMatchProps {
+    id: string; // Detail page ID
+}
