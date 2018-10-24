@@ -1,37 +1,26 @@
-// Set user info: pack in "webpack.config.js" externals
-// @ts-ignore: next
-import * as user from 'user';
-
 // Import action
-import {IActionData, IUserContentData} from '../interfaces/redux';
+import {IActionData, IConnectionContentData} from '../interfaces/redux';
 import {ActionType} from '../types/redux';
 
 import {pageSize} from '../lib/const';
 
-const INIT_STATE: IUserContentData = {
+const INIT_STATE: IConnectionContentData = {
     content: [],
     detail: {},
-    owner: {},
     page: 1,
     pageSize,
     total: 0,
 };
 
-export default function(state = {...INIT_STATE, owner: user}, action: IActionData<IUserContentData>) {
+export default function(state = INIT_STATE, action: IActionData<IConnectionContentData>) {
     switch (action.type) {
-    case ActionType.UPDATE_USER_DETAIL:
+    case ActionType.UPDATE_CONNECTION_DETAIL:
         const detail = {...action.data};
         return {
             ...state,
             detail
         };
-    case ActionType.UPDATE_USER_OWNER:
-        const owner = {...action.data};
-        return {
-            ...state,
-            owner
-        };
-    case ActionType.UPDATE_USER_LIST:
+    case ActionType.UPDATE_CONNECTION_LIST:
         if (!action.data) {
             return state;
         }
@@ -48,21 +37,13 @@ export default function(state = {...INIT_STATE, owner: user}, action: IActionDat
             pageSize: action.data.pageSize,
             total: action.data.total
         };
-    case ActionType.CLEAN_USER_DETAIL:
+    case ActionType.CLEAN_CONNECTION_DETAIL:
         return {
             ...state,
             detail: {}
         };
-    case ActionType.CLEAN_USER_OWNER:
-        return {
-            ...state,
-            owner: {}
-        };
-    case ActionType.CLEAN_USER_LIST:
-        return {
-            ...INIT_STATE,
-            owner: state.owner
-        };
+    case ActionType.CLEAN_CONNECTION_LIST:
+        return {...INIT_STATE};
     default:
         return state;
     }

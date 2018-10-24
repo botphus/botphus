@@ -7,7 +7,7 @@ import {modifyUserData, queryUserOwnerData} from '../../actions/user';
 import {localePkg} from '../../lib/const';
 import {routerHistory} from '../../router';
 
-import ModifyProfileForm from '../../components/form/modify_profile';
+import UserModifyProfileForm from '../../components/form/user_modify_profile';
 
 interface IUserProfileProps extends IReduxConnectProps {
     modal: IModalData;
@@ -27,7 +27,7 @@ class DashboardProfilePage extends React.Component<IUserProfileProps> {
         return (
             <div className="app-dashboard-profile">
                 <h1>{localePkg.Client.Title.Profile}</h1>
-                <ModifyProfileForm defaultValue={user.owner} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={false} />
+                <UserModifyProfileForm defaultValue={user.owner} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={false} />
             </div>
         );
     }

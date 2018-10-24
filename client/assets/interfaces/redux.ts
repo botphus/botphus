@@ -1,9 +1,12 @@
 import {ThunkDispatch} from 'redux-thunk';
 
+import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/interfaces/model/connection';
+import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
 import {ActionType} from '../types/redux';
 
 /**
  * Action data
+ * - T = data interface
  */
 export interface IActionData<T = any> {
     type: ActionType;
@@ -35,10 +38,12 @@ export interface IModalUpdateData {
 
 /**
  * Content data
+ * - L = list item interface
+ * - D = detail item interface
  */
-export interface IContentData<T = any> {
-    content: T[];
-    detail: T;
+export interface IContentData<L = any, D = any> {
+    content: L[];
+    detail: D;
     page: number;
     pageSize: number;
     total: number;
@@ -47,9 +52,11 @@ export interface IContentData<T = any> {
 /**
  * User content data
  */
-export interface IUserContentData extends IContentData {
-    owner: any;
+export interface IUserContentData extends IContentData<IUserListItem, IUserDetailItem> {
+    owner: IUserSession;
 }
+
+export type IConnectionContentData = IContentData<IConnectionListItem, IConnectionDetailItem>;
 
 /**
  * Redux connect props
@@ -62,8 +69,9 @@ export interface IReduxConnectProps {
  * Redux Store
  */
 export interface IReduxStoreState {
+    connection: IConnectionContentData;
     modal: IModalData;
-    user: IContentData;
+    user: IUserContentData;
 }
 
 /**

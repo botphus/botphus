@@ -17,10 +17,7 @@ export const searchSchema = {
             type: 'string'
         },
         type: {
-            enum: getNumEnumsList(ConnectionType).map((item) => {
-                return item.value;
-            }),
-            type: 'string'
+            type: 'integer'
         }
     }, pageInfo),
     type: 'object'
@@ -44,13 +41,16 @@ const configItemList = [
                 maxLength: strLength[1],
                 type: 'string'
             },
+            port: {
+                type: 'number'
+            },
             user: {
                 maxLength: strLength[1],
                 minLength: strLength[0],
                 type: 'string'
             }
         },
-        required: ['database', 'host', 'user'],
+        required: ['database', 'host', 'user', 'port'],
         type: 'object'
     },
     // Redis
@@ -90,7 +90,7 @@ const configItemList = [
  */
 const baseProperties = {
     config: {
-        oneOf: configItemList,
+        anyOf: configItemList,
     },
     name: {
         maxLength: strLength[1],

@@ -4,11 +4,19 @@ export default interface ILocalePackage {
     // Enum
     Enum: {
         UserPermissionCode: {
-            'ROOT': string;
-            'SYSTEM': string;
-            'TASK_MANAGE': string;
-            'TASK_FLOW': string;
-        }
+            ROOT: string;
+            SYSTEM: string;
+            TASK_MANAGE: string;
+            TASK_FLOW: string;
+        };
+        ConnectionType: {
+            MYSQL: string;
+            REDIS: string;
+        };
+    };
+    Placehoder: {
+        Input: string;
+        Select: string;
     };
     // System code error message
     SystemCode: {
@@ -43,6 +51,17 @@ export default interface ILocalePackage {
             name: string;
             type: string;
             config: string;
+            mysqlConfig: {
+                database: string;
+                host: string;
+                password: string;
+                user: string;
+                port: string;
+            };
+            redisConfig: {
+                host: string;
+                port: string;
+            };
         };
         // Task fields name
         Task: {
@@ -100,11 +119,13 @@ export default interface ILocalePackage {
             create: string;
             detail: string;
             modify: string;
+            remove: string;
             cancel: string;
             login: string;
             logout: string;
             submit: string;
             search: string;
+            addRedisConfig: string;
         };
         // Title
         Title: {
@@ -113,6 +134,8 @@ export default interface ILocalePackage {
             Home: string;
             Profile: string;
             Connection: string;
+            ConnectionRedisConfig: string;
+            ConnectionRedisClusterConfig: string;
             Task: string;
             TaskFlow: string;
             TaskReport: string;

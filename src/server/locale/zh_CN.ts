@@ -9,7 +9,15 @@ const localeData: ILocalePackage = {
             SYSTEM: '系统配置',
             TASK_MANAGE: '任务管理',
             TASK_FLOW: '任务流水执行'
+        },
+        ConnectionType: {
+            MYSQL: 'Mysql数据库',
+            REDIS: 'Redis缓存服务器'
         }
+    },
+    Placehoder: {
+        Input: '请输入${field}',
+        Select: '请选择${field}'
     },
     SystemCode: {
         success: '请求成功',
@@ -34,12 +42,23 @@ const localeData: ILocalePackage = {
             nickname: '昵称',
             permission: '权限',
             password: '密码',
-            enable: '访问权限'
+            enable: '是否可用'
         },
         Connection: {
             name: '名称',
             type: '类型',
-            config: '配置'
+            config: '配置详情',
+            mysqlConfig: {
+                database: '数据库名',
+                host: '主机地址',
+                password: '登录密码',
+                user: '登录用户名',
+                port: '主机端口'
+            },
+            redisConfig: {
+                host: '主机地址',
+                port: '主机端口'
+            }
         },
         Task: {
             name: '名称',
@@ -88,18 +107,22 @@ const localeData: ILocalePackage = {
             create: '创建数据',
             detail: '详情',
             modify: '编辑',
+            remove: '删除',
             cancel: '返回',
             login: '登录',
             logout: '登出',
             submit: '提交',
-            search: '搜索'
+            search: '搜索',
+            addRedisConfig: '添加redis配置',
         },
         Title: {
             Install: '创建管理员帐号',
             Login: '登录帐号',
             Home: '首页',
             Profile: '个人资料',
-            Connection: '数据库配置',
+            Connection: '数据连接配置',
+            ConnectionRedisConfig: 'Redis配置',
+            ConnectionRedisClusterConfig: 'Redis集群配置',
             Task: '测试任务',
             TaskFlow: '测试任务流水',
             TaskReport: '测试任务报告',
@@ -107,7 +130,7 @@ const localeData: ILocalePackage = {
         },
         Desc: {
             Home: '了解如何使用',
-            Connection: '(可选)创建数据库配置以便进行数据库验证',
+            Connection: '(可选)创建数据连接(Mysql/Redis等)配置以便进行数据验证',
             Task: '创建一个测试任务并分配成员',
             TaskFlow: '测试任务成员按任务生成测试流水',
             TaskReport: '测试流水执行并生成测试报告',

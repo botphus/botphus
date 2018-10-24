@@ -277,7 +277,7 @@ export function checkUserPermission(userPermission: number, permissionCode: User
  */
 export function getNumEnumsList(enums: any): INumEnumValue[] {
     return Object.keys(enums).filter((key) => {
-        return typeof key === 'string';
+        return isNaN(parseInt(key, 10));
     }).map((key) => {
         return {
             key,

@@ -14,7 +14,10 @@ const INIT_STATE: IModalData = {
 export default function(state = INIT_STATE, action: IActionData<IModalData>) {
     switch (action.type) {
     case ActionType.UPDATE_MODAL:
-        return Object.assign({}, state, action.data);
+        return {
+            ...state,
+            ...action.data
+        };
     default:
         return state;
     }

@@ -3,50 +3,50 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, IUserContentData} from '../../../interfaces/redux';
+import {IConnectionContentData, IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 
-import {cleanUserDetail, modifyUserData, postCreateUserData, queryUserDetailData} from '../../../actions/user';
+import {cleanConnectionDetail, modifyConnectionData, postCreateConnectionData, queryConnectionDetailData} from '../../../actions/connection';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
-import UserModifyProfileForm from '../../../components/form/user_modify_profile';
+import ConnectionModifyProfileForm from '../../../components/form/connection_modify_profile';
 import Loading from '../../../components/loading';
 
-interface IUserProfileProps extends IReduxConnectProps {
+interface IConnectionProfileProps extends IReduxConnectProps {
     modal: IModalData;
-    user: IUserContentData;
+    connection: IConnectionContentData;
 }
 
-function mapStateToProps({modal, user}: IReduxStoreState) {
+function mapStateToProps({modal, connection}: IReduxStoreState) {
     return {
+        connection,
         modal,
-        user
     };
 }
 
-class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
+class DashboardConnectionCreatePage extends React.Component<IConnectionProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
     public componentDidMount() {
         const {dispatch, match} = this.props;
         // Check is create
         if (match.params.id !== 'create') {
-            dispatch(queryUserDetailData(match.params.id));
+            dispatch(queryConnectionDetailData(match.params.id));
         }
     }
     public componentWillUnmount() {
         const {dispatch} = this.props;
-        dispatch(cleanUserDetail());
+        dispatch(cleanConnectionDetail());
     }
     public render() {
-        const {modal, match, user} = this.props;
+        const {modal, match, connection} = this.props;
         // Check loading state
         if (modal.loading) {
             return <Loading />;
         }
         return (
-            <div className="app-dashboard-user-create">
+            <div className="app-dashboard-connection-create">
                 <Row>
                     <Col span={12}>
-                        <h1>{localePkg.Client.Title.User}</h1>
+                        <h1>{localePkg.Client.Title.Connection}</h1>
                     </Col>
                     <Col className="text-right" span={12}>
                         <a className="ant-btn" onClick={this.handleCancel}>
@@ -54,8 +54,8 @@ class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteC
                         </a>
                     </Col>
                 </Row>
-                <UserModifyProfileForm
-                    defaultValue={user.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} permission={true} isCreate={match.params.id === 'create'}
+                <ConnectionModifyProfileForm
+                    defaultValue={connection.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={match.params.id === 'create'}
                 />
             </div>
         );
@@ -63,7 +63,7 @@ class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteC
     private handleSubmit = (data) => {
         const {dispatch, match} = this.props;
         const isCreate = match.params.id === 'create';
-        const dispatchFunc = isCreate ? postCreateUserData : modifyUserData;
+        const dispatchFunc = isCreate ? postCreateConnectionData : modifyConnectionData;
         const sendData = isCreate ? data : {
             modifyId: match.params.id,
             ...data
@@ -73,8 +73,8 @@ class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteC
         }));
     }
     private handleCancel = () => {
-        routerHistory.push('/dashboard/user/');
+        routerHistory.push('/dashboard/connection/');
     }
 }
 
-export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardUserCreatePage));
+export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardConnectionCreatePage));

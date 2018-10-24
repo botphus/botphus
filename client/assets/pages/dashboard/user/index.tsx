@@ -11,7 +11,7 @@ import {cleanUserList, queryUserListData} from '../../../actions/user';
 import {localePkg} from '../../../lib/const';
 import {getNumEnumsList, getPageData} from '../../../lib/util';
 
-import SearchProfileForm from '../../../components/form/search_profile';
+import UserSearchForm from '../../../components/form/user_search';
 
 interface IUserProps extends IReduxConnectProps {
     modal: IModalData;
@@ -81,7 +81,7 @@ class DashboardUserPage extends React.Component<IUserProps> {
                         </Link>
                     </Col>
                 </Row>
-                <SearchProfileForm onSubmit={this.handleSearch} defaultValue={{}} loading={modal.loadingTable} />
+                <UserSearchForm onSubmit={this.handleSearch} defaultValue={{}} loading={modal.loadingTable} />
                 <Table
                     columns={columns}
                     dataSource={user.content}
@@ -105,9 +105,10 @@ class DashboardUserPage extends React.Component<IUserProps> {
         });
     }
     private handleSearch = (data) => {
-        this.handleGetList(Object.assign({}, data, {
+        this.handleGetList({
+            ...data,
             page: 1
-        }));
+        });
     }
 }
 

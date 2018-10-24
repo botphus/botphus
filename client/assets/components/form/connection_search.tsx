@@ -1,14 +1,18 @@
-import {Button, Col, Form, Input, Row} from 'antd';
+import {Button, Col, Form, Input, Row, Select} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
+const {Option} = Select;
 
 import {IFormProps} from '../../interfaces/common';
+import {ConnectionType} from '../../types/common';
 
 import {formInlineItemLayout, formValidRules, localePkg} from '../../lib/const';
-import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
-import {filterEmptyFields} from '../../lib/util';
+import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
+import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
-class SearchProfileForm extends React.Component<IFormProps> {
+const typeList = getNumEnumsList(ConnectionType);
+
+class ConnectionSearchForm extends React.Component<IFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -21,36 +25,14 @@ class SearchProfileForm extends React.Component<IFormProps> {
                 <Row>
                     <Col span={8}>
                         <Item
-                            label={localePkg.Model.User.email}
+                            label={localePkg.Model.Connection.name}
                             {...formInlineItemLayout}
                         >
-                            {getFieldDecorator('email', {
-                                initialValue: defaultValue.email || '',
-                                rules: [{
-                                    max: formValidRules.emailLength[1],
-                                    message: getFormFieldErrorMsg(localePkg.Model.User.email, [
-                                        {
-                                            args: formValidRules.emailLength,
-                                            type: 'length',
-                                        }
-                                    ]),
-                                    min: formValidRules.emailLength[0]
-                                }],
-                            })(
-                                <Input />
-                            )}
-                        </Item>
-                    </Col>
-                    <Col span={8}>
-                        <Item
-                            label={localePkg.Model.User.nickname}
-                            {...formInlineItemLayout}
-                        >
-                            {getFieldDecorator('nickname', {
-                                initialValue: defaultValue.nickname || '',
+                            {getFieldDecorator('name', {
+                                initialValue: defaultValue.name || '',
                                 rules: [{
                                     max: formValidRules.strLength[1],
-                                    message: getFormFieldErrorMsg(localePkg.Model.User.nickname, [
+                                    message: getFormFieldErrorMsg(localePkg.Model.Connection.name, [
                                         {
                                             args: formValidRules.strLength,
                                             type: 'length',
@@ -59,7 +41,23 @@ class SearchProfileForm extends React.Component<IFormProps> {
                                     min: formValidRules.strLength[0]
                                 }],
                             })(
-                                <Input />
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Connection.name)} />
+                            )}
+                        </Item>
+                    </Col>
+                    <Col span={8}>
+                        <Item
+                            label={localePkg.Model.Connection.type}
+                            {...formInlineItemLayout}
+                        >
+                            {getFieldDecorator('type', {
+                                initialValue: defaultValue.type,
+                            })(
+                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Connection.type)}>
+                                    {typeList.map((item, index) => {
+                                        return <Option key={index.toString()} value={item.value}>{localePkg.Enum.ConnectionType[item.key]}</Option>;
+                                    })}
+                                </Select>
                             )}
                         </Item>
                     </Col>
@@ -84,4 +82,4 @@ class SearchProfileForm extends React.Component<IFormProps> {
     }
 }
 
-export default Form.create()(SearchProfileForm);
+export default Form.create()(ConnectionSearchForm);

@@ -2,16 +2,15 @@ import {Button, Checkbox, Form, Input, Switch} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
-import {IFormProps} from '../../interfaces/common';
+import {IModifyFormProps} from '../../interfaces/common';
 import {UserPermissionCode} from '../../types/common';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
-import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
+import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
 import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
-interface ICreateProfileProps extends IFormProps {
+interface ICreateProfileProps extends IModifyFormProps {
     permission?: boolean;
-    isCreate: boolean;
 }
 
 const permissionList = getNumEnumsList(UserPermissionCode).filter((item) => {
@@ -19,7 +18,7 @@ const permissionList = getNumEnumsList(UserPermissionCode).filter((item) => {
     return item.value > 1;
 });
 
-class ModifyProfileForm extends React.Component<ICreateProfileProps> {
+class UserModifyProfileForm extends React.Component<ICreateProfileProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -57,7 +56,7 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
                             required: true
                         }],
                     })(
-                        <Input />
+                        <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.email)} />
                     )}
                 </Item>
                 <Item
@@ -83,7 +82,7 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
                             required: true
                         }],
                     })(
-                        <Input />
+                        <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.nickname)} />
                     )}
                 </Item>
                 <Item
@@ -113,7 +112,7 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
                             required: isCreate
                         }],
                     })(
-                        <Input type="password" />
+                        <Input type="password" placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.password)} />
                     )}
                 </Item>
                 {permission ? (
@@ -133,7 +132,7 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
                             <Checkbox.Group>
                                 {permissionList.map((item, index) => {
                                     return (
-                                        <Checkbox key={index} value={item.value}>
+                                        <Checkbox key={index.toString()} value={item.value}>
                                             {localePkg.Enum.UserPermissionCode[item.key]}
                                         </Checkbox>
                                     );
@@ -179,7 +178,7 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
         e.stopPropagation();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const result = Object.assign({}, values);
+                const result = {...values};
                 if (values.permission) {
                     let permission: number = 0;
                     values.permission.forEach((permissionCode) => {
@@ -193,4 +192,4 @@ class ModifyProfileForm extends React.Component<ICreateProfileProps> {
     }
 }
 
-export default Form.create()(ModifyProfileForm);
+export default Form.create()(UserModifyProfileForm);

@@ -5,7 +5,7 @@ const {Item} = Form;
 import {IFormProps} from '../../interfaces/common';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
-import {formHasErrors, getFormFieldErrorMsg} from '../../lib/form';
+import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
 
 class LoginForm extends React.Component<IFormProps> {
     public componentDidMount() {
@@ -42,7 +42,7 @@ class LoginForm extends React.Component<IFormProps> {
                             required: true
                         }],
                     })(
-                        <Input />
+                        <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.email)} />
                     )}
                 </Item>
                 <Item
@@ -68,7 +68,7 @@ class LoginForm extends React.Component<IFormProps> {
                             required: true
                         }],
                     })(
-                        <Input type="password" />
+                        <Input type="password" placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.password)} />
                     )}
                 </Item>
                 <Item className="text-right" {...tailFormItemLayout}>

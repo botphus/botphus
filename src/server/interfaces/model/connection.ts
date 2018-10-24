@@ -5,11 +5,44 @@ import {ConnectionConfig} from 'mysql';
 import {ConnectionType} from '../../types/connection';
 
 /**
+ * Return data
+ */
+/**
+ * Connection list item
+ */
+export interface IConnectionListItem {
+    _id?: string;
+    name?: string;
+    type?: ConnectionType;
+}
+
+/**
+ * Mysql
+ */
+interface IConnectionDetailMysqlItem extends IConnectionListItem {
+    type?: ConnectionType.MYSQL;
+    config?: ConnectionConfig;
+}
+
+/**
+ * Redis
+ */
+interface IConnectionDetailRedisItem extends IConnectionListItem {
+    type?: ConnectionType.REDIS;
+    config?: RedisOptions | NodeConfiguration[];
+}
+
+/**
+ * Connection detail item
+ */
+export type IConnectionDetailItem = IConnectionDetailMysqlItem | IConnectionDetailRedisItem;
+
+/**
  * Connection base model
  */
 export interface IConnectionBaseModel extends Document {
     name?: string;
-    type?: ConnectionType;
+    type: ConnectionType;
     config?: ConnectionConfig | RedisOptions | NodeConfiguration[];
 }
 

@@ -1,6 +1,36 @@
 import {Document, Schema} from 'mongoose';
 
 /**
+ * Return data
+ */
+/**
+ * User list item
+ */
+export interface IUserListItem {
+    _id?: string;
+    email?: string;
+    nickname?: string;
+    permission?: number;
+}
+
+/**
+ * User detail
+ */
+export interface IUserDetailItem extends IUserListItem {
+    enable?: boolean;
+}
+
+/**
+ * Session
+ */
+export interface IUserSession {
+    id?: string;
+    email?: string;
+    nickname?: string;
+    permission?: number;
+}
+
+/**
  * User model
  */
 export interface IUserModel extends Document {

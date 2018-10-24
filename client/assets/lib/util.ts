@@ -79,7 +79,7 @@ export function translatePwd(pwd: string): string {
  * @param  {PermissionCode} permissionCode Permission code
  * @return {boolean}                       Pass or not
  */
-export function checkUserPermission(userPermission: number, permissionCode: UserPermissionCode): boolean {
+export function checkUserPermission(userPermission: number = 0, permissionCode: UserPermissionCode): boolean {
     return (userPermission & permissionCode) > 0;
 }
 
@@ -105,7 +105,7 @@ export function getPageData(data: IContentData): PaginationConfig {
  */
 export function getNumEnumsList(enums: any): INumEnumValue[] {
     return Object.keys(enums).filter((key) => {
-        return typeof key === 'string';
+        return isNaN(parseInt(key, 10));
     }).map((key) => {
         return {
             key,
@@ -120,9 +120,9 @@ export function getNumEnumsList(enums: any): INumEnumValue[] {
  * @return {any}         Filtered data
  */
 export function filterEmptyFields(data: object): any {
-    const returnData = Object.assign({}, data);
+    const returnData = {...data};
     for (const key in data) {
-        if (data[key] === null || data[key] === undefined || data[key] === '') {
+        if (typeof data[key] !== 'number' && !data[key]) {
             delete returnData[key];
         }
     }

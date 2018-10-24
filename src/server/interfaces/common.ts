@@ -7,6 +7,7 @@ import * as WebSocket from 'ws';
 
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
+import {IUserSession} from './model/user';
 
 interface ISchemaErrorData {
     keyword: string;
@@ -105,12 +106,7 @@ export interface IAppRouterConfig {
  */
 export interface ISessionConfig {
     [index: string]: any;
-    user?: {
-        id: string;
-        email: string;
-        nickname: string;
-        permission: number;
-    };
+    user?: IUserSession;
 }
 
 /**

@@ -14,7 +14,14 @@ export interface IFormProps extends FormComponentProps {
 }
 
 /**
- * Form Error message valid fields
+ * Modify Form Props
+ */
+export interface IModifyFormProps extends IFormProps {
+    isCreate: boolean;
+}
+
+/**
+ * Form error message valid fields
  */
 /**
  * Reqired

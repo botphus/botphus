@@ -21,9 +21,9 @@ export function postInstallData(query: any, callback?: ActionCallbackFunc): Acti
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.INSTALL, Object.assign({}, query, {
+        request(RequestAction.INSTALL, {...query,
             password: translatePwd(query.password)
-        }), 'POST')
+        }, 'POST')
             .then((res) => {
                 dispatch(updateModel({
                     loadingForm: false
@@ -51,9 +51,9 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.LOGIN, Object.assign({}, query, {
+        request(RequestAction.LOGIN, {...query,
             password: translatePwd(query.password)
-        }), 'POST')
+        }, 'POST')
             .then((res) => {
                 dispatch(updateUserOwner(res.data));
                 dispatch(updateModel({
@@ -109,9 +109,9 @@ export function postCreateUserData(query: any, callback?: ActionCallbackFunc): A
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.USER, Object.assign({}, query, {
+        request(RequestAction.USER, {...query,
             password: translatePwd(query.password)
-        }), 'POST')
+        }, 'POST')
             .then((res) => {
                 dispatch(updateModel({
                     loadingForm: false
@@ -139,7 +139,7 @@ export function modifyUserData(query: any, callback?: ActionCallbackFunc): Actio
         dispatch(updateModel({
             loadingForm: true
         }));
-        const sendData = Object.assign({}, query);
+        const sendData = {...query};
         if (sendData.password) {
             sendData.password = translatePwd(query.password);
         }
@@ -162,7 +162,7 @@ export function modifyUserData(query: any, callback?: ActionCallbackFunc): Actio
 
 /**
  * Query user self data
- * @return {ActionThunkFunc} [description]
+ * @return {ActionThunkFunc} Thunk fuction
  */
 export function queryUserOwnerData(): ActionThunkFunc {
     return (dispatch) => {
@@ -186,16 +186,16 @@ export function queryUserOwnerData(): ActionThunkFunc {
 
 /**
  * Query user detail data
- * @param  {string}          userId User ID
- * @return {ActionThunkFunc}        Thunk fuction
+ * @param  {string}          id User ID
+ * @return {ActionThunkFunc}    Thunk fuction
  */
-export function queryUserDetailData(userId: string): ActionThunkFunc {
+export function queryUserDetailData(id: string): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
         }));
         request(RequestAction.USER_PROFILE, {
-            id: userId
+            id
         })
             .then((res) => {
                 dispatch(updateUserDetail(res.data));
@@ -213,7 +213,7 @@ export function queryUserDetailData(userId: string): ActionThunkFunc {
 
 /**
  * Query user list data
- * @return {ActionThunkFunc} [description]
+ * @return {ActionThunkFunc} Thunk fuction
  */
 export function queryUserListData(query: any): ActionThunkFunc {
     return (dispatch) => {
@@ -293,7 +293,7 @@ export function updateUserOwner(data: any): IActionData {
 
 /**
  * Clean user owner info
- * @return {IActionData} [description]
+ * @return {IActionData} Action
  */
 export function cleanUserOwner(): IActionData {
     return {
