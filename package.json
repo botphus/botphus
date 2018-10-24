@@ -12,7 +12,7 @@
     "build:server": "tsc",
     "build:client": "webpack -p",
     "commit": "npm run test",
-    "test": "npm run build && npm run test:cover",
+    "test": "npm run lint && npm run build:server && npm run test:cover",
     "test:unit": "node ./test/create_config && mocha ./dist/test/ && node ./test/remove_config",
     "test:cover": "node ./test/create_config && nyc --reporter=lcov npm run test:unit && node ./test/remove_config",
     "lint": "tslint -c tslint.json -p tsconfig.json && tslint -c tslint.json -p ./client/tsconfig.json",
