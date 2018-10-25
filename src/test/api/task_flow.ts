@@ -2,7 +2,6 @@ import {Schema} from 'mongoose';
 import * as assert from 'power-assert';
 import * as request from 'supertest';
 
-import {TaskFlowPageType} from '../../server/types/task';
 import {IRequestData} from '../interfaces';
 
 import {sessionReg, taskFlowExcludeOption, taskFlowName, taskFlowStartPage, testAdminEmail, testPwd} from '../const';
@@ -95,7 +94,6 @@ export default function() {
                 .send({
                     excludeOption: taskFlowExcludeOption,
                     name: taskFlowName,
-                    pageType: TaskFlowPageType.NORMAL,
                     redisId,
                     startPage: taskFlowStartPage,
                     taskId
@@ -116,7 +114,6 @@ export default function() {
                     assertResMessage(res);
                     assert(res.body.data);
                     assert(res.body.data.name === taskFlowName);
-                    assert(res.body.data.pageType === TaskFlowPageType.NORMAL);
                     assert(res.body.data.redisId === redisId);
                     assert(res.body.data.taskId === taskId);
                     assert(res.body.data.startPage === taskFlowStartPage);

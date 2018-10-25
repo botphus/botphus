@@ -1,14 +1,39 @@
 import {ITaskDataRuleItem, ITaskDomRuleItem, ITaskEventRuleItem, ITaskPageRuleItem, ITaskTimeRuleItem} from 'botphus-core';
 import {Document, Schema, Types} from 'mongoose';
 
-import {TaskSaveRuleTypeItem} from '../../types/task';
+import {TaskPageType, TaskSaveRuleTypeItem} from '../../types/task';
 import {IUserReferModel} from './user';
+
+/**
+ * Return data
+ */
+/**
+ * Task list item
+ */
+export interface ITaskListItem {
+    _id?: string;
+    name?: string;
+    pageType?: TaskPageType;
+    createdAt?: string;
+    updateAt?: number;
+}
+
+/**
+ * Task detail
+ */
+export interface ITaskDetailItem extends ITaskListItem {
+    members?: IUserReferModel[];
+    ruleItems?: TaskSaveRuleTypeItem[];
+    createdUser?: string;
+    createdUserName?: string;
+}
 
 /**
  * Task item base interface
  */
 interface ItaskSaveBaseItem {
     name: string;
+    children?: TaskSaveRuleTypeItem[];
 }
 
 /**
@@ -42,6 +67,7 @@ export interface ITaskSaveTimeRuleItem extends ITaskTimeRuleItem, ItaskSaveBaseI
  */
 export interface ITaskModel extends Document {
     name: string; // Write first & Read only
+    pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
     ruleItems: TaskSaveRuleTypeItem[];
     createdUser: Types.ObjectId;
@@ -52,9 +78,11 @@ export interface ITaskModel extends Document {
  */
 export interface ITaskUserModel {
     name: string;
+    pageType: TaskPageType;
     members?: IUserReferModel[];
     ruleItems: TaskSaveRuleTypeItem[];
-    createdUser: Types.ObjectId;
+    createdUser: Schema.Types.ObjectId;
+    createdUserName?: string;
 }
 
 /**
@@ -62,6 +90,7 @@ export interface ITaskUserModel {
  */
 export interface ITaskSearchModel extends Document {
     name?: string;
+    pageType: TaskPageType;
     userId?: Schema.Types.ObjectId;
 }
 
@@ -69,6 +98,7 @@ export interface ITaskSearchModel extends Document {
  * Modify task model
  */
 export interface ITaskModifyModel extends Document {
+    pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
     ruleItems: TaskSaveRuleTypeItem[];
 }

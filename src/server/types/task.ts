@@ -8,7 +8,7 @@ export type TaskSaveRuleTypeItem = ITaskSaveDataRuleItem | ITaskSaveDomRuleItem 
 /**
  * Task page type
  */
-export enum TaskFlowPageType {
+export enum TaskPageType {
     'NORMAL'= 1,
     'SINGLE_PAGE'= 2,
 }

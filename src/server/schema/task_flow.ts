@@ -1,9 +1,6 @@
 import {pageInfo} from './common';
 
 import {strLength, urlLength} from '../types/rules';
-import {TaskFlowPageType} from '../types/task';
-
-import {getNumEnumsList} from '../modules/util';
 
 /**
  * Search schema
@@ -15,12 +12,6 @@ export const searchSchema = {
             maxLength: strLength[1],
             minLength: strLength[0],
             type: 'string'
-        },
-        pageType: {
-            enum: getNumEnumsList(TaskFlowPageType).map((item) => {
-                return item.value;
-            }),
-            type: 'integer'
         }
     }, pageInfo),
     type: 'object'
@@ -46,12 +37,6 @@ export const createSchema = {
             minLength: strLength[0],
             type: 'string',
         },
-        pageType: {
-            enum: getNumEnumsList(TaskFlowPageType).map((item) => {
-                return item.value;
-            }),
-            type: 'integer'
-        },
         redisId: {
             type: 'string'
         },
@@ -64,6 +49,6 @@ export const createSchema = {
             type: 'string'
         }
     },
-    required: ['excludeOption', 'name', 'pageType'],
+    required: ['excludeOption', 'name'],
     type: 'object'
 };

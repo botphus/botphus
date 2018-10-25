@@ -37,6 +37,8 @@ export default (
                                 <Route exact path="/dashboard/user/profile/:id" component={asyncLoadComponent('dashboard/user/profile')}/>
                                 <Route exact path="/dashboard/connection/" component={asyncLoadComponent('dashboard/connection/index')}/>
                                 <Route exact path="/dashboard/connection/profile/:id" component={asyncLoadComponent('dashboard/connection/profile')}/>
+                                <Route exact path="/dashboard/task/" component={asyncLoadComponent('dashboard/task/index')}/>
+                                <Route exact path="/dashboard/task/profile/:id" component={asyncLoadComponent('dashboard/task/profile')}/>
                                 <Route component={NotFoundPage} />
                             </Switch>
                         </LayoutDashboardPage>

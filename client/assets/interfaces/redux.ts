@@ -1,6 +1,7 @@
 import {ThunkDispatch} from 'redux-thunk';
 
 import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/interfaces/model/connection';
+import {ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
 import {ActionType} from '../types/redux';
 
@@ -56,7 +57,15 @@ export interface IUserContentData extends IContentData<IUserListItem, IUserDetai
     owner: IUserSession;
 }
 
+/**
+ * Connection content data
+ */
 export type IConnectionContentData = IContentData<IConnectionListItem, IConnectionDetailItem>;
+
+/**
+ * Task content data
+ */
+export type ITaskContentData = IContentData<ITaskListItem, ITaskDetailItem>;
 
 /**
  * Redux connect props
@@ -71,6 +80,7 @@ export interface IReduxConnectProps {
 export interface IReduxStoreState {
     connection: IConnectionContentData;
     modal: IModalData;
+    task: ITaskContentData;
     user: IUserContentData;
 }
 

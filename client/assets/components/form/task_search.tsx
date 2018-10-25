@@ -4,20 +4,20 @@ const {Item} = Form;
 const {Option} = Select;
 
 import {IFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
-import {ConnectionType} from '../../types/common';
+import {TaskPageType} from '../../types/common';
 
 import {formInlineItemLayout, formValidRules, localePkg} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
 import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
-const typeList: INumEnumValueWithLabel[] = getNumEnumsList(ConnectionType).map((item) => {
+const pageTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskPageType).map((item) => {
     return {
         ...item,
-        label: localePkg.Enum.ConnectionType[item.key]
+        label: localePkg.Enum.TaskPageType[item.key]
     };
 });
 
-class ConnectionSearchForm extends React.Component<IFormProps> {
+class TaskSearchForm extends React.Component<IFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -30,14 +30,14 @@ class ConnectionSearchForm extends React.Component<IFormProps> {
                 <Row>
                     <Col span={8}>
                         <Item
-                            label={localePkg.Model.Connection.name}
+                            label={localePkg.Model.Task.name}
                             {...formInlineItemLayout}
                         >
                             {getFieldDecorator('name', {
                                 initialValue: defaultValue.name || '',
                                 rules: [{
                                     max: formValidRules.strLength[1],
-                                    message: getFormFieldErrorMsg(localePkg.Model.Connection.name, [
+                                    message: getFormFieldErrorMsg(localePkg.Model.Task.name, [
                                         {
                                             args: formValidRules.strLength,
                                             type: 'length',
@@ -46,20 +46,20 @@ class ConnectionSearchForm extends React.Component<IFormProps> {
                                     min: formValidRules.strLength[0]
                                 }],
                             })(
-                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Connection.name)} />
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} />
                             )}
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item
-                            label={localePkg.Model.Connection.type}
+                            label={localePkg.Model.Task.pageType}
                             {...formInlineItemLayout}
                         >
-                            {getFieldDecorator('type', {
-                                initialValue: defaultValue.type,
+                            {getFieldDecorator('pageType', {
+                                initialValue: defaultValue.pageType,
                             })(
-                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Connection.type)}>
-                                    {typeList.map((item, index) => {
+                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.pageType)}>
+                                    {pageTypeList.map((item, index) => {
                                         return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
                                     })}
                                 </Select>
@@ -87,4 +87,4 @@ class ConnectionSearchForm extends React.Component<IFormProps> {
     }
 }
 
-export default Form.create()(ConnectionSearchForm);
+export default Form.create()(TaskSearchForm);

@@ -29,6 +29,10 @@ const schema = new Schema({
             })
         ]
     },
+    pageType: {
+        required: [true, `${localeTaskPkg.pageType}: ${localePkg.Model.requiredError}`],
+        type: Number
+    },
     ruleItems: {
         required: [true, `${localeTaskPkg.ruleItems}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.Mixed

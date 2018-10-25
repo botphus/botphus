@@ -69,3 +69,7 @@ export const tailFormItemLayout = {
         },
     }
 };
+
+// Date format string
+export const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+export const dateFormatOnlyDate = 'YYYY-MM-DD';

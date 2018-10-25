@@ -10,6 +10,9 @@ import {salt} from './const';
 // Get app DOM
 export const $app: HTMLElement = document.getElementById('app') || document.body;
 
+// Export log function
+export const log = console;
+
 /**
  * Serialize query data
  * @param  {object} data Query Data

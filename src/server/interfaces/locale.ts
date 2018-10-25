@@ -13,10 +13,54 @@ export default interface ILocalePackage {
             MYSQL: string;
             REDIS: string;
         };
+        TaskPageType: {
+            NORMAL: string;
+            SINGLE_PAGE: string;
+        }
+        TaskType: {
+            TYPE_DATA: string;
+            TYPE_DOM: string;
+            TYPE_EVENT: string;
+            TYPE_TIME: string;
+            TYPE_PAGE: string;
+        };
+        TaskTypeDataSubType: {
+            SUB_TYPE_MYSQL: string;
+            SUB_TYPE_REDIS: string;
+        };
+        TaskTypeDomSubType: {
+            SUB_TYPE_KEYBOARD: string;
+            SUB_TYPE_SET_ATTR: string;
+            SUB_TYPE_GET_ATTR: string;
+            SUB_TYPE_GET_HTML: string;
+            SUB_TYPE_GET_TEXT: string;
+            SUB_TYPE_CLICK: string;
+            // SUB_TYPE_SET_INPUT_FILES: string; // Todo
+        };
+        TaskTypeEventSubType: {
+            SUB_TYPE_REQUEST: string;
+            SUB_TYPE_RESPONSE: string;
+            SUB_TYPE_CONSOLE: string;
+            SUB_TYPE_DIALOG: string;
+        };
+        TaskTypeTimeSubType: {
+            SUB_TYPE_SET_SLEEP: string;
+        };
+        TaskTypePageSubType: {
+            SUB_TYPE_RELOAD: string;
+            // Todo
+            // SUB_TYPE_SET_COOKIE: string;
+            // SUB_TYPE_GET_COOKIE: string;
+            // SUB_TYPE_DELETE_COOKIE: string;
+            SUB_TYPE_GOTO: string;
+            // SUB_TYPE_SCREENSHOT: string; // Todo
+        }
     };
     Placehoder: {
         Input: string;
         Select: string;
+        Search: string;
+        NotFound: string;
     };
     // System code error message
     SystemCode: {
@@ -37,6 +81,8 @@ export default interface ILocalePackage {
         urlError: string;
         Common: {
             createdUser: string;
+            createdAt: string;
+            updateAt: string;
         };
         // User fields name
         User: {
@@ -66,14 +112,22 @@ export default interface ILocalePackage {
         // Task fields name
         Task: {
             name: string;
+            pageType: string;
             members: string;
             ruleItems: string;
+            ruleItem: {
+                name: string;
+                type: string;
+                subType: string;
+                argments: string;
+                assertion: string;
+                assertionVarName: string;
+            }
         };
         // Task flow fields name
         TaskFlow: {
             name: string;
             startPage: string;
-            pageType: string;
             mysqlId: string;
             redisId: string;
             taskId: string;
@@ -121,11 +175,14 @@ export default interface ILocalePackage {
             modify: string;
             remove: string;
             cancel: string;
+            next: string;
+            prev: string;
             login: string;
             logout: string;
             submit: string;
             search: string;
             addRedisConfig: string;
+            addTaskRule: string;
         };
         // Title
         Title: {
@@ -137,6 +194,8 @@ export default interface ILocalePackage {
             ConnectionRedisConfig: string;
             ConnectionRedisClusterConfig: string;
             Task: string;
+            TaskBasic: string;
+            TaskRule: string;
             TaskFlow: string;
             TaskReport: string;
             User: string;
@@ -150,5 +209,10 @@ export default interface ILocalePackage {
             TaskReport: string;
             User: string;
         };
+        Help: {
+            removeAction: string;
+            ruleAssertion: string;
+            ruleAssertionVarName: string;
+        }
     };
 }

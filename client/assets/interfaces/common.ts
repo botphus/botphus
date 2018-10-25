@@ -1,6 +1,7 @@
 import {FormComponentProps} from 'antd/lib/form/Form';
 
 export {INumEnumValue} from '../../../src/server/interfaces/common';
+import {INumEnumValue} from '../../../src/server/interfaces/common';
 
 /**
  * Form Props
@@ -11,6 +12,14 @@ export interface IFormProps extends FormComponentProps {
         [index: string]: any
     };
     onSubmit: (data: any) => void;
+}
+
+/**
+ * Form Select Option data
+ */
+export interface IFormSelectOptionItem {
+    key: string;
+    label: string;
 }
 
 /**
@@ -36,4 +45,11 @@ export interface IFormErrorMsgRequiredFields {
 export interface IFormErrorMsgLengthFields {
     type: 'length';
     args: [number, number];
+}
+
+/**
+ * Enum with label
+ */
+export interface INumEnumValueWithLabel extends INumEnumValue {
+    label: string;
 }

@@ -7,4 +7,6 @@ export enum RequestAction {
     'USER_SELF_PROFILE' = '/api/user/profile/my/',
     'CONNECTION' = '/api/connection/',
     'CONNECTION_PROFILE' = '/api/connection/profile/',
+    'TASK' = '/api/task/',
+    'TASK_PROFILE' = '/api/task/profile/',
 }

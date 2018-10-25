@@ -3,8 +3,46 @@ import {TaskType} from 'botphus-core';
 import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
 import {strLength} from '../types/rules';
+import {TaskPageType} from '../types/task';
 
-import {getNumEnumsList} from '../modules/util';
+import {app, getNumEnumsList} from '../modules/util';
+
+app.addSchema({
+    $id: 'taskRuleItems',
+    items: {
+        properties: {
+            argments: {
+                type: 'array'
+            },
+            assertion: {
+                items: {
+                    type: 'string'
+                },
+                type: 'array'
+            },
+            assertionVarName: {
+                type: 'string'
+            },
+            children: {
+                type: 'array'
+            },
+            name: {
+                maxLength: strLength[1],
+                minLength: strLength[0],
+                type: 'string'
+            },
+            type: {
+                enum: getNumEnumsList(TaskType).map((item) => {
+                    return item.value;
+                }),
+                type: 'integer'
+            }
+        },
+        required: ['name', 'type'],
+        type: 'object'
+    },
+    type: 'array'
+});
 
 /**
  * Search schema
@@ -14,12 +52,17 @@ export const searchSchema = {
     properties: Object.assign({
         name: {
             maxLength: strLength[1],
-            minLength: strLength[0],
             type: 'string'
+        },
+        pageType: {
+            enum: getNumEnumsList(TaskPageType).map((item) => {
+                return item.value;
+            }),
+            type: 'integer'
         },
         userId: {
             type: 'string'
-        }
+        },
     }, pageInfo),
     type: 'object'
 };
@@ -40,40 +83,13 @@ const baseProperties = {
         minLength: strLength[0],
         type: 'string'
     },
-    ruleItems: {
-        items: {
-            properties: {
-                argments: {
-                    type: 'array'
-                },
-                assertion: {
-                    items: {
-                        type: 'string'
-                    },
-                    type: 'array'
-                },
-                assertionVarName: {
-                    type: 'string'
-                },
-                children: {
-                    type: 'array'
-                },
-                name: {
-                    maxLength: strLength[1],
-                    minLength: strLength[0],
-                    type: 'string'
-                },
-                type: {
-                    enum: getNumEnumsList(TaskType).map((item) => {
-                        return item.value;
-                    }),
-                    type: 'integer'
-                }
-            },
-            required: ['name', 'type']
-        },
-        type: 'array'
-    }
+    pageType: {
+        enum: getNumEnumsList(TaskPageType).map((item) => {
+            return item.value;
+        }),
+        type: 'integer'
+    },
+    ruleItems: 'taskRuleItems#'
 };
 
 /**
@@ -82,7 +98,7 @@ const baseProperties = {
  */
 export const createSchema = {
     properties: baseProperties,
-    required: ['name', 'ruleItems'],
+    required: ['name', 'ruleItems', 'pageType'],
     type: 'object'
 };
 

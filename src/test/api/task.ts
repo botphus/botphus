@@ -2,9 +2,10 @@ import {Schema} from 'mongoose';
 import * as assert from 'power-assert';
 import * as request from 'supertest';
 
+import {TaskPageType} from '../../server/types/task';
 import {IRequestData} from '../interfaces';
 
-import {sessionReg, taskName, taskRuleList, testAdminEmail, testEmail2, testNickname, testPwd} from '../const';
+import {sessionReg, taskName, taskRuleList, testAdminEmail, testAdminNickname, testEmail2, testNickname, testPwd} from '../const';
 
 import config from '../../server/modules/config';
 import {app} from '../../server/modules/util';
@@ -65,6 +66,7 @@ export default function() {
                 .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
                 .send({
                     name: taskName,
+                    pageType: TaskPageType.NORMAL,
                     ruleItems: taskRuleList
                 })
                 .expect(200)
@@ -85,6 +87,8 @@ export default function() {
                     assert(res.body.data.name === taskName);
                     assert(res.body.data.ruleItems.length === taskRuleList.length);
                     assert(res.body.data.members.length === 0);
+                    assert(res.body.data.createdUserName === testAdminNickname);
+                    assert(res.body.data.pageType === TaskPageType.NORMAL);
                 })
                 .end(done);
         });
@@ -113,6 +117,8 @@ export default function() {
                     assert(res.body.data.ruleItems.length === taskRuleList.length);
                     assert(res.body.data.members.length === 1);
                     assert(res.body.data.members[0].nickname === testNickname);
+                    assert(res.body.data.createdUserName === testAdminNickname);
+                    assert(res.body.data.pageType === TaskPageType.NORMAL);
                 })
                 .end(done);
         });

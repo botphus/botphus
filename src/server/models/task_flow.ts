@@ -31,10 +31,6 @@ const schema = new Schema({
             })
         ]
     },
-    pageType: {
-        required: [true, `${localeTaskFlowPkg.pageType}: ${localePkg.Model.requiredError}`],
-        type: Number
-    },
     redisId: {
         type: Schema.Types.ObjectId
     },

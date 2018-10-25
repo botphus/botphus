@@ -7,9 +7,9 @@
         "moduleResolution": "node",
         "sourceMap": false,
         "outDir": "dist",
-        "baseUrl": ".",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "baseUrl": ".",
         "paths": {
             "*": [
                 "node_modules/*",

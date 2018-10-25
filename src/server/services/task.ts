@@ -13,7 +13,7 @@ import {queryUserByIdsWithReferMap} from './user';
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name createdAt updateAt';
+const defaultFields: string = '_id pageType name createdAt updateAt';
 
 /**
  * Query Task info by id
@@ -49,6 +49,9 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
                 members: query.userId
             }
         ];
+    }
+    if (query.pageType) {
+        condition.pageType = query.pageType;
     }
     return Promise.all([
         Task.countDocuments(condition).exec(),
@@ -97,16 +100,14 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
     return verifyTaskOwner(taskId, userId)
         .then((task) => {
             const taskInfo: ITaskUserModel = Object.assign({}, task.toObject());
-            if (task.members.length > 0) {
-                return queryUserByIdsWithReferMap(task.members)
-                    .then((userMap) => {
-                        taskInfo.members = task.members.map((taskUserId) => {
-                            return userMap[taskUserId.toString()];
-                        });
-                        return taskInfo;
+            return queryUserByIdsWithReferMap(task.members.concat([taskInfo.createdUser]))
+                .then((userMap) => {
+                    taskInfo.members = task.members.map((taskUserId) => {
+                        return userMap[taskUserId.toString()];
                     });
-            }
-            return taskInfo;
+                    taskInfo.createdUserName = userMap[taskInfo.createdUser.toString()].nickname;
+                    return taskInfo;
+                });
         });
 }
 

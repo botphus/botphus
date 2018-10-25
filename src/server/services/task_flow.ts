@@ -13,7 +13,7 @@ import {createSystemError, localePkg} from '../modules/util';
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name startPage pageType taskId';
+const defaultFields: string = '_id name startPage taskId';
 
 /**
  * Query task flow info by ID
@@ -42,9 +42,6 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
     }
     if (query.createdUser) {
         condition.createdUser = query.createdUser;
-    }
-    if (query.pageType) {
-        condition.pageType = query.pageType;
     }
     return Promise.all([
         TaskFlow.countDocuments(condition).exec(),

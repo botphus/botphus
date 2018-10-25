@@ -13,11 +13,49 @@ const localeData: ILocalePackage = {
         ConnectionType: {
             MYSQL: 'Mysql数据库',
             REDIS: 'Redis缓存服务器'
+        },
+        TaskPageType: {
+            NORMAL: '普通页面',
+            SINGLE_PAGE: '单页应用'
+        },
+        TaskType: {
+            TYPE_DATA: '数据类',
+            TYPE_DOM: 'DOM处理类',
+            TYPE_EVENT: '事件类',
+            TYPE_PAGE: '页面类',
+            TYPE_TIME: '时间类'
+        },
+        TaskTypeDataSubType: {
+            SUB_TYPE_MYSQL: 'Mysql查询',
+            SUB_TYPE_REDIS: 'Redis查询'
+        },
+        TaskTypeDomSubType: {
+            SUB_TYPE_CLICK: '鼠标点击',
+            SUB_TYPE_KEYBOARD: '输入内容',
+            SUB_TYPE_GET_ATTR: '获取属性',
+            SUB_TYPE_GET_HTML: '获取HTML内容',
+            SUB_TYPE_GET_TEXT: '获取纯文本',
+            SUB_TYPE_SET_ATTR: '设置属性'
+        },
+        TaskTypeEventSubType: {
+            SUB_TYPE_CONSOLE: '监听控制台',
+            SUB_TYPE_DIALOG: '监听弹窗',
+            SUB_TYPE_REQUEST: '监听请求发起',
+            SUB_TYPE_RESPONSE: '监听请求结束'
+        },
+        TaskTypePageSubType: {
+            SUB_TYPE_GOTO: '跳转页面',
+            SUB_TYPE_RELOAD: '刷新页面'
+        },
+        TaskTypeTimeSubType: {
+            SUB_TYPE_SET_SLEEP: '睡眠'
         }
     },
     Placehoder: {
         Input: '请输入${field}',
-        Select: '请选择${field}'
+        Select: '请选择${field}',
+        Search: '请输入${field}搜索',
+        NotFound: '未找到${field}'
     },
     SystemCode: {
         success: '请求成功',
@@ -29,13 +67,15 @@ const localeData: ILocalePackage = {
         loginForbidden: '你需要登录才能使用'
     },
     Model: {
-        requiredError: '必须填写该内容',
+        requiredError: '必须添加该内容',
         formatError: '该内容不合规',
         lengthError: '必须为{ARGS[0]}-{ARGS[1]}之间的字符',
         numberMinError: '必须大于{ARGS[0]}',
         urlError: '无效的网页地址',
         Common: {
-            createdUser: '创建用户'
+            createdUser: '创建用户',
+            createdAt: '创建时间',
+            updateAt: '更新时间'
         },
         User: {
             email: '邮箱',
@@ -62,13 +102,21 @@ const localeData: ILocalePackage = {
         },
         Task: {
             name: '名称',
+            pageType: '页面类型',
             members: '成员',
-            ruleItems: '规则列表'
+            ruleItems: '规则列表',
+            ruleItem: {
+                name: '规则名称',
+                type: '规则类型',
+                subType: '规则子类型',
+                argments: '规则参数',
+                assertion: '规则验证规则',
+                assertionVarName: '规则变量名'
+            }
         },
         TaskFlow: {
             name: '名称',
             startPage: '起始页',
-            pageType: '页面类型',
             mysqlId: 'MYSQL配置',
             redisId: 'Redis配置',
             taskId: '所属任务',
@@ -109,11 +157,14 @@ const localeData: ILocalePackage = {
             modify: '编辑',
             remove: '删除',
             cancel: '返回',
+            next: '下一步',
+            prev: '上一步',
             login: '登录',
             logout: '登出',
             submit: '提交',
             search: '搜索',
             addRedisConfig: '添加redis配置',
+            addTaskRule: '添加任务规则'
         },
         Title: {
             Install: '创建管理员帐号',
@@ -124,6 +175,8 @@ const localeData: ILocalePackage = {
             ConnectionRedisConfig: 'Redis配置',
             ConnectionRedisClusterConfig: 'Redis集群配置',
             Task: '测试任务',
+            TaskBasic: '基本信息',
+            TaskRule: '任务规则',
             TaskFlow: '测试任务流水',
             TaskReport: '测试任务报告',
             User: '用户管理'
@@ -135,6 +188,11 @@ const localeData: ILocalePackage = {
             TaskFlow: '测试任务成员按任务生成测试流水',
             TaskReport: '测试流水执行并生成测试报告',
             User: '管理所有平台用户'
+        },
+        Help: {
+            removeAction: '你确定要删除这条数据吗?',
+            ruleAssertion: '规则断言内容,每行一个判断规则,遵循JS语法,如data==="123"',
+            ruleAssertionVarName: '断言内容的变量名称,默认为data'
         }
     }
 };
