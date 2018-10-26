@@ -35,7 +35,7 @@ export default interface ILocalePackage {
             SUB_TYPE_GET_HTML: string;
             SUB_TYPE_GET_TEXT: string;
             SUB_TYPE_CLICK: string;
-            // SUB_TYPE_SET_INPUT_FILES: string; // Todo
+            SUB_TYPE_SET_INPUT_FILES: string;
         };
         TaskTypeEventSubType: {
             SUB_TYPE_REQUEST: string;
@@ -48,12 +48,11 @@ export default interface ILocalePackage {
         };
         TaskTypePageSubType: {
             SUB_TYPE_RELOAD: string;
-            // Todo
-            // SUB_TYPE_SET_COOKIE: string;
-            // SUB_TYPE_GET_COOKIE: string;
-            // SUB_TYPE_DELETE_COOKIE: string;
+            SUB_TYPE_SET_COOKIE: string;
+            SUB_TYPE_GET_COOKIE: string;
+            SUB_TYPE_DELETE_COOKIE: string;
             SUB_TYPE_GOTO: string;
-            // SUB_TYPE_SCREENSHOT: string; // Todo
+            SUB_TYPE_SCREENSHOT: string;
         }
     };
     Placehoder: {
@@ -119,7 +118,18 @@ export default interface ILocalePackage {
                 name: string;
                 type: string;
                 subType: string;
-                argments: string;
+                argments: {
+                    mysql: string;
+                    redis: string;
+                    querySelector: string;
+                    querySelectorText: string;
+                    querySelectorAttrName: string;
+                    querySelectorAttrValue: string;
+                    eventTimeout: string;
+                    eventPath: string;
+                    sleepTime: string;
+                    gotoPath: string;
+                };
                 assertion: string;
                 assertionVarName: string;
             }
@@ -175,6 +185,7 @@ export default interface ILocalePackage {
             modify: string;
             remove: string;
             cancel: string;
+            top: string;
             next: string;
             prev: string;
             login: string;
@@ -211,8 +222,18 @@ export default interface ILocalePackage {
         };
         Help: {
             removeAction: string;
-            ruleAssertion: string;
-            ruleAssertionVarName: string;
+            taskRuleDragError: string;
+            taskRuleEventEmptyTip: string;
+            TaskRuleItem: {
+                assertion: string;
+                assertionVarName: string;
+                argments: {
+                    redis: string;
+                    querySelector: string;
+                    eventTimeout: string;
+                    eventPath: string;
+                };
+            }
         }
     };
 }

@@ -1,4 +1,4 @@
-import {TaskType} from 'botphus-core';
+import {TaskType} from '../types/task';
 
 import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
@@ -23,22 +23,28 @@ app.addSchema({
             assertionVarName: {
                 type: 'string'
             },
-            children: {
-                type: 'array'
+            id: {
+                type: 'integer'
             },
             name: {
                 maxLength: strLength[1],
                 minLength: strLength[0],
                 type: 'string'
             },
+            pid: {
+                type: 'integer'
+            },
+            subType: {
+                type: 'integer'
+            },
             type: {
                 enum: getNumEnumsList(TaskType).map((item) => {
                     return item.value;
                 }),
                 type: 'integer'
-            }
+            },
         },
-        required: ['name', 'type'],
+        required: ['name', 'type', 'id'],
         type: 'object'
     },
     type: 'array'

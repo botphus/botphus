@@ -1,7 +1,6 @@
-import {ITaskDataRuleItem, ITaskDomRuleItem, ITaskEventRuleItem, ITaskPageRuleItem, ITaskTimeRuleItem} from 'botphus-core';
 import {Document, Schema, Types} from 'mongoose';
 
-import {TaskPageType, TaskSaveRuleTypeItem} from '../../types/task';
+import {TaskPageType, TaskSubType, TaskType} from '../../types/task';
 import {IUserReferModel} from './user';
 
 /**
@@ -23,7 +22,7 @@ export interface ITaskListItem {
  */
 export interface ITaskDetailItem extends ITaskListItem {
     members?: IUserReferModel[];
-    ruleItems?: TaskSaveRuleTypeItem[];
+    ruleItems?: ITaskRuleSaveItem[];
     createdUser?: string;
     createdUserName?: string;
 }
@@ -31,36 +30,21 @@ export interface ITaskDetailItem extends ITaskListItem {
 /**
  * Task item base interface
  */
-interface ItaskSaveBaseItem {
-    name: string;
-    children?: TaskSaveRuleTypeItem[];
+export interface ITaskRuleSaveItem {
+    id: number; // current ID
+    pid: number; // parent ID
+    level: number; // Tree level
+    type: TaskType; // Type
+    subType: TaskSubType; // subType
+    argments?: any[]; // Rule argments
+    assertion?: string[]; // Assertion list
+    assertionVarName?: string; // Assertion variable name
+    name: string; // Rule name
 }
 
-/**
- * Rewrite all rul item with base interface
- */
-/**
- * Rewrite data rule
- */
-export interface ITaskSaveDataRuleItem extends ITaskDataRuleItem, ItaskSaveBaseItem {}
-/**
- * Rewrite DOM rule
- */
-export interface ITaskSaveDomRuleItem extends ITaskDomRuleItem, ItaskSaveBaseItem {}
-/**
- * Rewrite event rule
- */
-export interface ITaskSaveEventRuleItem extends ITaskEventRuleItem, ItaskSaveBaseItem {
-   children: TaskSaveRuleTypeItem[];
+export interface ITaskRuleTreeItem extends ITaskRuleSaveItem {
+    children: ITaskRuleTreeItem[];
 }
-/**
- * Rewrite page rule
- */
-export interface ITaskSavePageRuleItem extends ITaskPageRuleItem, ItaskSaveBaseItem {}
-/**
- * Rewrite time rule
- */
-export interface ITaskSaveTimeRuleItem extends ITaskTimeRuleItem, ItaskSaveBaseItem {}
 
 /**
  * Task model
@@ -69,7 +53,7 @@ export interface ITaskModel extends Document {
     name: string; // Write first & Read only
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
-    ruleItems: TaskSaveRuleTypeItem[];
+    ruleItems: ITaskRuleSaveItem[];
     createdUser: Types.ObjectId;
 }
 
@@ -80,7 +64,7 @@ export interface ITaskUserModel {
     name: string;
     pageType: TaskPageType;
     members?: IUserReferModel[];
-    ruleItems: TaskSaveRuleTypeItem[];
+    ruleItems: ITaskRuleSaveItem[];
     createdUser: Schema.Types.ObjectId;
     createdUserName?: string;
 }
@@ -100,5 +84,5 @@ export interface ITaskSearchModel extends Document {
 export interface ITaskModifyModel extends Document {
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
-    ruleItems: TaskSaveRuleTypeItem[];
+    ruleItems: ITaskRuleSaveItem[];
 }

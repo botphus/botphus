@@ -8,7 +8,10 @@ import {TaskType, TaskTypeDataSubType, TaskTypeDomSubType, TaskTypeEventSubType,
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
+import {translateModifyRuleItemArgs} from '../../lib/task';
 import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
+
+import TaskRuleArgments from '../form_item/task_rule_argments';
 
 const taskTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskType).filter((item) => {
     return localePkg.Enum.TaskType[item.key];
@@ -75,7 +78,10 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
         const nameError = isFieldTouched('name') && getFieldError('name');
         const typeError = isFieldTouched('type') && getFieldError('type');
         const subTypeError = isFieldTouched('subType') && getFieldError('subType');
+        const assertionVarNameError = isFieldTouched('assertionVarName') && getFieldError('assertionVarName');
+        const assertionError = isFieldTouched('assertion') && getFieldError('assertion');
         const type = getFieldValue('type');
+        const subType = getFieldValue('subType');
         let taskSubTypeList: INumEnumValueWithLabel[] = [];
         switch (type) {
             case TaskType.TYPE_DATA:
@@ -173,13 +179,72 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
                             required: true
                         }],
                     })(
-                        <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.ruleItem.subType)}>
+                        <Select
+                            placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.ruleItem.subType)}
+                            onChange={() => {
+                                setTimeout(() => {
+                                    validateFields();
+                                }, 0);
+                            }}
+                        >
                             {taskSubTypeList.map((item, index) => {
                                 return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
                             })}
                         </Select>
                     )}
                 </Item>
+                {subType ? (
+                    <div>
+                        {/* Argments fields */}
+                        <TaskRuleArgments argments={defaultValue.subType === subType ? defaultValue.argments : []} form={this.props.form} type={type} subType={subType} />
+                        {subType !== TaskTypePageSubType.SUB_TYPE_RELOAD ? (
+                            <div>
+                                <Item
+                                    validateStatus={assertionVarNameError ? 'error' : 'success'}
+                                    help={assertionVarNameError || localePkg.Client.Help.TaskRuleItem.assertionVarName}
+                                    label={localePkg.Model.Task.ruleItem.assertionVarName}
+                                    {...formItemLayout}
+                                >
+                                    {getFieldDecorator('assertionVarName', {
+                                        initialValue: defaultValue.assertionVarName || '',
+                                        rules: [{
+                                            max: formValidRules.strLength[1],
+                                            message: getFormFieldErrorMsg(localePkg.Model.Task.ruleItem.assertionVarName, [
+                                                {
+                                                    args: formValidRules.strLength,
+                                                    type: 'length',
+                                                }
+                                            ]),
+                                            min: formValidRules.strLength[0]
+                                        }],
+                                    })(
+                                        <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.ruleItem.assertionVarName)} />
+                                    )}
+                                </Item>
+                                <Item
+                                    validateStatus={assertionError ? 'error' : 'success'}
+                                    help={localePkg.Client.Help.TaskRuleItem.assertion}
+                                    label={localePkg.Model.Task.ruleItem.assertion}
+                                    {...formItemLayout}
+                                >
+                                    {getFieldDecorator('assertion', {
+                                        initialValue: defaultValue.assertion ? defaultValue.assertion.join('\n') : '',
+                                        rules: [{
+                                            message: getFormFieldErrorMsg(localePkg.Model.Task.ruleItem.assertion, [
+                                                {
+                                                    type: 'required',
+                                                }
+                                            ]),
+                                            required: type === TaskType.TYPE_DATA
+                                        }],
+                                    })(
+                                        <Input.TextArea rows={8} placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.ruleItem.assertion)} />
+                                    )}
+                                </Item>
+                            </div>
+                        ) : null}
+                    </div>
+                ) : null }
                 <Item className="text-right" {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>
                         {isCreate ? localePkg.Client.Action.create : localePkg.Client.Action.modify}
@@ -194,7 +259,14 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
         e.stopPropagation();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                onSubmit(filterEmptyFields(values));
+                const result = {...values};
+                if (result.argments) {
+                    result.argments = translateModifyRuleItemArgs(values.type, values.subType, result.argments);
+                }
+                if (result.assertion) {
+                    result.assertion = result.assertion.split('\n');
+                }
+                onSubmit(filterEmptyFields(result));
             }
         });
     }

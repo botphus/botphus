@@ -35,7 +35,8 @@ const localeData: ILocalePackage = {
             SUB_TYPE_GET_ATTR: '获取属性',
             SUB_TYPE_GET_HTML: '获取HTML内容',
             SUB_TYPE_GET_TEXT: '获取纯文本',
-            SUB_TYPE_SET_ATTR: '设置属性'
+            SUB_TYPE_SET_ATTR: '设置属性',
+            SUB_TYPE_SET_INPUT_FILES: '上传文件'
         },
         TaskTypeEventSubType: {
             SUB_TYPE_CONSOLE: '监听控制台',
@@ -45,7 +46,11 @@ const localeData: ILocalePackage = {
         },
         TaskTypePageSubType: {
             SUB_TYPE_GOTO: '跳转页面',
-            SUB_TYPE_RELOAD: '刷新页面'
+            SUB_TYPE_RELOAD: '刷新页面',
+            SUB_TYPE_SCREENSHOT: '页面截图',
+            SUB_TYPE_DELETE_COOKIE: '删除cookie',
+            SUB_TYPE_GET_COOKIE: '获取cookie',
+            SUB_TYPE_SET_COOKIE: '设置cookie'
         },
         TaskTypeTimeSubType: {
             SUB_TYPE_SET_SLEEP: '睡眠'
@@ -109,9 +114,20 @@ const localeData: ILocalePackage = {
                 name: '规则名称',
                 type: '规则类型',
                 subType: '规则子类型',
-                argments: '规则参数',
-                assertion: '规则验证规则',
-                assertionVarName: '规则变量名'
+                argments: {
+                    mysql: 'SQL语句',
+                    redis: 'Redis命令',
+                    querySelector: 'DOM选择器',
+                    querySelectorText: '输入文本',
+                    querySelectorAttrName: '属性名',
+                    querySelectorAttrValue: '属性值',
+                    eventTimeout: '超时时间(ms)',
+                    eventPath: '匹配地址',
+                    sleepTime: '睡眠时间(ms)',
+                    gotoPath: '跳转地址'
+                },
+                assertion: '验证规则',
+                assertionVarName: '规则变量名',
             }
         },
         TaskFlow: {
@@ -157,6 +173,7 @@ const localeData: ILocalePackage = {
             modify: '编辑',
             remove: '删除',
             cancel: '返回',
+            top: '置顶',
             next: '下一步',
             prev: '上一步',
             login: '登录',
@@ -191,8 +208,18 @@ const localeData: ILocalePackage = {
         },
         Help: {
             removeAction: '你确定要删除这条数据吗?',
-            ruleAssertion: '规则断言内容,每行一个判断规则,遵循JS语法,如data==="123"',
-            ruleAssertionVarName: '断言内容的变量名称,默认为data'
+            taskRuleDragError: '只有事件类才允许拥有子规则',
+            taskRuleEventEmptyTip: '事件类规则必须包含子规则',
+            TaskRuleItem: {
+                assertion: '规则断言内容,每行一个判断规则,遵循JS语法,如data==="123"(data为规则变量名)',
+                assertionVarName: '断言内容的变量名称,默认为data',
+                argments: {
+                    redis: '如set name 111,请注意方法名均为小写',
+                    querySelector: 'Chrome中可以使用"控制台->Elements->右键对应节点->Copy->Copy selector"快速选择节点',
+                    eventTimeout: '超过该设置时间则视为监听失败',
+                    eventPath: '模糊匹配,只有该地址才进行监听'
+                }
+            }
         }
     }
 };

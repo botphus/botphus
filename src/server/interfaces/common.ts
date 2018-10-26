@@ -95,11 +95,16 @@ export interface IAppReply extends fastify.FastifyReply<http.ServerResponse | ht
 }
 
 /**
+ * index map
+ */
+export interface IIndexMap<T> {
+    [index: string]: T;
+}
+
+/**
  * Route config
  */
-export interface IAppRouterConfig {
-    [index: string]: UserPermissionCode;
-}
+export type IAppRouterConfig = IIndexMap<UserPermissionCode>;
 
 /**
  * Session

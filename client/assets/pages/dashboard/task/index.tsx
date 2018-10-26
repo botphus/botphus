@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import {IModalData, IReduxConnectProps, IReduxStoreState, ITaskContentData} from '../../../interfaces/redux';
+import {TaskPageType} from '../../../types/common';
 
 import {cleanTaskList, queryTaskListData} from '../../../actions/task';
 import {localePkg} from '../../../lib/const';
@@ -39,6 +40,13 @@ class DashboardTaskPage extends React.Component<ITaskProps> {
             {
                 dataIndex: 'name',
                 title: localePkg.Model.Task.name
+            },
+            {
+                dataIndex: 'pageType',
+                title: localePkg.Model.Task.pageType,
+                render(pageType) {
+                    return localePkg.Enum.TaskPageType[TaskPageType[pageType]];
+                }
             },
             {
                 dataIndex: 'createdAt',

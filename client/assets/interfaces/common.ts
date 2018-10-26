@@ -1,6 +1,6 @@
 import {FormComponentProps} from 'antd/lib/form/Form';
 
-export {INumEnumValue} from '../../../src/server/interfaces/common';
+export {INumEnumValue, IIndexMap} from '../../../src/server/interfaces/common';
 import {INumEnumValue} from '../../../src/server/interfaces/common';
 
 /**

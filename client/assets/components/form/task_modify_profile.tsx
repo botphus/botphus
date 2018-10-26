@@ -1,27 +1,28 @@
-import {Alert, Button, Card, Drawer, Form, Input, Select, Tabs} from 'antd';
-import * as cloneDeep from 'clone-deep';
+import {Alert, Button, Card, Drawer, Form, Icon, Input, message, Select, Tabs} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 const {TabPane} = Tabs;
 const {Option} = Select;
 
-import {IModifyFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
-import {TaskPageType, TaskSaveRuleTypeItem} from '../../types/common';
+import {IIndexMap, IModifyFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
+import {ITaskRuleSaveItem} from '../../interfaces/task';
+import {TaskPageType} from '../../types/common';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
+import {validRuleItems} from '../../lib/task';
 import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
 import MemberMultiSelect from '../form_item/member_multi_select';
 import TaskRule from '../form_item/task_rule';
 import Loading from '../loading';
-import TaskRuleItemWrapper from '../task_rule_wrapper';
 import TaskRuleModifyForm from './task_rule_modify';
 
 interface ITaskModifyProfileFormState {
     tab: 'basic' | 'rule';
-    taskRuleIndex: string;
-    taskRule?: TaskSaveRuleTypeItem;
+    taskRuleId: number;
+    taskRuleParentId: number;
+    taskRule?: ITaskRuleSaveItem;
 }
 
 const pageTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskPageType).map((item) => {
@@ -36,7 +37,8 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         super(props);
         this.state = {
             tab: 'basic',
-            taskRuleIndex: '',
+            taskRuleId: -1,
+            taskRuleParentId: 0,
         };
     }
     public componentDidMount() {
@@ -44,7 +46,7 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         this.props.form.validateFields();
     }
     public render() {
-        const {tab, taskRule, taskRuleIndex} = this.state;
+        const {tab, taskRule, taskRuleId} = this.state;
         const {defaultValue, loading, isCreate} = this.props;
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, getFieldValue} = this.props.form;
         const nameError = isFieldTouched('name') && getFieldError('name');
@@ -53,7 +55,7 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         getFieldDecorator('ruleItems', {
             initialValue: defaultValue.ruleItems || []
         });
-        const ruleItems: TaskSaveRuleTypeItem[] = getFieldValue('ruleItems');
+        const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Tabs activeKey={tab} onChange={this.handleChangeTab}>
@@ -134,15 +136,12 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                     </TabPane>
                     {/* Rule info*/}
                     <TabPane tab={localePkg.Client.Title.TaskRule} key="rule">
-                        <Card title={localePkg.Model.Task.ruleItems}>
-                            {ruleItems.map((rule, index) => {
-                                const componentIndex = index.toString();
-                                return <TaskRuleItemWrapper key={componentIndex} index={componentIndex} rule={rule} onRender={(curRule, curIndex) => {
-                                    return (
-                                        <TaskRule index={curIndex} value={curRule} onChange={this.handleModifyRuleModel} onRemove={this.handleRemoveRule} />
-                                    );
-                                }} />;
-                            })}
+                        <Card title={localePkg.Model.Task.ruleItems} extra={(
+                                <span>
+                                    <Icon className="m-r-sm" type="info-circle" theme="filled" /><span className="text-light">{localePkg.Client.Help.taskRuleEventEmptyTip}</span>
+                                </span>
+                        )}>
+                            <TaskRule value={ruleItems} onChange={this.handleModifyRuleModel} onRemove={this.handleRemoveRule} onDrag={this.handleDragRule} />
                             {ruleItems.length === 0 ? (
                                 <Alert message={getFormFieldErrorMsg(localePkg.Model.Task.ruleItems, [
                                     {
@@ -150,7 +149,7 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                                     }
                                 ])} />
                             ) : null}
-                            <div className="text-center m-t"><Button onClick={() => this.handleModifyRuleModel('top')}>{localePkg.Client.Action.addTaskRule}</Button></div>
+                            <div className="text-center m-t"><Button onClick={() => this.handleModifyRuleModel(0, 0)}>{localePkg.Client.Action.addTaskRule}</Button></div>
                         </Card>
                         <Item className="text-right" {...tailFormItemLayout}>
                             <Button loading={loading} onClick={() => this.handleChangeTab('basic')} className="m-r">
@@ -164,16 +163,16 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                 </Tabs>
                 {/* Create task rule model*/}
                 <Drawer
-                    title={taskRuleIndex === 'top' ? localePkg.Client.Action.create : localePkg.Client.Action.modify}
+                    title={taskRuleId === 0 ? localePkg.Client.Action.create : localePkg.Client.Action.modify}
                     placement="right"
                     width="100%"
                     mask={false}
                     maskClosable={false}
                     onClose={this.handleCancelModifyRuleModel}
-                    visible={!!taskRuleIndex}
+                    visible={taskRuleId >= 0}
                 >
-                    {taskRuleIndex ? (
-                        <TaskRuleModifyForm defaultValue={taskRule || {}} isCreate={taskRuleIndex === 'top'} onSubmit={this.handleModifyRule} loading={false} />
+                    {taskRuleId >= 0 ? (
+                        <TaskRuleModifyForm defaultValue={taskRule || {}} isCreate={taskRuleId === 0} onSubmit={this.handleModifyRule} loading={false} />
                     ) : <Loading />}
                 </Drawer>
             </Form>
@@ -189,6 +188,10 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                 result.members = result.members.map((item) => {
                     return item.key;
                 });
+                const ruleItemValidResult = validRuleItems(result.ruleItems);
+                if (ruleItemValidResult) {
+                    return message.error(ruleItemValidResult);
+                }
                 onSubmit(filterEmptyFields(result));
             }
         });
@@ -199,66 +202,143 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         });
     }
     // Handle model for task rule modify
-    private handleModifyRuleModel = (taskRuleIndex: string, value?: TaskSaveRuleTypeItem) => {
+    private handleModifyRuleModel = (taskRuleId: number, taskRuleParentId: number) => {
+        const {getFieldValue} = this.props.form;
+        const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
+        let taskRuleItem: any;
+        if (taskRuleId > 0) {
+            ruleItems.some((item) => {
+                if (item.id === taskRuleId) {
+                    taskRuleItem = item;
+                    return true;
+                }
+                return false;
+            });
+        }
         this.setState({
-            taskRule: value,
-            taskRuleIndex
+            taskRule: taskRuleItem,
+            taskRuleId,
+            taskRuleParentId
         });
     }
     private handleCancelModifyRuleModel = () => {
         this.setState({
             taskRule: undefined,
-            taskRuleIndex: '',
+            taskRuleId: -1,
+            taskRuleParentId: 0
         });
     }
     // Handle modify rule item list
-    private handleModifyRule = (value: TaskSaveRuleTypeItem) => {
-        const {taskRuleIndex} = this.state;
-        const {getFieldValue, setFieldsValue} = this.props.form;
-        const ruleItems: TaskSaveRuleTypeItem[] = cloneDeep(getFieldValue('ruleItems'));
-        // Create
-        if (taskRuleIndex === 'top') {
-            ruleItems.push(value);
-        } else { // Replace value
-            const taskRuleIndexList = taskRuleIndex.split('-');
-            if (taskRuleIndexList.length === 1) {
-                ruleItems[taskRuleIndex] = value;
-            } else {
-                let taskRuleItem: TaskSaveRuleTypeItem;
-                taskRuleIndexList.forEach((key, index) => {
-                    if (index === taskRuleIndexList.length - 1) {
-                        taskRuleItem[index] = value;
+    private handleDragRule = (dropKey: number, dragKey: number, levelMap: IIndexMap<number>, dropPosition: number, dropId: number) => {
+        const {getFieldValue} = this.props.form;
+        const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
+        let newRuleItems = ruleItems.map((item) => {
+            // Reset drag info
+            if (item.id === dragKey) {
+                return {
+                    ...item,
+                    level: levelMap[item.id],
+                    pid: dropKey
+                };
+            // Reset level
+            } else if (levelMap[item.id]) {
+                return {
+                    ...item,
+                    level: levelMap[item.id]
+                };
+            }
+            return item;
+        });
+        // if dropPosition means sort, Change sort
+        if (dropPosition !== 0) {
+            let dropIndex: number = -1;
+            let dragIndex: number = -1;
+            newRuleItems.some(((item, index) => {
+                if (dropIndex === -1 && item.id === dropId) {
+                    dropIndex = index;
+                }
+                if (dragIndex === -1 && item.id === dragKey) {
+                    dragIndex = index;
+                }
+                return dropIndex >= 0 && dragIndex >= 0;
+            }));
+            const beforeDropArray = newRuleItems.slice(0, dropIndex < dragIndex ? dropIndex : dragIndex);
+            const dropItem = newRuleItems.slice(dropIndex, dropIndex + 1);
+            const inDropAndDragArray = dropIndex < dragIndex ? newRuleItems.slice(dropIndex + 1, dragIndex) : newRuleItems.slice(dragIndex + 1, dropIndex);
+            const dragItem = newRuleItems.slice(dragIndex, dragIndex + 1);
+            const afterDragArray = newRuleItems.slice(dropIndex < dragIndex ? dragIndex + 1 : dropIndex + 1);
+            switch (dropPosition) {
+                case -1: // Before
+                    if (dropIndex < dragIndex) {
+                        newRuleItems = beforeDropArray.concat(dragItem, inDropAndDragArray, dropItem, afterDragArray);
                     } else {
-                        taskRuleItem = ruleItems[key];
+                        newRuleItems = beforeDropArray.concat(inDropAndDragArray, dragItem, dropItem, afterDragArray);
                     }
-                });
+                    break;
+                case 1: // After
+                    if (dropIndex < dragIndex) {
+                        newRuleItems = beforeDropArray.concat(dropItem, inDropAndDragArray, dragItem, afterDragArray);
+                    } else {
+                        newRuleItems = beforeDropArray.concat(inDropAndDragArray, dropItem, dragItem, afterDragArray);
+                    }
+                    break;
             }
         }
-        setFieldsValue({
-            ruleItems
+        this.handleSetRuleitems(newRuleItems);
+    }
+    private handleModifyRule = (data) => {
+        const {taskRuleId, taskRuleParentId} = this.state;
+        const {getFieldValue} = this.props.form;
+        const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
+        let taskParentRuleItem: any;
+        let maxId: number = 1;
+        ruleItems.forEach((item) => {
+            if (item.id === taskRuleParentId) {
+                taskParentRuleItem = item;
+            }
+            if (item.id > maxId) {
+                maxId = item.id;
+            }
         });
+        const saveRuleItem: ITaskRuleSaveItem = {
+            ...data,
+            id: taskRuleId > 0 ? taskRuleId : maxId + 1,
+            level: taskParentRuleItem ? taskParentRuleItem.level + 1 : 0,
+            pid: taskRuleParentId,
+        };
+        let newRuleItems: ITaskRuleSaveItem[];
+        if (taskRuleId > 0) {
+            newRuleItems = ruleItems.map((item) => {
+                if (item.id === taskRuleId) {
+                    return saveRuleItem;
+                }
+                return item;
+            });
+        } else {
+            newRuleItems = ruleItems.concat([saveRuleItem]);
+        }
+        this.handleSetRuleitems(newRuleItems);
         this.handleCancelModifyRuleModel();
     }
-    private handleRemoveRule = () => {
-        const {taskRuleIndex} = this.state;
-        const {getFieldValue, setFieldsValue} = this.props.form;
-        const ruleItems: TaskSaveRuleTypeItem[] = cloneDeep(getFieldValue('ruleItems'));
-        const taskRuleIndexList = taskRuleIndex.split('-');
-        if (taskRuleIndexList.length === 1) { // splice
-            ruleItems.splice(parseInt(taskRuleIndex, 10), 1);
-        } else {
-            let taskRuleItem: TaskSaveRuleTypeItem;
-            taskRuleIndexList.forEach((key, index) => {
-                if (index === taskRuleIndexList.length - 1) {
-                    taskRuleItem[index].splice(parseInt(key, 10), 1);
-                } else {
-                    taskRuleItem = ruleItems[key];
-                }
-            });
-        }
+    private handleRemoveRule = (levelMap: IIndexMap<number>) => {
+        const {getFieldValue} = this.props.form;
+        const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
+        const newRuleItems = ruleItems.filter((item) => {
+            return !(levelMap[item.id] >= 0);
+        });
+        this.handleSetRuleitems(newRuleItems);
+    }
+    private handleSetRuleitems = (ruleItems) => {
+        const {validateFields, setFieldsValue} = this.props.form;
+        ruleItems = ruleItems.sort((before, after) => {
+            return before.level - after.level;
+        });
         setFieldsValue({
             ruleItems
         });
+        setTimeout(() => {
+            validateFields();
+        }, 0);
     }
 }
 

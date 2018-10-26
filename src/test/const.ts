@@ -1,7 +1,7 @@
-import {TaskType, TaskTypeDomSubType, TaskTypeEventSubType} from 'botphus-core';
 import * as puppeteer from 'puppeteer';
 
-import {TaskSaveRuleTypeItem} from '../server/types/task';
+import {ITaskRuleSaveItem} from '../server/interfaces/model/task';
+import {TaskType, TaskTypeDomSubType, TaskTypeEventSubType} from '../server/types/task';
 
 import config from '../server/modules/config';
 
@@ -41,35 +41,39 @@ export const connectionRedisClusterConfig = [
 // Task test data
 export const taskName = 'test-task';
 const eventTimeout = 1000;
-export const taskRuleList: TaskSaveRuleTypeItem[] = [
-    // console
+export const taskRuleList: ITaskRuleSaveItem[] = [
     {
         argments: [eventTimeout, (consoleMessage: puppeteer.ConsoleMessage) => {
             return consoleMessage.type() === 'log';
         }],
         assertion: [`consoleMessage.type() === "log"`, 'consoleMessage.args().length === 2', 'consoleMessage.text().indexOf("Upload event:") >= 0'],
         assertionVarName: 'consoleMessage',
-        children: [
-            {
-                argments: [eventTimeout, (request: puppeteer.Request) => {
-                    return request.url().indexOf('upload.do') >= 0;
-                }],
-                children: [
-                    {
-                        argments: ['.ant-form-item:nth-child(10) .ant-form-item-children .ant-upload input'],
-                        name: 'test3',
-                        subType: TaskTypeDomSubType.SUB_TYPE_CLICK,
-                        type: TaskType.TYPE_DOM
-                    }
-                ],
-                name: 'test2',
-                subType: TaskTypeEventSubType.SUB_TYPE_REQUEST,
-                type: TaskType.TYPE_EVENT
-            }
-        ],
+        id: 1,
+        level: 0,
         name: 'test1',
+        pid: 0,
         subType: TaskTypeEventSubType.SUB_TYPE_CONSOLE,
+        type: TaskType.TYPE_EVENT,
+    },
+    {
+        argments: [eventTimeout, (request: puppeteer.Request) => {
+            return request.url().indexOf('upload.do') >= 0;
+        }],
+        id: 2,
+        level: 1,
+        name: 'test2',
+        pid: 1,
+        subType: TaskTypeEventSubType.SUB_TYPE_REQUEST,
         type: TaskType.TYPE_EVENT
+    },
+    {
+        argments: ['.ant-form-item:nth-child(10) .ant-form-item-children .ant-upload input'],
+        id: 3,
+        level: 2,
+        name: 'test3',
+        pid: 2,
+        subType: TaskTypeDomSubType.SUB_TYPE_CLICK,
+        type: TaskType.TYPE_DOM
     }
 ];
 
