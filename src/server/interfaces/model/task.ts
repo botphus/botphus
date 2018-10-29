@@ -43,6 +43,7 @@ export interface ITaskRuleSaveItem {
 }
 
 export interface ITaskRuleTreeItem extends ITaskRuleSaveItem {
+    index: string;
     children: ITaskRuleTreeItem[];
 }
 

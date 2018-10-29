@@ -24,7 +24,7 @@ function mapStateToProps({modal, task}: IReduxStoreState) {
     };
 }
 
-class DashboardTaskCreatePage extends React.Component<ITaskProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
+class DashboardTaskProfilePage extends React.Component<ITaskProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
     public componentDidMount() {
         const {dispatch, match} = this.props;
         // Check is create
@@ -77,4 +77,4 @@ class DashboardTaskCreatePage extends React.Component<ITaskProfileProps & RouteC
     }
 }
 
-export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardTaskCreatePage));
+export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardTaskProfilePage));

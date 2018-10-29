@@ -18,9 +18,9 @@ const schema = new Schema({
     message: {
         type: String
     },
-    success: {
-        required: [true, `${localeTaskReportPkg.success}: ${localePkg.Model.requiredError}`],
-        type: Boolean
+    status: {
+        required: [true, `${localeTaskReportPkg.status}: ${localePkg.Model.requiredError}`],
+        type: Number
     }
 });
 

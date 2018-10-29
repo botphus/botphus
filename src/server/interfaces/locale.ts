@@ -146,7 +146,7 @@ export default interface ILocalePackage {
         // Task report
         TaskReport: {
             index: string;
-            success: string;
+            status: string;
             message: string;
             flowId: string;
         };
@@ -208,6 +208,9 @@ export default interface ILocalePackage {
             TaskBasic: string;
             TaskRule: string;
             TaskFlow: string;
+            TaskFlowBasic: string;
+            TaskFlowRule: string;
+            TaskFlowConnection: string;
             TaskReport: string;
             User: string;
         };
@@ -221,6 +224,7 @@ export default interface ILocalePackage {
             User: string;
         };
         Help: {
+            FetchFaild: string;
             removeAction: string;
             taskRuleDragError: string;
             taskRuleEventEmptyTip: string;
@@ -233,6 +237,9 @@ export default interface ILocalePackage {
                     eventTimeout: string;
                     eventPath: string;
                 };
+            };
+            TaskFlow: {
+                connectionId: string;
             }
         }
     };

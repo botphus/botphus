@@ -140,7 +140,7 @@ const localeData: ILocalePackage = {
         },
         TaskReport: {
             index: '单元编号',
-            success: '单元执行结果',
+            status: '单元执行状态',
             message: '单元执行信息',
             flowId: '所属流水'
         }
@@ -195,6 +195,9 @@ const localeData: ILocalePackage = {
             TaskBasic: '基本信息',
             TaskRule: '任务规则',
             TaskFlow: '测试任务流水',
+            TaskFlowBasic: '基本信息',
+            TaskFlowRule: '选择规则',
+            TaskFlowConnection: '选择连接配置',
             TaskReport: '测试任务报告',
             User: '用户管理'
         },
@@ -207,6 +210,7 @@ const localeData: ILocalePackage = {
             User: '管理所有平台用户'
         },
         Help: {
+            FetchFaild: '获取数据失败',
             removeAction: '你确定要删除这条数据吗?',
             taskRuleDragError: '只有事件类才允许拥有子规则',
             taskRuleEventEmptyTip: '事件类规则必须包含子规则',
@@ -219,6 +223,9 @@ const localeData: ILocalePackage = {
                     eventTimeout: '超过该设置时间则视为监听失败',
                     eventPath: '模糊匹配,只有该地址才进行监听'
                 }
+            },
+            TaskFlow: {
+                connectionId: '如果没有数据类查询规则,你可以不选择'
             }
         }
     }

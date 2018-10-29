@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch';
 import {IHttpResponseMessage} from '../../../src/server/interfaces/common';
 
 import {SystemCode} from '../../../src/server/types/common';
-import {RequestAction} from '../types/request';
+import {RequestAction, RequestMethodType} from '../types/request';
 
 import {isObjEmpty, serialize} from './util';
 
@@ -13,12 +13,12 @@ const customHeader = {
     'X-Requested-With': 'XMLHttpRequest',
 };
 
-export default function request(action: RequestAction, data: any = null, method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE' = 'GET', opts: any = null) {
+export default function request(action: RequestAction, data: any = null, method: RequestMethodType = 'GET', opts: any = null) {
     let path: string = action;
     const option: any = {
         credentials: 'include',
         headers: customHeader,
-        method,
+        method: method || 'GET',
     };
     switch (method) {
         case 'GET':

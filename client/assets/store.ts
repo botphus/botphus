@@ -10,7 +10,7 @@ const createStoreWithMiddleware = applyMiddleware(
 // Install redux chrome plugin
 function configureStore(initialState) {
     // @ts-ignore:next
-    const debugMiddlewareStore = createStoreWithMiddleware(reducer, initialState, window.devToolsExtension ? window.devToolsExtension() : null);
+    const debugMiddlewareStore = createStoreWithMiddleware(reducer, initialState, window.devToolsExtension ? window.devToolsExtension() : undefined);
     return debugMiddlewareStore;
 }
 

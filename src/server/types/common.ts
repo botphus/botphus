@@ -14,3 +14,15 @@ export enum SystemCode {
 }
 
 export const defaultPageSize = 10;
+
+/* tslint:disable:object-literal-sort-keys */
+/**
+ * Close body data escape
+ */
+export const closeBodyEscapeMap: {
+    [index: string]: true
+} = {
+    'post:/api/task/': true,
+    'patch:/api/task/': true,
+};
+/* tslint:enable:object-literal-sort-keys */

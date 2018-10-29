@@ -2,7 +2,8 @@ import {Schema} from 'mongoose';
 
 import {TaskReport} from '../models/';
 
-import {ITaskReportModel} from '../interfaces/model';
+import {IIndexMap} from '../interfaces/common';
+import {ITaskReportBaseItem, ITaskReportModel} from '../interfaces/model';
 
 /**
  * Query task report info by ID
@@ -15,31 +16,32 @@ export function queryTaskReportById(taskReportId: Schema.Types.ObjectId, fields:
 }
 
 /**
- * Query task report list by flow ID
- * @param  {Schema.Types.ObjectId}                 taskFlowId Task flow ID
- * @param  {number}                                page       Page
- * @param  {number}                                pageSize   Page size
- * @param  {string}                                fields     Field list
- * @return {Promise<[number, ITaskReportModel[]]>}            Promise with total number & task report info list
+ * Query task report type
+ * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
+ * @return {Promise}                          Promise with task report map
  */
-export function queryTaskReportListByFlowId(taskFlowId: Schema.Types.ObjectId, page: number, pageSize: number, fields: string): Promise<[number, ITaskReportModel[]]> {
-    const condition: any = {
+export function queryTaskReportMap(taskFlowId: Schema.Types.ObjectId): Promise<IIndexMap<ITaskReportModel>> {
+    return TaskReport.find({
         flowId: taskFlowId
-    };
-    return Promise.all([
-        TaskReport.countDocuments(condition).exec(),
-        TaskReport.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
-            _id: 1
-        }).exec()
-    ]);
+    }).select('index status message flowId').exec()
+        .then((taskReportList) => {
+            const taskReportMap: IIndexMap<ITaskReportModel> = {};
+            taskReportList.forEach((taskReport) => {
+                taskReportMap[taskReport.index] = taskReport;
+            });
+            return taskReportMap;
+        });
 }
 
 /**
- * Createa task report info
- * @param  {ITaskReportModel}          taskReportData Task report data
- * @return {Promise<ITaskReportModel>}                Promise with task report Info
+ * Create task report list
+ * @param  {ITaskReportBaseItem[]}       taskReportDataList Task report data list
+ * @return {Promise<ITaskReportModel[]>}                    Promise with task report Info
  */
-export function createTaskReport(taskReportData: ITaskReportModel): Promise<ITaskReportModel> {
-    const taskReport = Object.assign(new TaskReport(), taskReportData);
-    return taskReport.save();
+export function createTaskReports(taskReportDataList: ITaskReportBaseItem[]): Promise<ITaskReportModel[]> {
+    // Create list
+    return Promise.all(taskReportDataList.map((taskReportData) => {
+        const taskReport = Object.assign(new TaskReport(), taskReportData);
+        return taskReport.save();
+    }));
 }

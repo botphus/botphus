@@ -13,7 +13,6 @@ export const searchSchema = {
     properties: Object.assign({
         name: {
             maxLength: strLength[1],
-            minLength: strLength[0],
             type: 'string'
         },
         type: {

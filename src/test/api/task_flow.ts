@@ -117,6 +117,10 @@ export default function() {
                     assert(res.body.data.redisId === redisId);
                     assert(res.body.data.taskId === taskId);
                     assert(res.body.data.startPage === taskFlowStartPage);
+                    assert(res.body.data.taskDetail);
+                    assert(res.body.data.taskReportMap);
+                    assert(res.body.data.redisDetail);
+                    assert(!res.body.data.mysqlDetail);
                 })
                 .end(done);
         });

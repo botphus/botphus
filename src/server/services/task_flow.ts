@@ -2,10 +2,13 @@ import {Schema, Types} from 'mongoose';
 
 import {TaskFlow} from '../models/';
 
-import {ITaskFlowModel, ITaskFlowSearchModel} from '../interfaces/model';
+import {ITaskFlowDetailModel, ITaskFlowModel, ITaskFlowSearchModel, ITaskReportBaseItem} from '../interfaces/model';
 import {SystemCode} from '../types/common';
+import {TaskReportStatus} from '../types/task';
 
-import {verifyTaskOwner} from './task';
+import {queryConnectionById} from './connection';
+import {queryTaskById, verifyTaskOwner} from './task';
+import {createTaskReports, queryTaskReportMap} from './task_report';
 
 import {createSystemError, localePkg} from '../modules/util';
 
@@ -13,7 +16,7 @@ import {createSystemError, localePkg} from '../modules/util';
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name startPage taskId';
+const defaultFields: string = '_id name startPage taskId createdAt';
 
 /**
  * Query task flow info by ID
@@ -53,17 +56,39 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
 
 /**
  * Query task flow detail by user
- * @param  {Schema.Types.ObjectId}   taskFlowId Task flow ID
- * @param  {string}                  userId     User ID
- * @return {Promise<ITaskFlowModel>}            Promise with TaskFlow Info
+ * @param  {Schema.Types.ObjectId}         taskFlowId Task flow ID
+ * @param  {string}                        userId     User ID
+ * @return {Promise<ITaskFlowDetailModel>}            Promise with Task flow Info
  */
-export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<ITaskFlowModel> {
+export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<ITaskFlowDetailModel> {
     return queryTaskFlowById(taskFlowId)
         .then((taskFlow) => {
             if (taskFlow.createdUser.toString() === userId) {
                 return taskFlow;
             }
             throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
+        })
+        .then((taskFlow) => {
+            return Promise.all([
+                Promise.resolve(taskFlow),
+                queryTaskById(taskFlow.taskId, 'name ruleItems pageType updateAt'), // Task info
+                queryTaskReportMap(taskFlow._id), // Task report map
+                taskFlow.mysqlId ? queryConnectionById(taskFlow.mysqlId, 'name config') : Promise.resolve(null), // Mysql
+                taskFlow.redisId ? queryConnectionById(taskFlow.redisId, 'name config') : Promise.resolve(null) // Redis
+            ]);
+        })
+        .then(([taskFlow, taskDetail, taskReportMap, mysqlDetail, redisDetail]) => {
+            const taskFlowDetail: ITaskFlowDetailModel = Object.assign(taskFlow.toObject(), {
+                taskDetail,
+                taskReportMap
+            });
+            if (mysqlDetail) {
+                taskFlowDetail.mysqlDetail = mysqlDetail;
+            }
+            if (redisDetail) {
+                taskFlowDetail.redisDetail = redisDetail;
+            }
+            return taskFlowDetail;
         });
 }
 
@@ -79,5 +104,22 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
     return verifyTaskOwner(taskFlow.taskId, createUser)
         .then(() => {
             return taskFlow.save();
+        })
+        .then((flowData) => {
+            return queryTaskById(flowData.taskId, '_id ruleItems') // Query task rules data
+                .then((taskData) => {
+                    const data: ITaskReportBaseItem[] = taskData.ruleItems.map((taskRule) => {
+                        return {
+                            flowId: flowData.id,
+                            index: `${taskRule.id}`,
+                            message: '',
+                            status: flowData.excludeOption[`${taskRule.id}`] ? TaskReportStatus.IGNORE : TaskReportStatus.PENDING,
+                        };
+                    });
+                    return createTaskReports(data);
+                })
+                .then(() => {
+                    return flowData;
+                });
         });
 }

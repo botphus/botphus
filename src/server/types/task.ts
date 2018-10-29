@@ -7,6 +7,16 @@ export enum TaskPageType {
 }
 
 /**
+ * Task report status
+ */
+export enum TaskReportStatus {
+    'PENDING' = 0,
+    'FAILED' = -1,
+    'SUCCESS' = 1,
+    'IGNORE' = 2
+}
+
+/**
  * Task Type
  */
 export enum TaskType {

@@ -3,26 +3,34 @@ import {LabeledValue} from 'antd/lib/select';
 import * as React from 'react';
 const {Option} = Select;
 
-import {IFormSelectOptionItem} from '../../interfaces/common';
-import {RequestAction} from '../../types/request';
+import {IFormSelectOptionItem, IIndexMap} from '../../interfaces/common';
+import {RequestAction, RequestMethodType} from '../../types/request';
 
 import {formValidRules, localePkg} from '../../lib/const';
 import {getFormFieldPlaceholder} from '../../lib/form';
 import request from '../../lib/request';
 import {log} from '../../lib/util';
 
-interface IMemberMultiSelectProps {
+interface ISearchSelectProps {
+    autoLoad?: boolean; // Auto load when mount
+    apiAction: RequestAction;
+    apiData?: any;
+    apiMethod?: RequestMethodType;
+    listName: string; // The list's name
+    listValueKey: string; // The key of listData that give to the list's option value
+    listNameKey: string; // The key of listData that give to the list's option name
+    searchField: string; // The search query field name
     delayTime?: number; // Request delay time
     value?: LabeledValue[];
     onChange?: (value: LabeledValue) => void;
 }
 
-interface IMemberMultiSelectState {
+interface ISearchSelectState {
     loading: boolean;
     listData: IFormSelectOptionItem[];
 }
 
-export default class MemberMultiSelect extends React.Component<IMemberMultiSelectProps, IMemberMultiSelectState> {
+export default class SearchSelect extends React.Component<ISearchSelectProps, ISearchSelectState> {
     private open: boolean = true;
     private timer: any = null;
     constructor(props) {
@@ -32,55 +40,59 @@ export default class MemberMultiSelect extends React.Component<IMemberMultiSelec
             loading: false
         };
     }
+    public componentDidMount() {
+        const {autoLoad} = this.props;
+        if (autoLoad) {
+            this.handleGetList('');
+        }
+    }
     public componentWillUnmount() {
         this.open = false;
         this.clearTimer();
     }
     public render() {
         const {listData, loading} = this.state;
-        const {value, onChange} = this.props;
+        const {value, onChange, listName, listValueKey, listNameKey} = this.props;
         return (
             <Select
-                mode="multiple"
+                showSearch
+                allowClear
                 value={value}
                 onSearch={this.handleSearch}
                 onChange={onChange}
-                placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Search, localePkg.Model.User.nickname)}
+                placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Search, listName)}
                 labelInValue
-                notFoundContent={loading ? <Spin size="small" /> : getFormFieldPlaceholder(localePkg.Placehoder.NotFound, localePkg.Model.User.nickname)}
+                notFoundContent={loading ? <Spin size="small" /> : getFormFieldPlaceholder(localePkg.Placehoder.NotFound, listName)}
                 filterOption={false}
             >
                 {listData.map((item, index) => {
-                    return <Option key={index.toString()} value={item.key} title={item.label}>{item.label}</Option>;
+                    return <Option key={index.toString()} value={item[listValueKey]} title={item[listNameKey]}>{item[listNameKey]}</Option>;
                 })}
             </Select>
         );
     }
-    private handleGetList = (nickname) => {
+    private handleGetList = (value) => {
+        const {searchField, apiAction, apiMethod, apiData, listName} = this.props;
         this.setState({
             loading: true
         });
-        request(RequestAction.USER, {
-            nickname
-        })
+        const sendData: IIndexMap<string> = {
+            ...apiData
+        };
+        sendData[searchField] = value;
+        request(apiAction, sendData, apiMethod)
             .then((data) => {
                 // Check open status
                 if (!this.open) {
                     return;
                 }
-                const listData: IFormSelectOptionItem[] = data.data.content.map((item) => {
-                    return {
-                        key: item._id,
-                        label: item.nickname
-                    };
-                });
                 this.setState({
-                    listData,
+                    listData: data.data.content,
                     loading: false
                 });
             })
             .catch((err) => {
-                // 判断如果卸载,则不再设置数据
+                // If close, return
                 if (!this.open) {
                     return;
                 }
@@ -88,7 +100,7 @@ export default class MemberMultiSelect extends React.Component<IMemberMultiSelec
                     loading: false
                 });
                 log.error(err);
-                message.error(`${localePkg.Client.Help.FetchFaild}: ${localePkg.Model.User.nickname}`);
+                message.error(`${localePkg.Client.Help.FetchFaild}: ${listName}`);
             });
     }
     private handleSearch = (value) => {

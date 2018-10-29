@@ -33,6 +33,7 @@ export interface ISystemError extends Error {
 export interface ISystemConfig {
     title: string; // Site title
     templateCache: string; // Template cache
+    host: string; // Current listen host
     port: number; // Server listen port;
     locale: string; // Locale package name for site & antd, check detail: https://ant.design/docs/react/i18n-cn & locale dir: "/src/server/locale"
     // Logger

@@ -7,7 +7,7 @@ const createApp = require('./dist/server/app').default;
 
 createApp()
     .then(() => {
-        app.listen(config.port, (err) => {
+        app.listen(config.port, config.host, (err) => {
             if (err) {
                 throw err;
             }

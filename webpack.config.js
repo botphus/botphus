@@ -36,19 +36,24 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.(tsx|ts)$/,
                 exclude: /(node_modules)/,
-                loader: 'ts-loader',
-                options: {
-                    configFile: path.join(__dirname, './client/tsconfig.json'),
-                    getCustomTransformers: () => ({
-                        before: [ tsImportPluginFactory({
-                            libraryDirectory: 'es',
-                            libraryName: 'antd',
-                            style: true,
-                        })]
-                    })
-                }
+                use: [
+                    'babel-loader',
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            configFile: path.join(__dirname, './client/tsconfig.json'),
+                            getCustomTransformers: () => ({
+                                before: [ tsImportPluginFactory({
+                                    libraryDirectory: 'es',
+                                    libraryName: 'antd',
+                                    style: true,
+                                })]
+                            })
+                        }
+                    }
+                ]
             },
             {
                 test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
@@ -60,7 +65,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.less|\.css$/,
+                test: /\.(less|css)$/,
                 use: [{
                     loader: MiniCssExtractPlugin.loader,
                     options: {

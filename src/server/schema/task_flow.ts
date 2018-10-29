@@ -42,13 +42,12 @@ export const createSchema = {
         },
         startPage: {
             maxLength: urlLength[1],
-            minLength: urlLength[0],
             type: 'string'
         },
         taskId: {
             type: 'string'
         }
     },
-    required: ['excludeOption', 'name'],
+    required: ['excludeOption', 'name', 'taskId'],
     type: 'object'
 };

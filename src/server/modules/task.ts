@@ -13,13 +13,14 @@ export function getTaskItemTreeList(items: ITaskRuleSaveItem[]): ITaskRuleTreeIt
     items.forEach((item) => {
         const curItem: ITaskRuleTreeItem = {
             children: [],
-            ...item
+            ...item,
+            index: `${item.id}`
         };
         // If parent
         if (item.pid === 0) {
+            const treeIndex = `${taskRuleTreeItem.length}`;
+            taskIdTreeMap[`${item.id}`] = treeIndex;
             taskRuleTreeItem.push(curItem);
-            const index = `${taskRuleTreeItem.length - 1}`;
-            taskIdTreeMap[`${item.id}`] = index;
         // If child
         } else {
             const parentIndex = taskIdTreeMap[item.pid];
@@ -28,8 +29,9 @@ export function getTaskItemTreeList(items: ITaskRuleSaveItem[]): ITaskRuleTreeIt
             parentIndexList.forEach((key) => {
                 parentItem = parentItem[parseInt(key, 10)].children;
             });
+            const treeIndex = `${parentIndex}-${parentItem.length}`;
+            taskIdTreeMap[`${item.id}`] = treeIndex;
             parentItem.push(curItem);
-            taskIdTreeMap[`${item.id}`] = `${parentIndex}-${parentItem.length - 1}`;
         }
     });
     return taskRuleTreeItem;

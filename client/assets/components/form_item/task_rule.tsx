@@ -12,17 +12,19 @@ import {getTaskItemRelatedIds, getTaskItemTreeList} from '../../lib/task';
 
 interface ITaskRuleProps {
     value: ITaskRuleSaveItem[];
-    onChange: (id: number, parentId: number) => void;
-    onRemove: (levelMap: IIndexMap<number>) => void;
+    checkValue?: string[];
+    onCheck?: (checkedKeys) => void;
+    onChange?: (id: number, parentId: number) => void;
+    onRemove?: (levelMap: IIndexMap<number>) => void;
     // before: dropPosition = -1
     // inset: dropPosition = 0
     // after: dropPosition = 1
-    onDrag: (dropKey: number, dragKey: number, levelMap: IIndexMap<number>, dropPosition: number, dropId?: number) => void;
+    onDrag?: (dropKey: number, dragKey: number, levelMap: IIndexMap<number>, dropPosition: number, dropId?: number) => void;
 }
 
 export default class TaskRule extends React.Component<ITaskRuleProps> {
     public render() {
-        const {value, onChange} = this.props;
+        const {checkValue, value, onChange, onDrag, onRemove, onCheck} = this.props;
         // Translate flat data to tree data
         const treeData = getTaskItemTreeList(value);
         const loop = (data: ITaskRuleTreeItem[]) => data.map((item) => {
@@ -30,15 +32,19 @@ export default class TaskRule extends React.Component<ITaskRuleProps> {
                 <div>
                     {item.name}({localePkg.Enum.TaskType[TaskType[item.type]]})
                     {/* action: create */}
-                    {item.type === TaskType.TYPE_EVENT ? (
+                    {onChange && item.type === TaskType.TYPE_EVENT ? (
                         <Icon title={localePkg.Client.Action.create} className="m-l" type="plus-square" theme="filled" onClick={() => onChange(0, item.id)} />
                     ) : null}
                     {/* action: modify */}
-                    <Icon title={localePkg.Client.Action.modify} className="m-l" type="edit" theme="filled" onClick={() => onChange(item.id, item.pid)} />
+                    {onChange ? (
+                        <Icon title={localePkg.Client.Action.modify} className="m-l" type="edit" theme="filled" onClick={() => onChange(item.id, item.pid)} />
+                    ) : null}
                     {/* action: remove */}
-                    <Popconfirm title={localePkg.Client.Help.removeAction} onConfirm={() => this.handleRemove(item)}>
-                        <Icon title={localePkg.Client.Action.remove} className="m-l" type="delete" theme="filled" />
-                    </Popconfirm>
+                    {onRemove ? (
+                        <Popconfirm title={localePkg.Client.Help.removeAction} onConfirm={() => this.handleRemove(item)}>
+                            <Icon title={localePkg.Client.Action.remove} className="m-l" type="delete" theme="filled" />
+                        </Popconfirm>
+                    ) : null}
                 </div>
             );
             if (item.children && item.children.length) {
@@ -48,10 +54,13 @@ export default class TaskRule extends React.Component<ITaskRuleProps> {
         });
         return (
             <Tree
+                checkable={!!onCheck}
+                checkedKeys={checkValue || []}
                 defaultExpandAll
                 className="app-task-rule"
-                draggable
+                draggable={!!onDrag}
                 onDrop={this.handleDrop}
+                onCheck={onCheck}
             >
                 {loop(treeData)}
              </Tree>
@@ -86,12 +95,16 @@ export default class TaskRule extends React.Component<ITaskRuleProps> {
             parentPid = parseInt(dropKey, 10);
         }
         getTaskItemRelatedIds(levelMap, dragData, curLevel);
-        onDrag(parentPid, parseInt(dragKey, 10), levelMap, dropPosition, dropData.id);
+        if (onDrag) {
+            onDrag(parentPid, parseInt(dragKey, 10), levelMap, dropPosition, dropData.id);
+        }
     }
     private handleRemove = (item: ITaskRuleTreeItem) => {
         const {onRemove} = this.props;
         const levelMap = {};
         getTaskItemRelatedIds(levelMap, item);
-        onRemove(levelMap);
+        if (onRemove) {
+            onRemove(levelMap);
+        }
     }
 }

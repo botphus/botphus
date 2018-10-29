@@ -24,7 +24,7 @@ function mapStateToProps({modal, user}: IReduxStoreState) {
     };
 }
 
-class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
+class DashboardUserProfilePage extends React.Component<IUserProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
     public componentDidMount() {
         const {dispatch, match} = this.props;
         // Check is create
@@ -77,4 +77,4 @@ class DashboardUserCreatePage extends React.Component<IUserProfileProps & RouteC
     }
 }
 
-export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardUserCreatePage));
+export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardUserProfilePage));
