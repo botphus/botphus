@@ -64,7 +64,7 @@ class DashboardConnectionPage extends React.Component<IConnectionProps> {
                         <h1>{localePkg.Client.Title.Connection}</h1>
                         <p className="text-light">{localePkg.Client.Desc.Connection}</p>
                     </Col>
-                    <Col className="text-right" span={12}>
+                    <Col className="text-right p-t-sm" span={12}>
                         <Link className="ant-btn ant-btn-primary" to="/dashboard/connection/profile/create">
                             <Icon type="plus-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.create}
                         </Link>

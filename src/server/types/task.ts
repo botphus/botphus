@@ -13,7 +13,8 @@ export enum TaskReportStatus {
     'PENDING' = 0,
     'FAILED' = -1,
     'SUCCESS' = 1,
-    'IGNORE' = 2
+    'IGNORE' = 2,
+    'ONGOING' = 3,
 }
 
 /**

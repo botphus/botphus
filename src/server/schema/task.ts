@@ -11,7 +11,7 @@ app.addSchema({
     $id: 'taskRuleItems',
     items: {
         properties: {
-            argments: {
+            arguments: {
                 type: 'array'
             },
             assertion: {

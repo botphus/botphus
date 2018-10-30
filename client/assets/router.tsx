@@ -41,6 +41,7 @@ export default (
                                 <Route exact path="/dashboard/task/profile/:id" component={asyncLoadComponent('dashboard/task/profile')}/>
                                 <Route exact path="/dashboard/task-flow/" component={asyncLoadComponent('dashboard/task_flow/index')}/>
                                 <Route exact path="/dashboard/task-flow/profile/create" component={asyncLoadComponent('dashboard/task_flow/profile_create')}/>
+                                <Route exact path="/dashboard/task-flow/profile/:id" component={asyncLoadComponent('dashboard/task_flow/profile')}/>
                                 <Route component={NotFoundPage} />
                             </Switch>
                         </LayoutDashboardPage>

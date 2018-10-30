@@ -79,7 +79,7 @@ class DashboardTaskPage extends React.Component<ITaskProps> {
                         <h1>{localePkg.Client.Title.Task}</h1>
                         <p className="text-light">{localePkg.Client.Desc.Task}</p>
                     </Col>
-                    <Col className="text-right" span={12}>
+                    <Col className="text-right p-t-sm" span={12}>
                         <Link className="ant-btn ant-btn-primary" to="/dashboard/task/profile/create">
                             <Icon type="plus-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.create}
                         </Link>

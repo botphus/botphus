@@ -104,6 +104,8 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
                 .then((userMap) => {
                     taskInfo.members = task.members.map((taskUserId) => {
                         return userMap[taskUserId.toString()];
+                    }).filter((userInfo) => {
+                        return !!userInfo;
                     });
                     taskInfo.createdUserName = userMap[taskInfo.createdUser.toString()].nickname;
                     return taskInfo;

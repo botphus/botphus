@@ -48,7 +48,7 @@ class DashboardUserProfilePage extends React.Component<IUserProfileProps & Route
                     <Col span={12}>
                         <h1>{localePkg.Client.Title.User}</h1>
                     </Col>
-                    <Col className="text-right" span={12}>
+                    <Col className="text-right p-t-sm" span={12}>
                         <a className="ant-btn" onClick={this.handleCancel}>
                             <Icon type="left-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.cancel}
                         </a>

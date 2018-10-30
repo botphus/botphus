@@ -8,8 +8,9 @@ import {TaskReportStatus} from '../types/task';
 
 import {queryConnectionById} from './connection';
 import {queryTaskById, verifyTaskOwner} from './task';
-import {createTaskReports, queryTaskReportMap} from './task_report';
+import {createTaskReports, pendTaskReportByFlowId, queryTaskReportMap} from './task_report';
 
+import {buildAndRunBotphusTask} from '../modules/task_flow';
 import {createSystemError, localePkg} from '../modules/util';
 
 /**
@@ -120,6 +121,26 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
                 })
                 .then(() => {
                     return flowData;
+                });
+        });
+}
+
+/**
+ * Start task flow
+ * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
+ * @param  {string}                userId     Create User ID
+ * @return {Promise<void>}                    Promise
+ */
+export function startTaskFlow(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<void> {
+    return queryTaskFlowByUser(taskFlowId, userId)
+        .then((flowData) => {
+            // Check flow create date is before task update time
+            if (new Date(flowData.createdAt) < new Date(flowData.taskDetail.updateAt)) {
+                throw createSystemError(localePkg.Service.TaskFlow.startForbidden, SystemCode.FORBIDDEN);
+            }
+            return pendTaskReportByFlowId(taskFlowId)
+                .then(() => {
+                    return buildAndRunBotphusTask(flowData);
                 });
         });
 }

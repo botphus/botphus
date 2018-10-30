@@ -92,6 +92,7 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "reconnecting-websocket": "^4.1.10",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "supertest": "^3.3.0",
@@ -106,7 +107,7 @@
   },
   "dependencies": {
     "@types/serve-favicon": "^2.2.30",
-    "botphus-core": "^0.1.2",
+    "botphus-core": "^0.2.0",
     "clone-deep": "^4.0.0",
     "cookie": "^0.3.1",
     "fastify": "^1.12.1",

@@ -1,8 +1,8 @@
 import {NodeConfiguration, RedisOptions} from 'ioredis';
-import {Document} from 'mongoose';
 import {ConnectionConfig} from 'mysql';
 
 import {ConnectionType} from '../../types/connection';
+import {IModifyDateModel} from './';
 
 /**
  * Return data
@@ -19,7 +19,7 @@ export interface IConnectionListItem {
 /**
  * Mysql
  */
-interface IConnectionDetailMysqlItem extends IConnectionListItem {
+export interface IConnectionDetailMysqlItem extends IConnectionListItem {
     type?: ConnectionType.MYSQL;
     config?: ConnectionConfig;
 }
@@ -27,7 +27,7 @@ interface IConnectionDetailMysqlItem extends IConnectionListItem {
 /**
  * Redis
  */
-interface IConnectionDetailRedisItem extends IConnectionListItem {
+export interface IConnectionDetailRedisItem extends IConnectionListItem {
     type?: ConnectionType.REDIS;
     config?: RedisOptions | NodeConfiguration[];
 }
@@ -40,7 +40,7 @@ export type IConnectionDetailItem = IConnectionDetailMysqlItem | IConnectionDeta
 /**
  * Connection base model
  */
-export interface IConnectionBaseModel extends Document {
+export interface IConnectionBaseModel extends IModifyDateModel {
     name?: string;
     type: ConnectionType;
     config?: ConnectionConfig | RedisOptions | NodeConfiguration[];

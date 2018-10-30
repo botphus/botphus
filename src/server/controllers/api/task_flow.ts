@@ -4,7 +4,7 @@ import {IAppRequest} from '../../interfaces/common';
 import {queryDetailSchema} from '../../schema/common';
 import * as taskFollowSchema from '../../schema/task_flow';
 
-import {createTaskFlow, queryTaskFlowByUser, queryTaskFlowList} from '../../services/task_flow';
+import {createTaskFlow, queryTaskFlowByUser, queryTaskFlowList, startTaskFlow} from '../../services/task_flow';
 
 import {buildPageInfo, getHttpMsg, getListQueryData} from '../../modules/util';
 
@@ -40,6 +40,16 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         }
     }, (request: IAppRequest, reply) => {
         return queryTaskFlowByUser(request.query.id, request.session.user.id)
+            .then((data) => {
+                reply.send(getHttpMsg(request, data));
+            });
+    });
+    app.get('/start/', {
+        schema: {
+            querystring: queryDetailSchema
+        }
+    }, (request: IAppRequest, reply) => {
+        return startTaskFlow(request.query.id, request.session.user.id)
             .then((data) => {
                 reply.send(getHttpMsg(request, data));
             });

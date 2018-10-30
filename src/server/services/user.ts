@@ -34,8 +34,7 @@ export function queryUserByIds(userIds: Schema.Types.ObjectId[], fields: string 
     return User.find({
         _id: {
             $in: userIds
-        },
-        enable: true
+        }
     }, fields).exec();
 }
 

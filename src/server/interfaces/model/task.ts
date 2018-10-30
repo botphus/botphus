@@ -1,6 +1,8 @@
 import {Document, Schema, Types} from 'mongoose';
 
 import {TaskPageType, TaskSubType, TaskType} from '../../types/task';
+import {IModifyDateModel} from './';
+
 import {IUserReferModel} from './user';
 
 /**
@@ -14,7 +16,7 @@ export interface ITaskListItem {
     name?: string;
     pageType?: TaskPageType;
     createdAt?: string;
-    updateAt?: number;
+    updateAt?: string;
 }
 
 /**
@@ -36,7 +38,7 @@ export interface ITaskRuleSaveItem {
     level: number; // Tree level
     type: TaskType; // Type
     subType: TaskSubType; // subType
-    argments?: any[]; // Rule argments
+    arguments?: any[]; // Rule arguments
     assertion?: string[]; // Assertion list
     assertionVarName?: string; // Assertion variable name
     name: string; // Rule name
@@ -50,7 +52,7 @@ export interface ITaskRuleTreeItem extends ITaskRuleSaveItem {
 /**
  * Task model
  */
-export interface ITaskModel extends Document {
+export interface ITaskModel extends IModifyDateModel {
     name: string; // Write first & Read only
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
@@ -61,7 +63,7 @@ export interface ITaskModel extends Document {
 /**
  * Task user model
  */
-export interface ITaskUserModel {
+export interface ITaskUserModel extends IModifyDateModel {
     name: string;
     pageType: TaskPageType;
     members?: IUserReferModel[];

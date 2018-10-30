@@ -75,7 +75,7 @@ class DashboardUserPage extends React.Component<IUserProps> {
                         <h1>{localePkg.Client.Title.User}</h1>
                         <p className="text-light">{localePkg.Client.Desc.User}</p>
                     </Col>
-                    <Col className="text-right" span={12}>
+                    <Col className="text-right p-t-sm" span={12}>
                         <Link className="ant-btn ant-btn-primary" to="/dashboard/user/profile/create">
                             <Icon type="plus-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.create}
                         </Link>

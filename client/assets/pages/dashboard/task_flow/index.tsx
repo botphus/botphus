@@ -64,7 +64,7 @@ class DashboardTaskFlowPage extends React.Component<ITaskFlowProps> {
                         <h1>{localePkg.Client.Title.TaskFlow}</h1>
                         <p className="text-light">{localePkg.Client.Desc.TaskFlow}</p>
                     </Col>
-                    <Col className="text-right" span={12}>
+                    <Col className="text-right p-t-sm" span={12}>
                         <Link className="ant-btn ant-btn-primary" to="/dashboard/task-flow/profile/create">
                             <Icon type="plus-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.create}
                         </Link>

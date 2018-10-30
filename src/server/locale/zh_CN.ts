@@ -54,6 +54,13 @@ const localeData: ILocalePackage = {
         },
         TaskTypeTimeSubType: {
             SUB_TYPE_SET_SLEEP: '睡眠'
+        },
+        TaskReportStatus: {
+            PENDING: '待执行',
+            FAILED: '执行失败',
+            SUCCESS: '执行成功',
+            IGNORE: '跳过执行',
+            ONGOING: '执行中'
         }
     },
     Placehoder: {
@@ -114,7 +121,7 @@ const localeData: ILocalePackage = {
                 name: '规则名称',
                 type: '规则类型',
                 subType: '规则子类型',
-                argments: {
+                arguments: {
                     mysql: 'SQL语句',
                     redis: 'Redis命令',
                     querySelector: 'DOM选择器',
@@ -158,6 +165,10 @@ const localeData: ILocalePackage = {
         },
         Connection: {
             configValidError: '配置信息不正确'
+        },
+        TaskFlow: {
+            startForbidden: '你不能运行一个已过期的任务流水,请重新创建流水',
+            taskCreateError: '创建任务错误'
         }
     },
     Schema: {
@@ -181,7 +192,8 @@ const localeData: ILocalePackage = {
             submit: '提交',
             search: '搜索',
             addRedisConfig: '添加redis配置',
-            addTaskRule: '添加任务规则'
+            addTaskRule: '添加任务规则',
+            startTaskFlow: '执行任务流水'
         },
         Title: {
             Install: '创建管理员帐号',
@@ -189,6 +201,7 @@ const localeData: ILocalePackage = {
             Home: '首页',
             Profile: '个人资料',
             Connection: '数据连接配置',
+            ConnectionMysqlConfig: 'Mysql配置',
             ConnectionRedisConfig: 'Redis配置',
             ConnectionRedisClusterConfig: 'Redis集群配置',
             Task: '测试任务',
@@ -196,8 +209,8 @@ const localeData: ILocalePackage = {
             TaskRule: '任务规则',
             TaskFlow: '测试任务流水',
             TaskFlowBasic: '基本信息',
-            TaskFlowRule: '选择规则',
-            TaskFlowConnection: '选择连接配置',
+            TaskFlowRule: '测试单元',
+            TaskFlowConnection: '连接配置',
             TaskReport: '测试任务报告',
             User: '用户管理'
         },
@@ -217,7 +230,7 @@ const localeData: ILocalePackage = {
             TaskRuleItem: {
                 assertion: '规则断言内容,每行一个判断规则,遵循JS语法,如data==="123"(data为规则变量名)',
                 assertionVarName: '断言内容的变量名称,默认为data',
-                argments: {
+                arguments: {
                     redis: '如set name 111,请注意方法名均为小写',
                     querySelector: 'Chrome中可以使用"控制台->Elements->右键对应节点->Copy->Copy selector"快速选择节点',
                     eventTimeout: '超过该设置时间则视为监听失败',

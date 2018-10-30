@@ -48,9 +48,9 @@ export default class TaskRule extends React.Component<ITaskRuleProps> {
                 </div>
             );
             if (item.children && item.children.length) {
-                return <TreeNode key={`${item.id}`} title={titleTitle} data={item}>{loop(item.children)}</TreeNode>;
+                return <TreeNode key={item.index} title={titleTitle} data={item}>{loop(item.children)}</TreeNode>;
             }
-            return <TreeNode key={`${item.id}`} title={titleTitle} data={item} />;
+            return <TreeNode key={item.index} title={titleTitle} data={item} />;
         });
         return (
             <Tree
@@ -63,7 +63,7 @@ export default class TaskRule extends React.Component<ITaskRuleProps> {
                 onCheck={onCheck}
             >
                 {loop(treeData)}
-             </Tree>
+            </Tree>
         );
     }
     private handleDrop = (info: AntTreeNodeDropEvent) => {

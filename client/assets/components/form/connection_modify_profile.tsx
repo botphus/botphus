@@ -297,6 +297,9 @@ class ConnectionModifyProfileForm extends React.Component<IModifyFormProps> {
                     });
                 }
                 delete result.redisKeys;
+                if (result.config.length === 1) {
+                    result.config = result.config[0];
+                }
                 onSubmit(filterEmptyFields(result));
             }
         });

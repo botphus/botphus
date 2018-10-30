@@ -1,5 +1,7 @@
 import {Document, Schema} from 'mongoose';
 
+import {IModifyDateModel} from './';
+
 /**
  * Return data
  */
@@ -33,7 +35,7 @@ export interface IUserSession {
 /**
  * User model
  */
-export interface IUserModel extends Document {
+export interface IUserModel extends IModifyDateModel {
     email: string;
     nickname: string;
     permission: number; // Binary digit, like 0b010,0b001, set user type: permission

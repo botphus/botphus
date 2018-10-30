@@ -5,6 +5,7 @@ import {clientType} from './types';
 import createApp from '../server/app';
 import mongoose from '../server/models/';
 import cacheClient from '../server/modules/cache';
+import {close} from '../server/modules/socket';
 import {app} from '../server/modules/util';
 
 import apiTest from './api/';
@@ -33,6 +34,7 @@ describe('Botphus', () => {
     apiTest();
     clearData();
     after('Close connection connection', (done) => {
+        close();
         Promise.all([mongoose.disconnect(), cacheClient.quit()])
             .then(() => {
                 done();

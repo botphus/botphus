@@ -1,10 +1,12 @@
 import {ITaskExcludeUnit} from 'botphus-core';
 import {Document, Schema, Types} from 'mongoose';
 
+import {IModifyDateModel} from './';
+
 import {IIndexMap} from '../common';
-import {IConnectionDetailItem, IConnectionModel} from './connection';
+import {IConnectionDetailMysqlItem, IConnectionDetailRedisItem, IConnectionModel} from './connection';
 import {ITaskDetailItem, ITaskModel} from './task';
-import {ITaskReportBaseItem, ITaskReportModel} from './task_report';
+import {ITaskReportDetailItem, ITaskReportModel} from './task_report';
 
 /**
  * Return data
@@ -27,18 +29,18 @@ export interface ITaskFlowListItem {
 export interface ITaskFlowDetailItem extends ITaskFlowListItem {
     startPage?: string;
     mysqlId?: Schema.Types.ObjectId;
-    mysqlDetail?: IConnectionDetailItem;
+    mysqlDetail?: IConnectionDetailMysqlItem;
     redisId?: Schema.Types.ObjectId;
-    redisDetail?: IConnectionDetailItem;
+    redisDetail?: IConnectionDetailRedisItem;
     taskId?: Schema.Types.ObjectId;
     taskDetail?: ITaskDetailItem;
-    taskReportMap?: IIndexMap<ITaskReportBaseItem>;
+    taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
 
 /**
  * Task execution flow model
  */
-export interface ITaskFlowModel extends Document {
+export interface ITaskFlowModel extends IModifyDateModel {
     name: string;
     startPage?: string;
     // mysql config id
@@ -61,7 +63,7 @@ export interface ITaskFlowSearchModel extends Document {
 /**
  * Task execution flow detail model
  */
-export interface ITaskFlowDetailModel extends ITaskFlowModel {
+export interface ITaskFlowDetailModel extends IModifyDateModel {
     mysqlDetail?: IConnectionModel;
     redisDetail?: IConnectionModel;
     taskDetail?: ITaskModel;

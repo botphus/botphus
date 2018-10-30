@@ -19,4 +19,14 @@ export function modifyDate(schema: mongoose.Schema) {
         this.updateAt = now;
         next();
     });
+    schema.pre<IModifyDateModel>('update', update);
+    schema.pre<IModifyDateModel>('updateOne', update);
+}
+
+function update(next: mongoose.HookNextFunction) {
+    const now: Date = new Date();
+    if (this._update) {
+        this._update.updateAt = now;
+    }
+    next();
 }

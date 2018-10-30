@@ -8,10 +8,10 @@ import {userPermissionMap} from '../types/user';
 import {checkUserPermission, createSystemError, localePkg} from '../modules/util';
 
 function valid(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => void): void {
-    const urlInfo = url.parse(request.originalUrl);
+    const urlInfo = url.parse(request.req.url);
     request.log.debug('Check permission start:', urlInfo.pathname);
     if (urlInfo.pathname.indexOf('/api')) {
-        const permissionIndex: string = `${request.method.toLowerCase()}:${urlInfo.pathname.replace('/api', '')}`;
+        const permissionIndex: string = `${request.req.method.toLowerCase()}:${urlInfo.pathname.replace('/api', '')}`;
         const permissionCode: number = userPermissionMap[permissionIndex];
         // Check login status
         if (permissionCode === 0) {
@@ -36,6 +36,6 @@ function valid(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => v
 
 export default fp((fastify, _opts, next) => {
     // Init session
-    fastify.addHook('onRequest', valid);
+    fastify.addHook('preHandler', valid);
     next();
 });

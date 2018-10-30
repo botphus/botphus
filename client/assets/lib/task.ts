@@ -7,11 +7,11 @@ import {TaskSubType, TaskType, TaskTypeDataSubType, TaskTypeDomSubType, TaskType
 import {localePkg} from '../lib/const';
 
 /**
- * Translate task argments
+ * Translate task arguments
  * @param  {TaskType}          type    Task Type
  * @param  {TaskSubType}       subType Task sub type
  * @param  {IIndexMap<string>} args    Args
- * @return {any[]}                     task argments
+ * @return {any[]}                     task arguments
  */
 export function translateModifyRuleItemArgs(type: TaskType, subType: TaskSubType, args: IIndexMap<string>): any[] {
     const returnArgs = [];

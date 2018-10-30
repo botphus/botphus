@@ -235,11 +235,11 @@ class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskF
                     delete result.taskInfo;
                 }
                 if (result.mysqlInfo) {
-                    result.taskId = result.mysqlInfo.key;
+                    result.mysqlId = result.mysqlInfo.key;
                     delete result.mysqlInfo;
                 }
                 if (result.redisInfo) {
-                    result.taskId = result.redisInfo.key;
+                    result.redisId = result.redisInfo.key;
                     delete result.redisInfo;
                 }
                 onSubmit(filterEmptyFields(result));

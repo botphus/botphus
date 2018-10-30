@@ -43,7 +43,7 @@ export const taskName = 'test-task';
 const eventTimeout = 1000;
 export const taskRuleList: ITaskRuleSaveItem[] = [
     {
-        argments: [eventTimeout, (consoleMessage: puppeteer.ConsoleMessage) => {
+        arguments: [eventTimeout, (consoleMessage: puppeteer.ConsoleMessage) => {
             return consoleMessage.type() === 'log';
         }],
         assertion: [`consoleMessage.type() === "log"`, 'consoleMessage.args().length === 2', 'consoleMessage.text().indexOf("Upload event:") >= 0'],
@@ -56,7 +56,7 @@ export const taskRuleList: ITaskRuleSaveItem[] = [
         type: TaskType.TYPE_EVENT,
     },
     {
-        argments: [eventTimeout, (request: puppeteer.Request) => {
+        arguments: [eventTimeout, (request: puppeteer.Request) => {
             return request.url().indexOf('upload.do') >= 0;
         }],
         id: 2,
@@ -67,7 +67,7 @@ export const taskRuleList: ITaskRuleSaveItem[] = [
         type: TaskType.TYPE_EVENT
     },
     {
-        argments: ['.ant-form-item:nth-child(10) .ant-form-item-children .ant-upload input'],
+        arguments: ['.ant-form-item:nth-child(10) .ant-form-item-children .ant-upload input'],
         id: 3,
         level: 2,
         name: 'test3',

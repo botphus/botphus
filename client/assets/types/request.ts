@@ -20,4 +20,5 @@ export enum RequestAction {
     'TASK_PROFILE' = '/api/task/profile/',
     'TASK_FLOW' = '/api/task-flow/',
     'TASK_FLOW_PROFILE' = '/api/task-flow/profile/',
+    'TASK_FLOW_START' = '/api/task-flow/start/',
 }

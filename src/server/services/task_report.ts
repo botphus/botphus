@@ -4,6 +4,7 @@ import {TaskReport} from '../models/';
 
 import {IIndexMap} from '../interfaces/common';
 import {ITaskReportBaseItem, ITaskReportModel} from '../interfaces/model';
+import {TaskReportStatus} from '../types/task';
 
 /**
  * Query task report info by ID
@@ -44,4 +45,25 @@ export function createTaskReports(taskReportDataList: ITaskReportBaseItem[]): Pr
         const taskReport = Object.assign(new TaskReport(), taskReportData);
         return taskReport.save();
     }));
+}
+
+/**
+ * Pend task report by flow ID
+ * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
+ * @return {Promise<void[]>}                  Pend success
+ */
+export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promise<void[]> {
+    return TaskReport.find({
+        flowId: taskFlowId,
+        status: {
+            $in: [TaskReportStatus.FAILED, TaskReportStatus.SUCCESS]
+        }
+    })
+        .then((taskReportList) => {
+            return Promise.all(taskReportList.map((taskReport) => {
+                return taskReport.update({
+                    status: TaskReportStatus.PENDING
+                });
+            }));
+        });
 }

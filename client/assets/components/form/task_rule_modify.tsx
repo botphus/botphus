@@ -11,7 +11,7 @@ import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../.
 import {translateModifyRuleItemArgs} from '../../lib/task';
 import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
-import TaskRuleArgments from '../form_item/task_rule_argments';
+import TaskRuleArguments from '../form_item/task_rule_arguments';
 
 const taskTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskType).filter((item) => {
     return localePkg.Enum.TaskType[item.key];
@@ -195,8 +195,8 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
                 </Item>
                 {subType ? (
                     <div>
-                        {/* Argments fields */}
-                        <TaskRuleArgments argments={defaultValue.subType === subType ? defaultValue.argments : []} form={this.props.form} type={type} subType={subType} />
+                        {/* Arguments fields */}
+                        <TaskRuleArguments arguments={defaultValue.subType === subType ? defaultValue.arguments : []} form={this.props.form} type={type} subType={subType} />
                         {subType !== TaskTypePageSubType.SUB_TYPE_RELOAD ? (
                             <div>
                                 <Item
@@ -260,8 +260,8 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 const result = {...values};
-                if (result.argments) {
-                    result.argments = translateModifyRuleItemArgs(values.type, values.subType, result.argments);
+                if (result.arguments) {
+                    result.arguments = translateModifyRuleItemArgs(values.type, values.subType, result.arguments);
                 }
                 if (result.assertion) {
                     result.assertion = result.assertion.split('\n');

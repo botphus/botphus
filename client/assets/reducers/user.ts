@@ -2,6 +2,13 @@
 // @ts-ignore: next
 import * as user from 'user';
 
+// If user info init, connect socket
+import {connectSocket} from '../lib/socket';
+
+if (user.id) {
+    connectSocket();
+}
+
 // Import action
 import {IActionData, IUserContentData} from '../interfaces/redux';
 import {ActionType} from '../types/redux';

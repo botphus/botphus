@@ -7,6 +7,7 @@ import {RequestAction} from '../types/request';
 import {updateModel} from './modal';
 
 import request from '../lib/request';
+import {connectSocket, disconnectSocket} from '../lib/socket';
 import {translatePwd} from '../lib/util';
 
 // actions
@@ -56,6 +57,8 @@ export function postLoginData(query: any, callback?: ActionCallbackFunc): Action
         }, 'POST')
             .then((res) => {
                 dispatch(updateUserOwner(res.data));
+                // Connect socket
+                connectSocket();
                 dispatch(updateModel({
                     loadingForm: false
                 }));
@@ -86,6 +89,8 @@ export function postLogoutData(callback?: ActionCallbackFunc): ActionThunkFunc {
                 dispatch(updateModel({
                     loading: false
                 }));
+                // Disconnect socket
+                disconnectSocket();
                 if (callback) {
                     callback(res);
                 }

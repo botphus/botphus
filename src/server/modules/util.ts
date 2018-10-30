@@ -162,7 +162,7 @@ export function getHttpMsg(request: IAppRequest, data: any, message: string = lo
  */
 export function getHttpErrorMsg(request: IAppRequest, err: ISystemError): IHttpResponseMessage {
     const systemCodePkg = localePkg.SystemCode;
-    let code = err.code || (err.name !== 'Error' ? SystemCode.MONGO_ERROR : SystemCode.UNKNOWN_ERROR); // Default code > Mongo error > unknown
+    let code = err.code || (err.errors ? SystemCode.MONGO_ERROR : SystemCode.UNKNOWN_ERROR); // Default code > Mongo error > unknown
     let message = err.message || err.stack;
     // Set Not Found
     if (err.message === 'Not Found') {
@@ -170,45 +170,41 @@ export function getHttpErrorMsg(request: IAppRequest, err: ISystemError): IHttpR
     }
     // Get code message
     switch (code) {
-    case SystemCode.NOT_FOUND:
-        message = systemCodePkg.notFound;
-        break;
-    case SystemCode.UNKNOWN_ERROR:
-        // Schema error
-        if (err.validation) {
-            code = SystemCode.ROUTINE_ERROR;
-            const curValidMsg = err.validation[0];
-            switch (curValidMsg.keyword) {
-                case 'type':
-                    message = localePkg.Schema.typeError;
-                    break;
-                case 'required':
-                    message = localePkg.Schema.requiredError;
-                default:
-                    message = localePkg.Schema.commonError;
+        case SystemCode.NOT_FOUND:
+            message = systemCodePkg.notFound;
+            break;
+        case SystemCode.UNKNOWN_ERROR:
+            // Schema error
+            if (err.validation) {
+                code = SystemCode.ROUTINE_ERROR;
+                const curValidMsg = err.validation[0];
+                switch (curValidMsg.keyword) {
+                    case 'type':
+                        message = localePkg.Schema.typeError;
+                        break;
+                    case 'required':
+                        message = localePkg.Schema.requiredError;
+                    default:
+                        message = localePkg.Schema.commonError;
+                }
+            } else {
+                message = systemCodePkg.unknownError;
+                // Save error log
+                app.log.error(err);
             }
-        } else {
-            message = systemCodePkg.unknownError;
-            // Save error log
-            app.log.error(err);
-        }
-        break;
-    case SystemCode.MONGO_ERROR:
-        if (err.errors) {
+            break;
+        case SystemCode.MONGO_ERROR:
             const errorField = Object.keys(err.errors)[0];
             if (err.errors[errorField].name === 'CastError') {
                 message = systemCodePkg.mongoCastError;
             } else {
                 message = err.errors[errorField].message;
             }
-        } else {
-            message = err.message;
-        }
-        break;
-    case SystemCode.MONGO_UNIQUE_ERROR:
-        code = SystemCode.MONGO_ERROR;
-        message = localePkg.SystemCode.mongoUniqueError + ':' + message.replace(/^[\S\s]+\"([\S\s]+)\"[\S\s]+$/, '$1');
-        break;
+            break;
+        case SystemCode.MONGO_UNIQUE_ERROR:
+            code = SystemCode.MONGO_ERROR;
+            message = localePkg.SystemCode.mongoUniqueError + ':' + message.replace(/^[\S\s]+\"([\S\s]+)\"[\S\s]+$/, '$1');
+            break;
     }
     return {
         code,

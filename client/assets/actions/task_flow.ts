@@ -38,6 +38,36 @@ export function postCreateTaskFlowData(query: any, callback?: ActionCallbackFunc
 }
 
 /**
+ * Start task flow
+ * @param  {string}             taskFlowId Task flow ID
+ * @param  {ActionCallbackFunc} callback   Callback function
+ * @return {ActionThunkFunc}               Thunk fuction
+ */
+export function startTaskFlowData(taskFlowId: string, callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loading: true
+        }));
+        request(RequestAction.TASK_FLOW_START, {
+            id: taskFlowId
+        })
+            .then((res) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loading: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
  * Query task flow detail data
  * @param  {string}          id TaskFlow ID
  * @return {ActionThunkFunc}    Thunk fuction

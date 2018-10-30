@@ -1,4 +1,5 @@
 import router from './modules/router';
+import './modules/socket'; // Socket server
 
 // Set prepend filter
 import './filters/prepend';

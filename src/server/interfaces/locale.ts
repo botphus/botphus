@@ -53,7 +53,14 @@ export default interface ILocalePackage {
             SUB_TYPE_DELETE_COOKIE: string;
             SUB_TYPE_GOTO: string;
             SUB_TYPE_SCREENSHOT: string;
-        }
+        };
+        TaskReportStatus: {
+            PENDING: string;
+            FAILED: string;
+            SUCCESS: string;
+            IGNORE: string;
+            ONGOING: string;
+        };
     };
     Placehoder: {
         Input: string;
@@ -118,7 +125,7 @@ export default interface ILocalePackage {
                 name: string;
                 type: string;
                 subType: string;
-                argments: {
+                arguments: {
                     mysql: string;
                     redis: string;
                     querySelector: string;
@@ -168,6 +175,11 @@ export default interface ILocalePackage {
         Connection: {
             configValidError: string;
         };
+        // Task info
+        TaskFlow: {
+            startForbidden: string;
+            taskCreateError: string;
+        }
     };
     // Schema Valid Error
     Schema: {
@@ -194,6 +206,7 @@ export default interface ILocalePackage {
             search: string;
             addRedisConfig: string;
             addTaskRule: string;
+            startTaskFlow: string;
         };
         // Title
         Title: {
@@ -202,6 +215,7 @@ export default interface ILocalePackage {
             Home: string;
             Profile: string;
             Connection: string;
+            ConnectionMysqlConfig: string;
             ConnectionRedisConfig: string;
             ConnectionRedisClusterConfig: string;
             Task: string;
@@ -231,7 +245,7 @@ export default interface ILocalePackage {
             TaskRuleItem: {
                 assertion: string;
                 assertionVarName: string;
-                argments: {
+                arguments: {
                     redis: string;
                     querySelector: string;
                     eventTimeout: string;

@@ -1,6 +1,18 @@
-import {Document, Schema} from 'mongoose';
+import {Schema} from 'mongoose';
 
 import {TaskReportStatus} from '../../types/task';
+import {IModifyDateModel} from './';
+
+/**
+ * Return data
+ */
+export interface ITaskReportDetailItem {
+    index?: string;
+    status?: TaskReportStatus;
+    message?: string;
+    flowId?: string;
+    updateAt?: Date;
+}
 
 /**
  * Task report base item
@@ -19,4 +31,4 @@ export interface ITaskReportBaseItem {
 /**
  * Task execution report model
  */
-export interface ITaskReportModel extends ITaskReportBaseItem, Document {}
+export interface ITaskReportModel extends ITaskReportBaseItem, IModifyDateModel {}
