@@ -14,7 +14,7 @@
     "commit": "npm run test",
     "test": "npm run lint && npm run build:server && npm run test:cover",
     "test:unit": "node ./test/create_config && mocha ./dist/test/ && node ./test/remove_config",
-    "test:cover": "node ./test/create_config && nyc --reporter=lcov npm run test:unit && node ./test/remove_config",
+    "test:cover": "nyc --reporter=lcov npm run test:unit",
     "lint": "tslint -c tslint.json -p tsconfig.json && tslint -c tslint.json -p ./client/tsconfig.json",
     "dev:server": "tsc -w",
     "dev:client": "webpack -w"
