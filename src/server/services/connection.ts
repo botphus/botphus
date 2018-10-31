@@ -30,7 +30,8 @@ function validConnectionConfig(connectionData: IConnectionModel): Promise<void> 
                     return !!(item.host && item.port);
                 });
             } else {
-                valid = !!(connectionData.config.host && connectionData.config.port);
+                // @ts-ignore: next
+                valid = typeof connectionData.config === 'object' && !!(connectionData.config.host && connectionData.config.port);
             }
     }
     if (valid) {

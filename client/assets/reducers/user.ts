@@ -24,7 +24,7 @@ const INIT_STATE: IUserContentData = {
     total: 0,
 };
 
-export default function(state = {...INIT_STATE, owner: user}, action: IActionData<IUserContentData>) {
+export default function(state = {...INIT_STATE, owner: user}, action: IActionData<any>) {
     switch (action.type) {
     case ActionType.UPDATE_USER_DETAIL:
         const detail = {...action.data};

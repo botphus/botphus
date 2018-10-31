@@ -31,7 +31,7 @@ const socketLogIndex = 'Socket: ';
 // Set socket linstener
 if (config.socket === 'local') {
     app.log.info(`${socketLogIndex}Listenning on port ${config.socketPort}`);
-
+    // Message check
     wss.on('connection', function connection(ws: ISocketClient) {
         ws.on('message', function incoming(message: string) {
             app.log.debug(`${socketLogIndex}receive ${message}`);
@@ -50,10 +50,11 @@ if (config.socket === 'local') {
 
 /**
  * Send socket message
- * @param {string} message Message
- * @param {string} userId  User ID
+ * @param {SocketMessageType} messageType Socket message type
+ * @param {string}            message     Message
+ * @param {string}            userId      User ID
  */
-export function send(message: string, userId: string): void {
+export function send(messageType: SocketMessageType, message: string, userId: string): void {
     // If not local close
     if (config.socket !== 'local') {
         return;
@@ -61,7 +62,11 @@ export function send(message: string, userId: string): void {
     // Send message for every task
     wss.clients.forEach(function each(client: ISocketClient) {
         if (client.userId === userId && client.readyState === WebSocket.OPEN) {
-            client.send(message);
+            client.send(`${messageType}:${message}`, (err) => {
+                if (err) {
+                    app.log.warn(`Socket send to ${userId} error:`, err);
+                }
+            });
         }
     });
 }

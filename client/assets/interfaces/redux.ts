@@ -4,6 +4,7 @@ import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/in
 import {ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 import {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
+import {TaskFlowStatus} from '../types/common';
 import {ActionType} from '../types/redux';
 
 /**
@@ -71,7 +72,9 @@ export type ITaskContentData = IContentData<ITaskListItem, ITaskDetailItem>;
 /**
  * Task flow content data
  */
-export type ITaskFlowContentData = IContentData<ITaskFlowListItem, ITaskFlowDetailItem>;
+export interface ITaskFlowContentData extends IContentData<ITaskFlowListItem, ITaskFlowDetailItem> {
+    flowStatus?: TaskFlowStatus;
+}
 
 /**
  * Redux connect props

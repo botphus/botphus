@@ -12,7 +12,7 @@ const INIT_STATE: ITaskContentData = {
     total: 0,
 };
 
-export default function(state = INIT_STATE, action: IActionData<ITaskContentData>) {
+export default function(state = INIT_STATE, action: IActionData<any>) {
     switch (action.type) {
     case ActionType.UPDATE_TASK_DETAIL:
         const detail = {...action.data};

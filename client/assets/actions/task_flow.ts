@@ -1,6 +1,8 @@
 import {message} from 'antd';
 
 import {IActionData} from '../interfaces/redux';
+import {ITaskReportDetailItem} from '../interfaces/task';
+import {TaskFlowStatus} from '../types/common';
 import {ActionCallbackFunc, ActionThunkFunc, ActionType} from '../types/redux';
 import {RequestAction} from '../types/request';
 
@@ -55,6 +57,8 @@ export function startTaskFlowData(taskFlowId: string, callback?: ActionCallbackF
                 dispatch(updateModel({
                     loading: false
                 }));
+                dispatch(updateTaskFlowStatus(TaskFlowStatus.ONGOING));
+                message.success(res.message);
                 if (callback) {
                     callback(res);
                 }
@@ -149,6 +153,30 @@ export function updateTaskFlowDetail(data: any): IActionData {
     return {
         data,
         type: ActionType.UPDATE_TASK_FLOW_DETAIL,
+    };
+}
+
+/**
+ * Update task flow report map
+ * @param  {[type]}      reportData Report data
+ * @return {IActionData}            Action
+ */
+export function updateTaskFlowReportMap(reportData: ITaskReportDetailItem): IActionData {
+    return {
+        data: reportData,
+        type: ActionType.UPDATE_TASK_FlOW_REPORT_MAP
+    };
+}
+
+/**
+ * Update task flow status
+ * @param  {TaskFlowStatus} status Flow status
+ * @return {IActionData}           Action
+ */
+export function updateTaskFlowStatus(status: TaskFlowStatus): IActionData {
+    return {
+        data: status,
+        type: ActionType.UPDATE_TASK_FlOW_STATUS
     };
 }
 

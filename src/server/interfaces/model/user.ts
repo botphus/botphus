@@ -1,4 +1,4 @@
-import {Document, Schema} from 'mongoose';
+import {Schema} from 'mongoose';
 
 import {IModifyDateModel} from './';
 
@@ -61,7 +61,7 @@ export interface IUserReferMap {
 /**
  * Create user model
  */
-export interface IUserCreateModel extends Document {
+export interface IUserCreateModel {
     email: string;
     nickname: string;
     permission: number; // Binary digit, like 0b010,0b001, set user type: permission
@@ -71,7 +71,7 @@ export interface IUserCreateModel extends Document {
 /**
  * Modify user model
  */
-export interface IUserModifyModel extends Document {
+export interface IUserModifyModel {
     email?: string;
     nickname?: string;
     permission?: number;
@@ -82,7 +82,7 @@ export interface IUserModifyModel extends Document {
 /**
  * Search user model
  */
-export interface IUserSearchModel extends Document {
+export interface IUserSearchModel {
     email?: string;
     nickname?: string;
     enable?: boolean;

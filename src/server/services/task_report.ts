@@ -3,7 +3,7 @@ import {Schema} from 'mongoose';
 import {TaskReport} from '../models/';
 
 import {IIndexMap} from '../interfaces/common';
-import {ITaskReportBaseItem, ITaskReportModel} from '../interfaces/model';
+import {ITaskReportBaseItem, ITaskReportModel, ITaskReportModifyModel} from '../interfaces/model';
 import {TaskReportStatus} from '../types/task';
 
 /**
@@ -48,11 +48,23 @@ export function createTaskReports(taskReportDataList: ITaskReportBaseItem[]): Pr
 }
 
 /**
+ * Modify task report by ID
+ * @param  {Schema.Types.ObjectId}  taskReportId   Task report ID
+ * @param  {ITaskReportModifyModel} taskReportData task report modify data
+ * @return {Promise<any>}                          Promise with task report id
+ */
+export function modifyTaskReportById(taskReportId: Schema.Types.ObjectId, taskReportData: ITaskReportModifyModel): Promise<any> {
+    return TaskReport.updateOne({
+        _id: taskReportId
+    }, taskReportData).exec();
+}
+
+/**
  * Pend task report by flow ID
  * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
  * @return {Promise<void[]>}                  Pend success
  */
-export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promise<void[]> {
+export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promise<ITaskReportModel[]> {
     return TaskReport.find({
         flowId: taskFlowId,
         status: {
@@ -61,9 +73,8 @@ export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promi
     })
         .then((taskReportList) => {
             return Promise.all(taskReportList.map((taskReport) => {
-                return taskReport.update({
-                    status: TaskReportStatus.PENDING
-                });
+                taskReport.status = TaskReportStatus.PENDING;
+                return taskReport.save();
             }));
         });
 }

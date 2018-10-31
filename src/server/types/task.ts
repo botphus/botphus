@@ -18,6 +18,17 @@ export enum TaskReportStatus {
 }
 
 /**
+ * Task flow status
+ */
+export enum TaskFlowStatus {
+    'PENDING' = 0,
+    'FAILED' = -1,
+    'CLOSE' = -2,
+    'SUCCESS' = 1,
+    'ONGOING' = 2,
+}
+
+/**
  * Task Type
  */
 export enum TaskType {

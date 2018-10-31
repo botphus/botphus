@@ -1,4 +1,4 @@
-import {NodeConfiguration, RedisOptions} from 'ioredis';
+import {ClusterOptions, NodeConfiguration, RedisOptions} from 'ioredis';
 import {ConnectionConfig} from 'mysql';
 
 import {ConnectionType} from '../../types/connection';
@@ -59,7 +59,7 @@ export interface IMysqlConnectionModel extends IConnectionBaseModel {
  */
 export interface IRedisConnectionModel extends IConnectionBaseModel {
     type: ConnectionType.REDIS;
-    config: RedisOptions | NodeConfiguration[];
+    config: RedisOptions | ClusterOptions;
 }
 
 /**

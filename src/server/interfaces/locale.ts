@@ -179,6 +179,7 @@ export default interface ILocalePackage {
         TaskFlow: {
             startForbidden: string;
             taskCreateError: string;
+            taskStartSuccess: string;
         }
     };
     // Schema Valid Error
@@ -207,6 +208,7 @@ export default interface ILocalePackage {
             addRedisConfig: string;
             addTaskRule: string;
             startTaskFlow: string;
+            restartTaskFlow: string;
         };
         // Title
         Title: {

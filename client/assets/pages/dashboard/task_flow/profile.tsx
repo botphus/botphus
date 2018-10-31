@@ -6,6 +6,7 @@ const {TabPane} = Tabs;
 
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 import {ITaskFlowContentData} from '../../../interfaces/redux';
+import {TaskFlowStatus} from '../../../types/common';
 
 import {queryTaskFlowDetailData, startTaskFlowData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
@@ -33,6 +34,50 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
     }
     public render() {
         const {taskFlow} = this.props;
+        let $startBtn;
+        switch (taskFlow.flowStatus) {
+            case TaskFlowStatus.CLOSE:
+                $startBtn = (
+                    <Tooltip placement="topLeft" title={localePkg.Service.TaskFlow.startForbidden}>
+                        <Button type="primary" className="m-r" disabled>
+                            <Icon type="close-circle" className="m-r-sm" theme="outlined" />
+                            {localePkg.Client.Action.startTaskFlow}
+                        </Button>
+                    </Tooltip>
+                );
+                break;
+            case TaskFlowStatus.SUCCESS:
+                $startBtn = (
+                    <Button type="primary" className="m-r" onClick={this.handleStartTask}>
+                        <Icon type="check-circle" className="m-r-sm" theme="outlined" />
+                        {localePkg.Client.Action.startTaskFlow}
+                    </Button>
+                );
+                break;
+            case TaskFlowStatus.FAILED:
+                $startBtn = (
+                    <Button type="danger" className="m-r" onClick={this.handleStartTask}>
+                        <Icon type="close-circle" className="m-r-sm" theme="outlined" />
+                        {localePkg.Client.Action.restartTaskFlow}
+                    </Button>
+                );
+                break;
+            case TaskFlowStatus.ONGOING:
+                $startBtn = (
+                    <Button type="primary" className="m-r" disabled>
+                        <Icon type="loading" className="m-r-sm" theme="outlined" />
+                        {localePkg.Client.Action.startTaskFlow}
+                    </Button>
+                );
+                break;
+            default:
+                $startBtn = (
+                    <Button type="primary" className="m-r" onClick={this.handleStartTask}>
+                        <Icon type="pause-circle" className="m-r-sm" theme="outlined" />
+                        {localePkg.Client.Action.startTaskFlow}
+                    </Button>
+                );
+        }
         return (
             <div className="app-dashboard-task-flow-create">
                 <Row>
@@ -40,14 +85,7 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
                         <h1>{localePkg.Client.Title.TaskFlow}</h1>
                     </Col>
                     <Col className="text-right p-t-sm" span={12}>
-                        {(taskFlow.detail.createdAt && taskFlow.detail.taskDetail && taskFlow.detail.taskDetail.updateAt &&
-                            new Date(taskFlow.detail.createdAt) > new Date(taskFlow.detail.taskDetail.updateAt)) ? (
-                            <Button type="primary" className="m-r" onClick={this.handleStartTask}>{localePkg.Client.Action.startTaskFlow}</Button>
-                        ) : (
-                            <Tooltip placement="topLeft" title={localePkg.Service.TaskFlow.startForbidden}>
-                                <Button type="primary" className="m-r" disabled>{localePkg.Client.Action.startTaskFlow}</Button>
-                            </Tooltip>
-                        )}
+                        {$startBtn}
                         <Button onClick={this.handleCancel}>
                             <Icon type="left-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.cancel}
                         </Button>

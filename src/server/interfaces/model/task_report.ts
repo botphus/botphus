@@ -32,3 +32,11 @@ export interface ITaskReportBaseItem {
  * Task execution report model
  */
 export interface ITaskReportModel extends ITaskReportBaseItem, IModifyDateModel {}
+
+/**
+ * Task execution report modify model
+ */
+export interface ITaskReportModifyModel {
+    status?: TaskReportStatus;
+    message?: string;
+}

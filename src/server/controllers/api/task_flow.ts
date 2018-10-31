@@ -6,7 +6,7 @@ import * as taskFollowSchema from '../../schema/task_flow';
 
 import {createTaskFlow, queryTaskFlowByUser, queryTaskFlowList, startTaskFlow} from '../../services/task_flow';
 
-import {buildPageInfo, getHttpMsg, getListQueryData} from '../../modules/util';
+import {buildPageInfo, getHttpMsg, getListQueryData, localePkg} from '../../modules/util';
 
 module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     // Create task flow
@@ -51,7 +51,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     }, (request: IAppRequest, reply) => {
         return startTaskFlow(request.query.id, request.session.user.id)
             .then((data) => {
-                reply.send(getHttpMsg(request, data));
+                reply.send(getHttpMsg(request, data, localePkg.Service.TaskFlow.taskStartSuccess));
             });
     });
     next();

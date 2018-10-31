@@ -1,4 +1,4 @@
-import {Document, Schema, Types} from 'mongoose';
+import {Schema, Types} from 'mongoose';
 
 import {TaskPageType, TaskSubType, TaskType} from '../../types/task';
 import {IModifyDateModel} from './';
@@ -75,7 +75,7 @@ export interface ITaskUserModel extends IModifyDateModel {
 /**
  * Search task model
  */
-export interface ITaskSearchModel extends Document {
+export interface ITaskSearchModel {
     name?: string;
     pageType: TaskPageType;
     userId?: Schema.Types.ObjectId;
@@ -84,7 +84,7 @@ export interface ITaskSearchModel extends Document {
 /**
  * Modify task model
  */
-export interface ITaskModifyModel extends Document {
+export interface ITaskModifyModel {
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
     ruleItems: ITaskRuleSaveItem[];

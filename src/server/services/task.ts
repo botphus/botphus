@@ -118,7 +118,7 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
  * @param  {Schema.Types.ObjectId} taskId   Task ID
  * @param  {string}                userId   User ID
  * @param  {ITaskModifyModel}      taskData Task data
- * @return {Promise<ITaskModel>}            Promise with task Info
+ * @return {Promise<ITaskModel>}            Promise with task id
  */
 export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, taskData: ITaskModifyModel): Promise<any> {
     return verifyTaskOwner(taskId, userId)

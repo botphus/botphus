@@ -168,7 +168,8 @@ const localeData: ILocalePackage = {
         },
         TaskFlow: {
             startForbidden: '你不能运行一个已过期的任务流水,请重新创建流水',
-            taskCreateError: '创建任务错误'
+            taskCreateError: '创建任务错误',
+            taskStartSuccess: '任务已开始,请稍后'
         }
     },
     Schema: {
@@ -193,7 +194,8 @@ const localeData: ILocalePackage = {
             search: '搜索',
             addRedisConfig: '添加redis配置',
             addTaskRule: '添加任务规则',
-            startTaskFlow: '执行任务流水'
+            startTaskFlow: '执行任务流水',
+            restartTaskFlow: '重新执行流水'
         },
         Title: {
             Install: '创建管理员帐号',

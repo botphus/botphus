@@ -21,6 +21,9 @@ export default class TaskFlowInfo extends React.Component<ITaskFlowInfoProps> {
                     <Col span={8}>
                         <span>{localePkg.Model.Common.createdAt}:{detail.createdAt}</span>
                     </Col>
+                    <Col span={8}>
+                        <span>{localePkg.Model.TaskFlow.startPage}:{detail.startPage}</span>
+                    </Col>
                 </Row>
                 {detail.redisId || detail.mysqlId ? (
                     <Card title={localePkg.Client.Title.TaskFlowConnection} className="m-t">

@@ -12,7 +12,7 @@ const INIT_STATE: IConnectionContentData = {
     total: 0,
 };
 
-export default function(state = INIT_STATE, action: IActionData<IConnectionContentData>) {
+export default function(state = INIT_STATE, action: IActionData<any>) {
     switch (action.type) {
     case ActionType.UPDATE_CONNECTION_DETAIL:
         const detail = {...action.data};
