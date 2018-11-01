@@ -1,4 +1,4 @@
-import {Drawer, Icon, Tag, Tree} from 'antd';
+import {Drawer, Icon, Progress, Tag, Tree} from 'antd';
 import {AntTreeNodeSelectedEvent} from 'antd/lib/tree/Tree';
 import * as React from 'react';
 const {TreeNode} = Tree;
@@ -41,16 +41,11 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
             SUCCESS: 0,
         };
         const selectReport: ITaskReportDetailItem = selectIndex ? reportMap[selectIndex] : {};
-        const statusCountList: string[] = Object.keys(statusCount);
-        let totalPercent: number = 100;
-        list.forEach((item) => {
-            const curReport: ITaskReportDetailItem = reportMap[item.id] || {};
-            statusCount[TaskReportStatus[typeof curReport.status === 'number' ? curReport.status : TaskReportStatus.IGNORE]] += 1;
-        });
         // Translate flat data to tree data
         const treeData = getTaskItemTreeList(list);
         const loop = (data: ITaskRuleTreeItem[]) => data.map((item) => {
             const curReport: ITaskReportDetailItem = reportMap[item.index] || {};
+            statusCount[TaskReportStatus[typeof curReport.status === 'number' ? curReport.status : TaskReportStatus.IGNORE]] += 1;
             let disabled: boolean = false;
             let $reportStatusIcon;
             switch (curReport.status) {
@@ -58,7 +53,7 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
                     $reportStatusIcon = <Icon type="clock-circle" theme="twoTone" />;
                     break;
                 case TaskReportStatus.FAILED:
-                    $reportStatusIcon = <Icon type="close-circle" theme="twoTone" twoToneColor="#F2F2F2" />;
+                    $reportStatusIcon = <Icon type="close-circle" />;
                     break;
                 case TaskReportStatus.SUCCESS:
                     $reportStatusIcon = <Icon type="check-circle" theme="twoTone" twoToneColor="#52C41A" />;
@@ -71,7 +66,9 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
                     disabled = true;
             }
             const titleTitle = (
-                <div title={typeof curReport.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[curReport.status]] : ''}>
+                <div
+                    title={typeof curReport.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[curReport.status]] : ''}
+                    className={curReport.status === TaskReportStatus.FAILED ? 'text-error' : ''}>
                     <span className="m-r">{$reportStatusIcon}</span>{item.name}({localePkg.Enum.TaskType[TaskType[item.type]]})
                 </div>
             );
@@ -80,30 +77,20 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
             }
             return <TreeNode disabled={disabled} key={item.index} title={titleTitle} index={item.index} />;
         });
+        const $children = loop(treeData);
+        const progressPercent = formatNumber((statusCount.SUCCESS / list.length) * 100, 2);
         return (
             <div>
-                <div className="app-task-flow-count">
-                    {statusCountList.map((key, index) => {
-                        const percent = formatNumber((statusCount[key] / list.length) * 100, 2);
-                        if (index !== statusCountList.length - 1) {
-                            totalPercent -= percent;
-                        }
-                        return (
-                            <span className="count-item" key={index.toString()}>
-                                <span className="percent">{index !== statusCountList.length - 1 ? percent : totalPercent}%</span>
-                                <span className="name">{localePkg.Enum.TaskReportStatus[key]}</span>
-                                <Tag className="number" closable={false}>{statusCount[key]}/{list.length}</Tag>
-                            </span>
-                        );
-                    })}
-                </div>
+                <Progress
+                    percent={progressPercent}
+                    status={statusCount.FAILED > 0 ? 'exception' : (progressPercent === 100 ? 'success' : 'active')} />
                 <Tree
                     onSelect={this.handleSelect}
                     defaultExpandAll
                     selectedKeys={[selectIndex]}
                     className="app-task-flow-rule m-t"
                 >
-                    {loop(treeData)}
+                    {$children}
                 </Tree>
                 <Drawer
                     title={localePkg.Client.Title.TaskReport}

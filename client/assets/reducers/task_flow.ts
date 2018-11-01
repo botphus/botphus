@@ -70,18 +70,29 @@ export default function(state = INIT_STATE, action: IActionData<any>) {
         if (!curReport.index) {
             return state;
         }
-        const curDetail = {...state.detail};
-        const curReportMap = {...curDetail.taskReportMap};
-        curReportMap[curReport.index] = {...curReportMap[curReport.index], ...curReport};
-        curDetail.taskReportMap = curReportMap;
+        const curUpdateTaskFlowReportMapDetail = {...state.detail};
+        const curUpdateTaskFlowReportMapReportMap = {...curUpdateTaskFlowReportMapDetail.taskReportMap};
+        curUpdateTaskFlowReportMapReportMap[curReport.index] = {...curUpdateTaskFlowReportMapReportMap[curReport.index], ...curReport};
+        curUpdateTaskFlowReportMapDetail.taskReportMap = curUpdateTaskFlowReportMapReportMap;
         return {
             ...state,
-            detail: curDetail
+            detail: curUpdateTaskFlowReportMapDetail
         };
         break;
     case ActionType.UPDATE_TASK_FlOW_STATUS:
+        const curUpdateTaskFlowStatusDetail = {...state.detail};
+        const curTaskFlowStatusReportMap = {...curUpdateTaskFlowStatusDetail.taskReportMap};
+        if (action.data === TaskFlowStatus.ONGOING) {
+            Object.keys(curTaskFlowStatusReportMap).forEach((key) => {
+                if (curTaskFlowStatusReportMap[key].status === TaskReportStatus.FAILED || curTaskFlowStatusReportMap[key].status === TaskReportStatus.SUCCESS) {
+                    curTaskFlowStatusReportMap[key].status = TaskReportStatus.PENDING;
+                }
+            });
+            curUpdateTaskFlowStatusDetail.taskReportMap = curTaskFlowStatusReportMap;
+        }
         return {
             ...state,
+            detail: curUpdateTaskFlowStatusDetail,
             flowStatus: action.data
         };
         break;

@@ -84,17 +84,17 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
             updateData.message = error.stack;
             updateData.status = TaskReportStatus.FAILED;
             // Find cur pending index
-            let pendingReport;
+            let lastReport;
             Object.keys(taskReportMap).some((key) => {
                 const curReport = taskReportMap[key];
-                if (curReport.status === TaskReportStatus.PENDING) {
-                    pendingReport = curReport;
+                if (curReport.status === TaskReportStatus.ONGOING || curReport.status === TaskReportStatus.PENDING) {
+                    lastReport = curReport;
                     return true;
                 }
                 return false;
             });
-            if (pendingReport) {
-                sendTaskData(pendingReport, updateData, userId);
+            if (lastReport) {
+                sendTaskData(lastReport, updateData, userId);
             }
             return;
         }
@@ -128,9 +128,10 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
 
 /**
  * Update task report data & send socket message
- * @param {ITaskReportModel}       reportItem [description]
- * @param {ITaskReportModifyModel} updateData [description]
- * @param {string}                 userId     [description]
+ * @param {ITaskReportModel}       reportItem  Report item
+ * @param {ITaskReportModifyModel} updateData  Update data
+ * @param {string}                 userId      User ID
+ * @param {SocketMessageType}      messageType Message type
  */
 function sendTaskData(reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.UPDATE): void {
     // Update report data
