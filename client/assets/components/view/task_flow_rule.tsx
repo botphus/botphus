@@ -1,4 +1,4 @@
-import {Drawer, Icon, Progress, Tag, Tree} from 'antd';
+import {Drawer, Icon, Progress, Tree} from 'antd';
 import {AntTreeNodeSelectedEvent} from 'antd/lib/tree/Tree';
 import * as React from 'react';
 const {TreeNode} = Tree;
