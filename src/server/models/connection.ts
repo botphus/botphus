@@ -34,4 +34,4 @@ const schema = new Schema({
 schema.plugin(modifyDate);
 
 /* tslint:disable:variable-name */
-export const Connection = model<IConnectionBaseModel>('Connection', schema);
+export const Connection = model<IConnectionBaseModel>('BP_Connection', schema);

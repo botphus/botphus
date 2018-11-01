@@ -42,4 +42,4 @@ const schema = new Schema({
 schema.plugin(modifyDate);
 
 /* tslint:disable:variable-name */
-export const Task = model<ITaskModel>('Task', schema);
+export const Task = model<ITaskModel>('BP_Task', schema);

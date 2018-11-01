@@ -65,4 +65,4 @@ schema.plugin(modifyDate);
 schema.index({email: 1});
 
 /* tslint:disable:variable-name */
-export const User = model<IUserModel>('User', schema);
+export const User = model<IUserModel>('BP_User', schema);

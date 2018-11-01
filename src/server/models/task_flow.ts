@@ -58,4 +58,4 @@ schema.plugin(modifyDate);
 schema.index({taskId: -1});
 
 /* tslint:disable:variable-name */
-export const TaskFlow = model<ITaskFlowModel>('TaskFlow', schema);
+export const TaskFlow = model<ITaskFlowModel>('BP_TaskFlow', schema);

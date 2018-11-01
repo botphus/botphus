@@ -28,4 +28,4 @@ schema.plugin(modifyDate);
 schema.index({flowId: 1});
 
 /* tslint:disable:variable-name */
-export const TaskReport = model<ITaskReportModel>('TaskReport', schema);
+export const TaskReport = model<ITaskReportModel>('BP_TaskReport', schema);
