@@ -60,7 +60,7 @@ function rebuildTaskRuleForBotphusTask(ruleItems: ITaskRuleSaveItem[]): any[] {
                 // Check match path
                 if (item.arguments[1]) {
                     return {...item,
-                        arguments: [item.arguments[0], new Function('request', `request.url().indexOf("${item.arguments[1]}") >= 0`)]
+                        arguments: [item.arguments[0], new Function('request', `return request.url().indexOf("${item.arguments[1]}") >= 0`)]
                     };
                 }
                 break;
@@ -79,9 +79,7 @@ function rebuildTaskRuleForBotphusTask(ruleItems: ITaskRuleSaveItem[]): any[] {
  */
 function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IIndexMap<ITaskReportModel>, userId: string): void {
     subProcess.on('message', ([error, messageData]: TaskMessage) => {
-        const updateData: ITaskReportModifyModel = {
-            message: ''
-        };
+        const updateData: ITaskReportModifyModel = {};
         if (error) {
             updateData.message = error.stack;
             updateData.status = TaskReportStatus.FAILED;
@@ -103,11 +101,13 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
         app.log.debug(messageData);
         switch (messageData.type) {
             case MessageType.TASK_UNIT_EXEC_START:
+                updateData.message = '';
                 updateData.status = TaskReportStatus.ONGOING;
                 sendTaskData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_DATA_RECEIVE:
-                updateData.message = typeof messageData.data === 'object' ? messageData.data : messageData.data;
+                updateData.status = TaskReportStatus.ONGOING;
+                updateData.message = typeof messageData.data === 'object' ? JSON.stringify(messageData.data) : messageData.data;
                 sendTaskData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_END:
@@ -134,11 +134,8 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
  */
 function sendTaskData(reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.UPDATE): void {
     // Update report data
-    switch (updateData.status) {
-        case TaskReportStatus.SUCCESS:
-        case TaskReportStatus.FAILED:
-            modifyTaskReportById(reportItem._id, updateData);
-            break;
+    if (typeof updateData.status === 'number') {
+        modifyTaskReportById(reportItem._id, updateData);
     }
     // Send socket message
     switch (messageType) {
