@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+'use strict';
+const app = require('./dist/server/modules/util').app;
+const config = require('./dist/server/modules/config').default;
+const createApp = require('./dist/server/app').default;
+
+createApp()
+    .then(() => {
+        app.listen(config.port, config.host, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+        return app;
+    })
+    .catch((err) => {
+        app.log.error(err);
+        process.exit(1);
+    });

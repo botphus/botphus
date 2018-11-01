@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <% for (let css in htmlWebpackPlugin.files.css) { %>
+        <link rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.files.css[css] %>">
+    <% } %>
+</head>
+<body>
+    <div id="app" class="app" data-salt="{{salt}}" data-socket="{{socketServer}}"></div>
+    <script type="text/javascript">
+        const user = {{{user}}};
+    </script>
+    <% for (let js in htmlWebpackPlugin.files.js) { %>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
+    <% } %>
+</body>
+</html>

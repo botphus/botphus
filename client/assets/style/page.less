@@ -1,0 +1,143 @@
+@import './variables.less';
+html,body,.app,.app-layout,.app-layout>.ant-layout{
+    height: 100%;
+}
+
+// APP
+.app-layout, .app-welcome {
+    height: 100%;
+}
+.ant-layout-content {
+    background: #FFF;
+    padding: 20px;
+}
+.app {
+    &>.ant-spin-nested-loading {
+        height: 100%;
+        &>.ant-spin-container {
+            height: 100%;
+        }
+    }
+}
+.app-page-loading {
+    text-align: center;
+    animation: shaking 4s infinite linear;
+    .loading {
+        font-size: 4em;
+    }
+}
+.app-tip {
+    text-align: center;
+    .icon {
+        font-size: 4em;
+    }
+    .text {
+        font-size: 2em;
+    }
+}
+.app-menu {
+    color: #FFF;
+    .clear();
+    .logo {
+        background: rgba(255,255,255,.2);
+        margin: 15px 15px 0;
+        padding: 5px 0;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 30px;
+        a {
+            color: @text-color-secondary-dark;
+            text-decoration: none;
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                background: url('../images/logo.png');
+                vertical-align: top;
+            }
+            &:hover {
+                color: @menu-dark-highlight-color;
+            }
+            .text {
+                margin-left: 10px;
+            }
+        }
+    }
+    .user-profile {
+        background: rgba(255,255,255,.3);
+        margin: 0 20px 15px;
+        padding: 2px 10px;
+        border-radius: 0 0 5px 5px;
+        text-align: center;
+        .clear();
+        .nickname {
+            .ellipsis();
+        }
+        .logout {
+            color: #FFF;
+            .pull-right();
+        }
+    }
+    .ant-menu {
+        line-height: 65px;
+        font-size: 1.2em;
+    }
+    &.ant-layout-sider-collapsed {
+        .logo {
+            .text {
+                display: none;
+            }
+        }
+        .user-profile {
+            .nickname {
+                display: none;
+            }
+            .logout {
+                float: none;
+            }
+        }
+    }
+}
+.app-task-rule {
+    .m-b();
+}
+
+// Other App style
+a.ant-btn{
+    line-height: @btn-height-base;
+}
+a.ant-btn-lg{
+    line-height: @btn-height-lg;
+}
+a.ant-btn-sm{
+    line-height: @btn-height-sm;
+}
+
+.ant-form.ant-advanced-search-form {
+    margin: 10px 0;
+    padding: 10px;
+    background: #FBFBFB;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+}
+
+// Anime
+@keyframes shaking {
+    @number-opacity: 0.2;
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: @number-opacity;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: @number-opacity;
+    }
+    100% {
+        opacity: 1;
+    }
+}
