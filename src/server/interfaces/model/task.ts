@@ -1,8 +1,8 @@
 import {Schema, Types} from 'mongoose';
 
 import {TaskPageType, TaskSubType, TaskType} from '../../types/task';
-import {IModifyDateModel} from './';
 
+import {IModifyDateModel} from './';
 import {IUserReferModel} from './user';
 
 /**
@@ -53,7 +53,7 @@ export interface ITaskRuleTreeItem extends ITaskRuleSaveItem {
  * Task model
  */
 export interface ITaskModel extends IModifyDateModel {
-    name: string; // Write first & Read only
+    name: string;
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
     ruleItems: ITaskRuleSaveItem[];
@@ -77,7 +77,7 @@ export interface ITaskUserModel extends IModifyDateModel {
  */
 export interface ITaskSearchModel {
     name?: string;
-    pageType: TaskPageType;
+    pageType?: TaskPageType;
     userId?: Schema.Types.ObjectId;
 }
 
@@ -85,7 +85,8 @@ export interface ITaskSearchModel {
  * Modify task model
  */
 export interface ITaskModifyModel {
-    pageType: TaskPageType;
-    members: Schema.Types.ObjectId[];
-    ruleItems: ITaskRuleSaveItem[];
+    name?: string;
+    pageType?: TaskPageType;
+    members?: Schema.Types.ObjectId[];
+    ruleItems?: ITaskRuleSaveItem[];
 }

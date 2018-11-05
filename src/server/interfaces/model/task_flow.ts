@@ -18,8 +18,7 @@ import {ITaskReportDetailItem, ITaskReportModel} from './task_report';
 export interface ITaskFlowListItem {
     _id?: string;
     name?: string;
-    taskId?: Schema.Types.ObjectId;
-    taskName?: string;
+    taskId?: string;
     createdAt?: string;
     updateAt?: number;
     status?: TaskFlowStatus;
@@ -30,11 +29,10 @@ export interface ITaskFlowListItem {
  */
 export interface ITaskFlowDetailItem extends ITaskFlowListItem {
     startPage?: string;
-    mysqlId?: Schema.Types.ObjectId;
+    mysqlId?: string;
     mysqlDetail?: IConnectionDetailMysqlItem;
-    redisId?: Schema.Types.ObjectId;
+    redisId?: string;
     redisDetail?: IConnectionDetailRedisItem;
-    taskId?: Schema.Types.ObjectId;
     taskDetail?: ITaskDetailItem;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
