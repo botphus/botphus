@@ -27,8 +27,7 @@ function mapStateToProps({modal, taskFlow}: IReduxStoreState) {
 }
 
 class DashboardTaskFlowProfileCreatePage extends React.Component<ITaskFlowProfileCreateProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
-    constructor(props) {
-        super(props);
+    public componentDidMount() {
         const {dispatch, location} = this.props;
         const query = parseLocationSearch(location.search);
         if (query.copyId) {

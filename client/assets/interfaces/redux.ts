@@ -4,7 +4,6 @@ import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/in
 import {ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 import {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
-import {TaskFlowStatus} from '../types/common';
 import {ActionType} from '../types/redux';
 
 /**
