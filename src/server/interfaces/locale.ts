@@ -61,6 +61,13 @@ export default interface ILocalePackage {
             IGNORE: string;
             ONGOING: string;
         };
+        TaskFlowStatus: {
+            PENDING: string;
+            FAILED: string;
+            CLOSE: string;
+            SUCCESS: string;
+            ONGOING: string;
+        };
     };
     Placehoder: {
         Input: string;
@@ -149,6 +156,7 @@ export default interface ILocalePackage {
             redisId: string;
             taskId: string;
             excludeOption: string;
+            status: string;
         };
         // Task report
         TaskReport: {

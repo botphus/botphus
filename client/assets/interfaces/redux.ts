@@ -72,9 +72,7 @@ export type ITaskContentData = IContentData<ITaskListItem, ITaskDetailItem>;
 /**
  * Task flow content data
  */
-export interface ITaskFlowContentData extends IContentData<ITaskFlowListItem, ITaskFlowDetailItem> {
-    flowStatus?: TaskFlowStatus;
-}
+export type ITaskFlowContentData = IContentData<ITaskFlowListItem, ITaskFlowDetailItem>;
 
 /**
  * Redux connect props

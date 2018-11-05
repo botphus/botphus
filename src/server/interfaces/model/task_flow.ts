@@ -1,6 +1,7 @@
 import {ITaskExcludeUnit} from 'botphus-core';
 import {Schema, Types} from 'mongoose';
 
+import {TaskFlowStatus} from '../../types/task';
 import {IModifyDateModel} from './';
 
 import {IIndexMap} from '../common';
@@ -21,6 +22,7 @@ export interface ITaskFlowListItem {
     taskName?: string;
     createdAt?: string;
     updateAt?: number;
+    status?: TaskFlowStatus;
 }
 
 /**
@@ -50,6 +52,7 @@ export interface ITaskFlowModel extends IModifyDateModel {
     excludeOption: ITaskExcludeUnit;
     taskId: Schema.Types.ObjectId;
     createdUser: Types.ObjectId;
+    status: TaskFlowStatus;
 }
 
 /**
@@ -63,9 +66,17 @@ export interface ITaskFlowDetailModel extends ITaskFlowModel {
 }
 
 /**
+ * Task execution flow modify model
+ */
+export interface ITaskFlowModifyModel {
+    status: TaskFlowStatus;
+}
+
+/**
  * Task execution flow serach model
  */
 export interface ITaskFlowSearchModel {
     name: string;
+    status?: TaskFlowStatus;
     createdUser?: Types.ObjectId;
 }

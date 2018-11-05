@@ -35,7 +35,7 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
     public render() {
         const {taskFlow} = this.props;
         let $startBtn;
-        switch (taskFlow.flowStatus) {
+        switch (taskFlow.detail.status) {
             case TaskFlowStatus.CLOSE:
                 $startBtn = (
                     <Tooltip placement="topLeft" title={localePkg.Service.TaskFlow.startForbidden}>

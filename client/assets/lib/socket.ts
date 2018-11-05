@@ -2,7 +2,7 @@ import {message} from 'antd';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 import {ITaskReportDetailItem} from '../interfaces/task';
-import {SocketMessageType, TaskFlowStatus} from '../types/common';
+import {SocketMessageType} from '../types/common';
 
 import store from '../store';
 import {socketServer} from './const';
@@ -57,7 +57,7 @@ function onMessage(event) {
                 if (!taskFlowState.detail._id || endTaskId !== taskFlowState.detail._id) {
                     return;
                 }
-                store.dispatch(updateTaskFlowStatus(endTaskMessage === 'success' ? TaskFlowStatus.SUCCESS : TaskFlowStatus.FAILED));
+                store.dispatch(updateTaskFlowStatus(parseInt(endTaskMessage, 10)));
                 break;
         }
     } catch (e) {

@@ -48,6 +48,10 @@ const schema = new Schema({
             })
         ]
     },
+    status: {
+        required: [true, `${localeTaskFlowPkg.status}: ${localePkg.Model.requiredError}`],
+        type: Number
+    },
     taskId: {
         required: [true, `${localeTaskFlowPkg.taskId}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.ObjectId

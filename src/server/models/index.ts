@@ -3,6 +3,11 @@ import mongoose = require('mongoose');
 import config from '../modules/config';
 import {app} from '../modules/util';
 
+import {TaskFlowStatus, TaskReportStatus} from '../types/task';
+
+import {modifyTaskFlows} from '../services/task_flow';
+import {modifyTaskReports} from '../services/task_report';
+
 mongoose.set('useCreateIndex', true);
 mongoose.Promise = Promise;
 mongoose.connect(config.db, {
@@ -18,6 +23,18 @@ mongoose.connect(config.db, {
         });
     }
     app.log.debug('MongoDB connect succeed');
+    // Update ongoing task flows & reports to faild
+    modifyTaskFlows({
+        status: TaskFlowStatus.ONGOING
+    }, {
+        status: TaskFlowStatus.FAILED
+    });
+    modifyTaskReports({
+        status: TaskReportStatus.ONGOING
+    }, {
+        message: 'Application restart',
+        status: TaskReportStatus.FAILED,
+    });
 });
 
 export default mongoose;

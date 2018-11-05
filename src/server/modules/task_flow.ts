@@ -19,10 +19,10 @@ const botphusCore = new BotphusCore();
 
 /**
  * Build and run botphus task
- * @param  {ITaskFlowDetailModel} taskFlowData Task flow data
- * @return {Promise<void>}                     Promise
+ * @param  {ITaskFlowDetailModel}  taskFlowData Task flow data
+ * @return {Promise<ChildProcess>}              Promise with child process
  */
-export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Promise<void> {
+export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Promise<ChildProcess> {
     return botphusCore.createTask(
         taskFlowData.taskDetail.name,
         new Date(taskFlowData.taskDetail.updateAt).getTime(),
@@ -40,6 +40,7 @@ export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Prom
             return botphusCore.startTask(taskNo, taskFlowData.startPage || '', startOption)
                 .then((subProcess) => {
                     listenBotphusTaskMessage(subProcess, taskFlowData.taskReportMap, taskFlowData.createdUser.toString());
+                    return subProcess;
                 });
         }, (err) => {
             throw createSystemError(`${localePkg.Service.TaskFlow.taskCreateError}:${err.message}`, SystemCode.ROUTINE_ERROR);
@@ -94,7 +95,7 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
                 return false;
             });
             if (lastReport) {
-                sendTaskData(lastReport, updateData, userId);
+                sendTaskFlowData(lastReport, updateData, userId);
             }
             return;
         }
@@ -103,26 +104,20 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
             case MessageType.TASK_UNIT_EXEC_START:
                 updateData.message = '';
                 updateData.status = TaskReportStatus.ONGOING;
-                sendTaskData(taskReportMap[messageData.index], updateData, userId);
+                sendTaskFlowData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_DATA_RECEIVE:
                 updateData.status = TaskReportStatus.ONGOING;
                 updateData.message = typeof messageData.data === 'object' ? JSON.stringify(messageData.data) : messageData.data;
-                sendTaskData(taskReportMap[messageData.index], updateData, userId);
+                sendTaskFlowData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_END:
                 updateData.status = TaskReportStatus.SUCCESS;
                 // Update report map
                 taskReportMap[messageData.index].status = TaskReportStatus.SUCCESS;
-                sendTaskData(taskReportMap[messageData.index], updateData, userId);
+                sendTaskFlowData(taskReportMap[messageData.index], updateData, userId);
                 break;
         }
-    });
-    subProcess.on('close', (code) => {
-        sendTaskData(taskReportMap[Object.keys(taskReportMap)[0]], {
-            message: code === 0 || !code ? 'success' : 'failed'
-        }, userId, SocketMessageType.END);
-        app.log.debug('Process close code:', code);
     });
 }
 
@@ -133,7 +128,8 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
  * @param {string}                 userId      User ID
  * @param {SocketMessageType}      messageType Message type
  */
-function sendTaskData(reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.UPDATE): void {
+export function sendTaskFlowData(
+    reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.UPDATE): void {
     // Update report data
     if (typeof updateData.status === 'number') {
         modifyTaskReportById(reportItem._id, updateData);

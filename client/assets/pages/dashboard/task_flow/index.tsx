@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import {IModalData, IReduxConnectProps, IReduxStoreState, ITaskFlowContentData} from '../../../interfaces/redux';
+import {TaskFlowStatus} from '../../../types/common';
 
 import {cleanTaskFlowList, queryTaskFlowListData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
@@ -41,10 +42,24 @@ class DashboardTaskFlowPage extends React.Component<ITaskFlowProps> {
                 title: localePkg.Model.TaskFlow.name
             },
             {
+                dataIndex: 'status',
+                title: localePkg.Model.TaskFlow.status,
+                render(status) {
+                    return localePkg.Enum.TaskFlowStatus[TaskFlowStatus[status]] || '-';
+                }
+            },
+            {
                 dataIndex: 'createdAt',
                 title: localePkg.Model.Common.createdAt,
                 render(createAt) {
                     return formatDate(createAt);
+                }
+            },
+            {
+                dataIndex: 'updateAt',
+                title: localePkg.Model.Common.updateAt,
+                render(updateAt) {
+                    return formatDate(updateAt);
                 }
             },
             {

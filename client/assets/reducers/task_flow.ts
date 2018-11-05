@@ -1,6 +1,5 @@
 // Import action
 import {IActionData, ITaskFlowContentData} from '../interfaces/redux';
-import {TaskFlowStatus, TaskReportStatus} from '../types/common';
 import {ActionType} from '../types/redux';
 
 import {pageSize} from '../lib/const';
@@ -8,7 +7,6 @@ import {pageSize} from '../lib/const';
 const INIT_STATE: ITaskFlowContentData = {
     content: [],
     detail: {},
-    flowStatus: TaskFlowStatus.CLOSE,
     page: 1,
     pageSize,
     total: 0,
@@ -18,32 +16,9 @@ export default function(state = INIT_STATE, action: IActionData<any>) {
     switch (action.type) {
     case ActionType.UPDATE_TASK_FLOW_DETAIL:
         const detail = {...action.data};
-        // Check update date
-        let flowStatus = (detail.taskDetail && new Date(detail.createdAt) > new Date(detail.taskDetail.updateAt)) ?
-            TaskFlowStatus.SUCCESS : TaskFlowStatus.CLOSE;
-        // Check task report ongoing status
-        if (flowStatus !== TaskFlowStatus.CLOSE) {
-            Object.keys(detail.taskReportMap).some((key) => {
-                const curStatus = detail.taskReportMap[key].status;
-                switch (curStatus) {
-                    case TaskReportStatus.ONGOING:
-                        flowStatus = TaskFlowStatus.ONGOING;
-                        break;
-                    case TaskReportStatus.FAILED:
-                        flowStatus = TaskFlowStatus.FAILED;
-                        break;
-                    case TaskReportStatus.PENDING:
-                        flowStatus = TaskFlowStatus.PENDING;
-                    default:
-                        return false;
-                }
-                return true;
-            });
-        }
         return {
             ...state,
-            detail,
-            flowStatus
+            detail
         };
     case ActionType.UPDATE_TASK_FLOW_LIST:
         if (!action.data) {
@@ -80,20 +55,13 @@ export default function(state = INIT_STATE, action: IActionData<any>) {
         };
         break;
     case ActionType.UPDATE_TASK_FlOW_STATUS:
-        const curUpdateTaskFlowStatusDetail = {...state.detail};
-        const curTaskFlowStatusReportMap = {...curUpdateTaskFlowStatusDetail.taskReportMap};
-        if (action.data === TaskFlowStatus.ONGOING) {
-            Object.keys(curTaskFlowStatusReportMap).forEach((key) => {
-                if (curTaskFlowStatusReportMap[key].status === TaskReportStatus.FAILED || curTaskFlowStatusReportMap[key].status === TaskReportStatus.SUCCESS) {
-                    curTaskFlowStatusReportMap[key].status = TaskReportStatus.PENDING;
-                }
-            });
-            curUpdateTaskFlowStatusDetail.taskReportMap = curTaskFlowStatusReportMap;
-        }
+        const curUpdateTaskFlowStatusDetail = {
+            ...state.detail,
+            status: action.data
+        };
         return {
             ...state,
-            detail: curUpdateTaskFlowStatusDetail,
-            flowStatus: action.data
+            detail: curUpdateTaskFlowStatusDetail
         };
         break;
     case ActionType.CLEAN_TASK_FLOW_DETAIL:

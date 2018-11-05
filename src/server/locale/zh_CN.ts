@@ -61,6 +61,13 @@ const localeData: ILocalePackage = {
             SUCCESS: '执行成功',
             IGNORE: '跳过执行',
             ONGOING: '执行中'
+        },
+        TaskFlowStatus: {
+            PENDING: '待执行',
+            FAILED: '执行失败',
+            CLOSE: '已关闭',
+            SUCCESS: '执行成功',
+            ONGOING: '正在执行'
         }
     },
     Placehoder: {
@@ -143,7 +150,8 @@ const localeData: ILocalePackage = {
             mysqlId: 'MYSQL配置',
             redisId: 'Redis配置',
             taskId: '所属任务',
-            excludeOption: '过滤单元'
+            excludeOption: '过滤单元',
+            status: '状态'
         },
         TaskReport: {
             index: '单元编号',

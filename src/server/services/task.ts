@@ -4,9 +4,11 @@ import {Task} from '../models/';
 
 import {ITaskModel, ITaskModifyModel, ITaskSearchModel, ITaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
+import {TaskFlowStatus} from '../types/task';
 
 import {createSystemError, localePkg} from '../modules/util';
 
+import {modifyTaskFlows} from './task_flow';
 import {queryUserByIdsWithReferMap} from './user';
 
 /**
@@ -123,7 +125,17 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
 export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, taskData: ITaskModifyModel): Promise<any> {
     return verifyTaskOwner(taskId, userId)
         .then(() => {
-            return Task.updateOne({
+            return modifyTaskFlows({
+                status: {
+                    $ne: TaskFlowStatus.CLOSE
+                },
+                taskId,
+            }, {
+                status: TaskFlowStatus.CLOSE
+            });
+        })
+        .then(() => {
+            Task.updateOne({
                 _id: taskId
             }, taskData).exec();
         });
