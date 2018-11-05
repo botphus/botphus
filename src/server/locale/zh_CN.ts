@@ -192,6 +192,7 @@ const localeData: ILocalePackage = {
             detail: '详情',
             modify: '编辑',
             remove: '删除',
+            copy: '拷贝',
             cancel: '返回',
             top: '置顶',
             next: '下一步',

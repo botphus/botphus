@@ -33,6 +33,7 @@ export interface ITaskFlowDetailItem extends ITaskFlowListItem {
     mysqlDetail?: IConnectionDetailMysqlItem;
     redisId?: string;
     redisDetail?: IConnectionDetailRedisItem;
+    excludeOption?: ITaskExcludeUnit;
     taskDetail?: ITaskDetailItem;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
@@ -47,7 +48,7 @@ export interface ITaskFlowModel extends IModifyDateModel {
     mysqlId?: Schema.Types.ObjectId;
     // redis config id
     redisId?: Schema.Types.ObjectId;
-    excludeOption: ITaskExcludeUnit;
+    excludeOption?: ITaskExcludeUnit;
     taskId: Schema.Types.ObjectId;
     createdUser: Types.ObjectId;
     status: TaskFlowStatus;

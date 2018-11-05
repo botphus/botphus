@@ -3,27 +3,47 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
+import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, ITaskFlowContentData} from '../../../interfaces/redux';
 
-import {postCreateTaskFlowData} from '../../../actions/task_flow';
+import {cleanTaskFlowDetail, postCreateTaskFlowData, queryTaskFlowDetailData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
+import {parseLocationSearch} from '../../../lib/util';
 import {routerHistory} from '../../../router';
 
 import TaskFlowCreateProfileForm from '../../../components/form/task_flow_create_profile';
 
 interface ITaskFlowProfileCreateProps extends IReduxConnectProps {
     modal: IModalData;
+    taskFlow: ITaskFlowContentData;
 }
 
-function mapStateToProps({modal}: IReduxStoreState) {
+import Loading from '../../../components/loading';
+
+function mapStateToProps({modal, taskFlow}: IReduxStoreState) {
     return {
-        modal
+        modal,
+        taskFlow
     };
 }
 
 class DashboardTaskFlowProfileCreatePage extends React.Component<ITaskFlowProfileCreateProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
+    constructor(props) {
+        super(props);
+        const {dispatch, location} = this.props;
+        const query = parseLocationSearch(location.search);
+        if (query.copyId) {
+            dispatch(queryTaskFlowDetailData(query.copyId));
+        }
+    }
+    public componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch(cleanTaskFlowDetail());
+    }
     public render() {
-        const {modal} = this.props;
+        const {modal, taskFlow} = this.props;
+        if (modal.loading) {
+            return <Loading />;
+        }
         return (
             <div className="app-dashboard-task-flow-create">
                 <Row>
@@ -36,7 +56,7 @@ class DashboardTaskFlowProfileCreatePage extends React.Component<ITaskFlowProfil
                         </a>
                     </Col>
                 </Row>
-                <TaskFlowCreateProfileForm onSubmit={this.handleSubmit} defaultValue={{}} loading={modal.loadingForm} />
+                <TaskFlowCreateProfileForm onSubmit={this.handleSubmit} defaultValue={taskFlow.detail} loading={modal.loadingForm} />
             </div>
         );
     }

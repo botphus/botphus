@@ -205,6 +205,7 @@ export default interface ILocalePackage {
             detail: string;
             modify: string;
             remove: string;
+            copy: string;
             cancel: string;
             top: string;
             next: string;

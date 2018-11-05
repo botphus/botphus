@@ -68,7 +68,12 @@ class DashboardTaskFlowPage extends React.Component<ITaskFlowProps> {
                 title: localePkg.Client.Action.title,
                 width: 100,
                 render(row) {
-                    return <Link to={`/dashboard/task-flow/profile/${row._id}`}>{localePkg.Client.Action.detail}</Link>;
+                    return (
+                        <span>
+                            <Link to={`/dashboard/task-flow/profile/${row._id}`}>{localePkg.Client.Action.detail}</Link>
+                            <Link to={`/dashboard/task-flow/profile/create?copyId=${row._id}`} className="m-l-sm">{localePkg.Client.Action.copy}</Link>
+                        </span>
+                    );
                 }
             }
         ];

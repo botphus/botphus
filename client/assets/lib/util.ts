@@ -1,7 +1,7 @@
 import {PaginationConfig} from 'antd/lib/pagination';
 import md5 from 'blueimp-md5';
 
-import {INumEnumValue} from '../interfaces/common';
+import {IIndexMap, INumEnumValue} from '../interfaces/common';
 import {IContentData} from '../interfaces/redux';
 import {UserPermissionCode} from '../types/common';
 
@@ -130,4 +130,23 @@ export function filterEmptyFields(data: object): any {
         }
     }
     return returnData;
+}
+
+/**
+ * Parse location search to query map
+ * @param  {string}            search Search sting
+ * @return {IIndexMap<string>}        Query map
+ */
+export function parseLocationSearch(search: string): IIndexMap<string> {
+    const query: IIndexMap<string> = {};
+    if (search) {
+        const matchData = search.match(/[^\?&]+=[^\?&]+/g);
+        if (matchData) {
+            matchData.forEach((queryString) => {
+                const [queryIndex, queryData] = queryString.split('=');
+                query[queryIndex] = queryData;
+            });
+        }
+    }
+    return query;
 }
