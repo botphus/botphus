@@ -83,3 +83,6 @@ export const taskFlowExcludeOption = {
     '0-1': true
 };
 export const taskFlowStartPage = 'https://cn.bing.com/';
+
+// Union task data
+export const unionTaskName = 'test-union-task';

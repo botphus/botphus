@@ -37,6 +37,7 @@ export enum TaskType {
     TYPE_EVENT = 3, // EVENT listener
     TYPE_TIME = 4, // Time action
     TYPE_PAGE = 5, // Page action
+    TYPE_UNION = 6, // Union type
 }
 
 /**
@@ -96,4 +97,12 @@ export enum TaskTypePageSubType {
     SUB_TYPE_GOTO = 504, // Redirect to target url
     // TODO
     // SUB_TYPE_SCREENSHOT = 505, // Take a screenshot
+}
+
+/**
+ * Sub type: union
+ */
+export enum TaskTypeUnionSubType {
+    SUB_TYPE_BLOCK = 600, // Block union rule when execute process was error
+    SUB_TYPE_NON_BLOCK = 601, // Non-block union rule when execute process was error
 }

@@ -39,5 +39,10 @@ export const userPermissionMap: {
     'get:/task-follow/': UserPermissionCode.TASK_FLOW,
     'get:/task-follow/profile/': UserPermissionCode.TASK_FLOW,
     'get:/task-follow/start/': UserPermissionCode.TASK_FLOW,
+    // Union task
+    'post:/union-task/': UserPermissionCode.TASK_MANAGE,
+    'patch:/union-task/': UserPermissionCode.TASK_MANAGE,
+    'get:/union-task/': UserPermissionCode.LOGIN,
+    'get:/union-task/profile/': UserPermissionCode.LOGIN,
 };
 /* tslint:enable:object-literal-sort-keys */

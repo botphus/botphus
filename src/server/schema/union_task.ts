@@ -1,50 +1,32 @@
-import {TaskType} from '../types/task';
-
 import {modifyCommonRequiredField, modifyCommonSchema, pageInfo} from './common';
 
 import {strLength} from '../types/rules';
-import {TaskPageType} from '../types/task';
 
-import {app, getNumEnumsList} from '../modules/util';
+import {app} from '../modules/util';
 
 app.addSchema({
-    $id: 'taskRuleItems',
+    $id: 'taskItems',
     items: {
         properties: {
-            arguments: {
-                type: 'array'
-            },
-            assertion: {
-                items: {
-                    type: 'string'
-                },
-                type: 'array'
-            },
-            assertionVarName: {
-                type: 'string'
-            },
-            id: {
-                type: 'integer'
+            ignoreError: {
+                type: 'boolean'
             },
             name: {
                 maxLength: strLength[1],
                 minLength: strLength[0],
                 type: 'string'
             },
-            pid: {
-                type: 'integer'
+            startPage: {
+                type: 'string'
             },
-            subType: {
-                type: 'integer'
+            taskId: {
+                type: 'string'
             },
-            type: {
-                enum: getNumEnumsList(TaskType).map((item) => {
-                    return item.value;
-                }),
-                type: 'integer'
-            },
+            taskPid: {
+                type: 'string'
+            }
         },
-        required: ['name', 'type', 'id'],
+        required: ['taskId', 'name', 'ignoreError'],
         type: 'object'
     },
     type: 'array'
@@ -59,12 +41,6 @@ export const searchSchema = {
         name: {
             maxLength: strLength[1],
             type: 'string'
-        },
-        pageType: {
-            enum: getNumEnumsList(TaskPageType).map((item) => {
-                return item.value;
-            }),
-            type: 'integer'
         }
     }, pageInfo),
     type: 'object'
@@ -86,13 +62,7 @@ const baseProperties = {
         minLength: strLength[0],
         type: 'string'
     },
-    pageType: {
-        enum: getNumEnumsList(TaskPageType).map((item) => {
-            return item.value;
-        }),
-        type: 'integer'
-    },
-    ruleItems: 'taskRuleItems#'
+    taskItems: 'taskItems#'
 };
 
 /**
@@ -101,7 +71,7 @@ const baseProperties = {
  */
 export const createSchema = {
     properties: baseProperties,
-    required: ['name', 'ruleItems', 'pageType'],
+    required: ['name', 'taskItems'],
     type: 'object'
 };
 

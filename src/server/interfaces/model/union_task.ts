@@ -33,7 +33,7 @@ export interface IUnionTaskSaveItem {
     taskId: Schema.Types.ObjectId; // current ID
     taskPid?: Schema.Types.ObjectId; // parent ID
     name: string; // Task name
-    level: string; // Tree level
+    level?: string; // Tree level
     startPage?: string; // Start page path
     ignoreError: boolean; // Ignore execution error
 }
