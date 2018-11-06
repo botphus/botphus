@@ -74,6 +74,7 @@ export default interface ILocalePackage {
         Select: string;
         Search: string;
         NotFound: string;
+        Empty: string;
     };
     // System code error message
     SystemCode: {
@@ -136,6 +137,7 @@ export default interface ILocalePackage {
                     mysql: string;
                     redis: string;
                     querySelector: string;
+                    querySelectorHumanClick: string;
                     querySelectorText: string;
                     querySelectorAttrName: string;
                     querySelectorAttrValue: string;
@@ -163,8 +165,20 @@ export default interface ILocalePackage {
             index: string;
             status: string;
             message: string;
+            receiveData: string;
             flowId: string;
         };
+        // Union task
+        UnionTask: {
+            name: string;
+            members: string;
+            taskItems: string;
+            taskItem: {
+                taskId: string;
+                startPage: string;
+                ignoreError: string;
+            }
+        }
     };
     // Service Error
     Service: {
@@ -259,6 +273,7 @@ export default interface ILocalePackage {
                 arguments: {
                     redis: string;
                     querySelector: string;
+                    querySelectorHumanClick: string;
                     eventTimeout: string;
                     eventPath: string;
                 };

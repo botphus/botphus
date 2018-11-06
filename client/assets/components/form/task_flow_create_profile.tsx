@@ -114,7 +114,7 @@ class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskF
                                 }],
                             })(
                                 <SearchSelect
-                                    autoLoad={true}
+                                    autoLoad={defaultValue.taskId ? false : true}
                                     apiAction={RequestAction.TASK}
                                     listName={localePkg.Model.Task.name}
                                     searchField="name"

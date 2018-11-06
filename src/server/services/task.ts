@@ -18,7 +18,7 @@ import {queryUserByIdsWithReferMap} from './user';
 const defaultFields: string = '_id pageType name createdAt updateAt';
 
 /**
- * Query Task info by id
+ * Query task info by id
  * @param  {Schema.Types.ObjectId} taskId Task ID
  * @param  {string}                fields Field list
  * @return {Promise<ITaskModel>}          Promise with Task Info
@@ -28,7 +28,7 @@ export function queryTaskById(taskId: Schema.Types.ObjectId, fields: string = nu
 }
 
 /**
- * Query Task list
+ * Query task list
  * @param  {IUserSearchModel}                query    Query condition
  * @param  {number}                          page     Page
  * @param  {number}                          pageSize Page size
@@ -94,9 +94,10 @@ export function createTask(taskData: ITaskModel, createUser: string): Promise<IT
 }
 
 /**
- * [queryTaskByUsers description]
- * @param  {Schema.Types.ObjectId} taskId Task ID
- * @return {Promise<ITaskModel>}          User ID
+ * Query task by id with users info
+ * @param  {Schema.Types.ObjectId}   taskId Task ID
+ * @param  {string}                  userId User ID
+ * @return {Promise<ITaskUserModel>}        Task info with user info
  */
 export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: string): Promise<ITaskUserModel> {
     return verifyTaskOwner(taskId, userId)

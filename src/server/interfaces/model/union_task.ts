@@ -21,7 +21,7 @@ export interface IUnionTaskListItem {
  */
 export interface IUnionTaskDetailItem extends IUnionTaskListItem {
     members?: IUserReferModel[];
-    ruleItems?: IUnionTaskRuleSaveItem[];
+    taskItems?: IUnionTaskSaveItem[];
     createdUser?: string;
     createdUserName?: string;
 }
@@ -29,16 +29,17 @@ export interface IUnionTaskDetailItem extends IUnionTaskListItem {
 /**
  * Union task item base interface
  */
-export interface IUnionTaskRuleSaveItem {
+export interface IUnionTaskSaveItem {
     taskId: Schema.Types.ObjectId; // current ID
     taskPid?: Schema.Types.ObjectId; // parent ID
+    name: string; // Task name
     level: string; // Tree level
     startPage?: string; // Start page path
     ignoreError: boolean; // Ignore execution error
 }
 
-export interface IUnionTaskRuleTreeItem extends IUnionTaskRuleSaveItem {
-    children: IUnionTaskRuleTreeItem[];
+export interface IUnionTaskTreeItem extends IUnionTaskSaveItem {
+    children: IUnionTaskTreeItem[];
 }
 
 /**
@@ -47,7 +48,7 @@ export interface IUnionTaskRuleTreeItem extends IUnionTaskRuleSaveItem {
 export interface IUnionTaskModel extends IModifyDateModel {
     name: string;
     members: Schema.Types.ObjectId[];
-    taskItems: IUnionTaskRuleSaveItem[];
+    taskItems: IUnionTaskSaveItem[];
     createdUser: Types.ObjectId;
 }
 
@@ -57,7 +58,7 @@ export interface IUnionTaskModel extends IModifyDateModel {
 export interface IUnionTaskUserModel extends IModifyDateModel {
     name: string;
     members?: IUserReferModel[];
-    ruleItems: IUnionTaskRuleSaveItem[];
+    taskItems: IUnionTaskSaveItem[];
     createdUser: Schema.Types.ObjectId;
     createdUserName?: string;
 }
@@ -76,5 +77,5 @@ export interface IUnionTaskSearchModel {
 export interface IUnionTaskModifyModel {
     name: string;
     members: Schema.Types.ObjectId[];
-    taskItems: IUnionTaskRuleSaveItem[];
+    taskItems: IUnionTaskSaveItem[];
 }

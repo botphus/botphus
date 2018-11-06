@@ -21,7 +21,7 @@ interface ISearchSelectProps {
     listNameKey: string; // The key of listData that give to the list's option name
     searchField: string; // The search query field name
     delayTime?: number; // Request delay time
-    value?: LabeledValue[];
+    value?: LabeledValue;
     onChange?: (value: LabeledValue) => void;
 }
 
@@ -65,6 +65,9 @@ export default class SearchSelect extends React.Component<ISearchSelectProps, IS
                 notFoundContent={loading ? <Spin size="small" /> : getFormFieldPlaceholder(localePkg.Placehoder.NotFound, listName)}
                 filterOption={false}
             >
+                {listData.length === 0 && value && value.key ? (
+                    <Option value={value.key}>{value.label}</Option>
+                ) : null}
                 {listData.map((item, index) => {
                     return <Option key={index.toString()} value={item[listValueKey]} title={item[listNameKey]}>{item[listNameKey]}</Option>;
                 })}

@@ -1,4 +1,4 @@
-import {Drawer, Icon, Progress, Tree} from 'antd';
+import {Col, Divider, Drawer, Icon, Progress, Row, Tree} from 'antd';
 import {AntTreeNodeSelectedEvent} from 'antd/lib/tree/Tree';
 import * as React from 'react';
 const {TreeNode} = Tree;
@@ -8,6 +8,7 @@ import {ITaskReportDetailItem, ITaskRuleSaveItem, ITaskRuleTreeItem} from '../..
 import {TaskReportStatus, TaskType} from '../../types/common';
 
 import {localePkg} from '../../lib/const';
+import {getFormFieldPlaceholder} from '../../lib/form';
 import {formatNumber} from '../../lib/format';
 import {getTaskItemTreeList} from '../../lib/task';
 
@@ -98,11 +99,20 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
                     visible={selectIndex !== ''}
                     width={500}
                 >
-                    <p>{localePkg.Model.TaskReport.index}: {selectReport.index}</p>
-                    <p>{localePkg.Model.TaskReport.status}:
-                        {typeof selectReport.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[selectReport.status]] : ''}</p>
-                    <p>{localePkg.Model.TaskReport.message}</p>
-                    <p>{selectReport.message || '-'}</p>
+                    <Row>
+                        <Col span={12}>
+                            <span className="m-r">{localePkg.Model.TaskReport.index}: </span>
+                            {selectReport.index}
+                        </Col>
+                        <Col span={12}>
+                            <span className="m-r">{localePkg.Model.TaskReport.status}: </span>
+                            {typeof selectReport.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[selectReport.status]] : ''}
+                        </Col>
+                    </Row>
+                    <Divider>{localePkg.Model.TaskReport.receiveData}</Divider>
+                    <div>{selectReport.receiveData || getFormFieldPlaceholder(localePkg.Placehoder.Empty, localePkg.Model.TaskReport.receiveData)}</div>
+                    <Divider>{localePkg.Model.TaskReport.message}</Divider>
+                    <div>{selectReport.message || getFormFieldPlaceholder(localePkg.Placehoder.Empty, localePkg.Model.TaskReport.message)}</div>
                 </Drawer>
             </div>
         );

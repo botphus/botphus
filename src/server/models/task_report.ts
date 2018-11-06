@@ -18,6 +18,9 @@ const schema = new Schema({
     message: {
         type: String
     },
+    receiveData: {
+        type: String
+    },
     status: {
         required: [true, `${localeTaskReportPkg.status}: ${localePkg.Model.requiredError}`],
         type: Number

@@ -74,7 +74,8 @@ const localeData: ILocalePackage = {
         Input: '请输入${field}',
         Select: '请选择${field}',
         Search: '请输入${field}搜索',
-        NotFound: '未找到${field}'
+        NotFound: '未找到${field}',
+        Empty: '${field}没有任何数据'
     },
     SystemCode: {
         success: '请求成功',
@@ -132,6 +133,7 @@ const localeData: ILocalePackage = {
                     mysql: 'SQL语句',
                     redis: 'Redis命令',
                     querySelector: 'DOM选择器',
+                    querySelectorHumanClick: '模拟自然人点击',
                     querySelectorText: '输入文本',
                     querySelectorAttrName: '属性名',
                     querySelectorAttrValue: '属性值',
@@ -157,7 +159,18 @@ const localeData: ILocalePackage = {
             index: '单元编号',
             status: '单元执行状态',
             message: '单元执行信息',
+            receiveData: '接收数据',
             flowId: '所属流水'
+        },
+        UnionTask: {
+            name: '名称',
+            members: '成员',
+            taskItems: '任务列表',
+            taskItem: {
+                taskId: '任务',
+                startPage: '起始页面',
+                ignoreError: '忽略错误'
+            }
         }
     },
     Service: {
@@ -244,6 +257,7 @@ const localeData: ILocalePackage = {
                 arguments: {
                     redis: '如set name 111,请注意方法名均为小写',
                     querySelector: 'Chrome中可以使用"控制台->Elements->右键对应节点->Copy->Copy selector"快速选择节点',
+                    querySelectorHumanClick: '当你点击的地方可能被浮动的元素(如浮动广告)覆盖时,请取消该选择.否则可能引起点击触发失败的情况发生.',
                     eventTimeout: '超过该设置时间则视为监听失败',
                     eventPath: '模糊匹配,只有该地址才进行监听'
                 }

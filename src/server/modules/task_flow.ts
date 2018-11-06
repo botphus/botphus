@@ -84,11 +84,15 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
         if (error) {
             updateData.message = error.stack;
             updateData.status = TaskReportStatus.FAILED;
+            if (error.index) {
+                return sendTaskFlowData(taskReportMap[error.index], updateData, userId);
+            }
             // Find cur pending index
             let lastReport;
-            Object.keys(taskReportMap).some((key) => {
+            const reportList = Object.keys(taskReportMap);
+            reportList.some((key, index) => {
                 const curReport = taskReportMap[key];
-                if (curReport.status === TaskReportStatus.ONGOING || curReport.status === TaskReportStatus.PENDING) {
+                if (curReport.status === TaskReportStatus.ONGOING || curReport.status === TaskReportStatus.PENDING || index === reportList.length - 1) {
                     lastReport = curReport;
                     return true;
                 }
@@ -102,13 +106,13 @@ function listenBotphusTaskMessage(subProcess: ChildProcess, taskReportMap: IInde
         app.log.debug(messageData);
         switch (messageData.type) {
             case MessageType.TASK_UNIT_EXEC_START:
-                updateData.message = '';
+                // Reset info
                 updateData.status = TaskReportStatus.ONGOING;
                 sendTaskFlowData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_DATA_RECEIVE:
                 updateData.status = TaskReportStatus.ONGOING;
-                updateData.message = typeof messageData.data === 'object' ? JSON.stringify(messageData.data) : messageData.data;
+                updateData.receiveData = typeof messageData.data === 'object' ? JSON.stringify(messageData.data) : messageData.data;
                 sendTaskFlowData(taskReportMap[messageData.index], updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_END:

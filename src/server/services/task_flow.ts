@@ -120,6 +120,7 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
                             flowId: flowData.id,
                             index: `${taskRule.id}`,
                             message: '',
+                            receiveData: '',
                             status: flowData.excludeOption[`${taskRule.id}`] ? TaskReportStatus.IGNORE : TaskReportStatus.PENDING,
                         };
                     });

@@ -1,7 +1,7 @@
 /**
  * Task rule arguments modify: data type
  */
-import {Form, Input} from 'antd';
+import {Form, Input, Checkbox} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
@@ -16,6 +16,7 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
         const {subType} = this.props;
         const {getFieldDecorator, getFieldError, isFieldTouched} = this.props.form;
         const argumentsQuerySelectorError = isFieldTouched('arguments.querySelector') && getFieldError('arguments.querySelector');
+        const argumentsHumanClickError = isFieldTouched('arguments.humanClick') && getFieldError('arguments.humanClick');
         const argumentsQuerySelectorTextError = isFieldTouched('arguments.querySelectorText') && getFieldError('arguments.querySelectorText');
         const argumentsQuerySelectorAttrNameError = isFieldTouched('arguments.querySelectorAttrName') && getFieldError('arguments.querySelectorAttrName');
         const argumentsQuerySelectorAttrValueError = isFieldTouched('arguments.querySelectorAttrValue') && getFieldError('arguments.querySelectorAttrValue');
@@ -41,9 +42,32 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                         <Input.TextArea rows={4} placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.ruleItem.arguments.querySelector)} />
                     )}
                 </Item>
+                {subType === TaskTypeDomSubType.SUB_TYPE_CLICK ? (
+                    <Item
+                        validateStatus={argumentsHumanClickError ? 'error' : 'success'}
+                        help={argumentsHumanClickError || localePkg.Client.Help.TaskRuleItem.arguments.querySelectorHumanClick}
+                        label={localePkg.Model.Task.ruleItem.arguments.querySelectorHumanClick}
+                        {...formItemLayout}
+                    >
+                        {getFieldDecorator('arguments.humanClick', {
+                            valuePropName: 'checked',
+                            initialValue: typeof this.props.arguments[1] === 'boolean' ? this.props.arguments[1] : true,
+                            rules: [{
+                                message: getFormFieldErrorMsg(localePkg.Model.Task.ruleItem.arguments.querySelectorHumanClick, [
+                                    {
+                                        type: 'required'
+                                    }
+                                ]),
+                                required: true
+                            }]
+                        })(
+                            <Checkbox />
+                        )}
+                    </Item>
+                ) : null}
                 {subType === TaskTypeDomSubType.SUB_TYPE_KEYBOARD ? (
                     <Item
-                        validateStatus={argumentsQuerySelectorTextError ? 'error' : 'success'}
+                        validateStatus={argumentsHumanClickError ? 'error' : 'success'}
                         help={argumentsQuerySelectorTextError || ''}
                         label={localePkg.Model.Task.ruleItem.arguments.querySelectorText}
                         {...formItemLayout}

@@ -27,6 +27,9 @@ export function translateModifyRuleItemArgs(type: TaskType, subType: TaskSubType
         case TaskType.TYPE_DOM:
             const domArgs = [args.querySelector];
             switch (subType) {
+                case TaskTypeDomSubType.SUB_TYPE_CLICK:
+                    domArgs.push(args.humanClick);
+                    break;
                 case TaskTypeDomSubType.SUB_TYPE_KEYBOARD:
                     domArgs.push(args.querySelectorText);
                     break;

@@ -24,7 +24,7 @@ export function queryTaskReportById(taskReportId: Schema.Types.ObjectId, fields:
 export function queryTaskReportMap(taskFlowId: Schema.Types.ObjectId): Promise<IIndexMap<ITaskReportModel>> {
     return TaskReport.find({
         flowId: taskFlowId
-    }).select('index status message flowId').exec()
+    }).select('index status message receiveData flowId').exec()
         .then((taskReportList) => {
             const taskReportMap: IIndexMap<ITaskReportModel> = {};
             taskReportList.forEach((taskReport) => {
@@ -71,7 +71,9 @@ export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promi
             $in: [TaskReportStatus.FAILED, TaskReportStatus.SUCCESS]
         }
     }, {
-        status: TaskReportStatus.PENDING
+        message: '',
+        receiveData: '',
+        status: TaskReportStatus.PENDING,
     });
 }
 
