@@ -125,7 +125,7 @@ export function getNumEnumsList(enums: any): INumEnumValue[] {
 export function filterEmptyFields(data: object): any {
     const returnData = {...data};
     for (const key in data) {
-        if (typeof data[key] !== 'number' && !data[key]) {
+        if (typeof data[key] !== 'number' && typeof data[key] !== 'boolean' && !data[key]) {
             delete returnData[key];
         }
     }
@@ -149,4 +149,53 @@ export function parseLocationSearch(search: string): IIndexMap<string> {
         }
     }
     return query;
+}
+
+/**
+ * Sort Items
+ * - T: List interface
+ * - I: Drop/Drag index key type
+ * @param {T[]}     items        Sort item list
+ * @param {keyof T} fieldKey     Sort field key
+ * @param {number}  dropPosition Drop postion info: before: dropPosition = -1, inset: dropPosition = 0, after: dropPosition = 1
+ * @param {I}       dropKey      Drop key value
+ * @param {I}       dragKey      Drag key value
+ * @return {T[]}                 Return list
+ */
+export function sortItems<T, I>(items: T[], fieldKey: keyof T, dropPosition: number, dropKey: I, dragKey: I): T[] {
+    let list: T[] = [];
+    let dropIndex: number = -1;
+    let dragIndex: number = -1;
+    items.some(((item, index) => {
+        const key: any = item[fieldKey];
+        if (dropIndex === -1 && key === dropKey) {
+            dropIndex = index;
+        }
+        if (dragIndex === -1 && key === dragKey) {
+            dragIndex = index;
+        }
+        return dropIndex >= 0 && dragIndex >= 0;
+    }));
+    const beforeDropArray = items.slice(0, dropIndex < dragIndex ? dropIndex : dragIndex);
+    const dropItem = items.slice(dropIndex, dropIndex + 1);
+    const inDropAndDragArray = dropIndex < dragIndex ? items.slice(dropIndex + 1, dragIndex) : items.slice(dragIndex + 1, dropIndex);
+    const dragItem = items.slice(dragIndex, dragIndex + 1);
+    const afterDragArray = items.slice(dropIndex < dragIndex ? dragIndex + 1 : dropIndex + 1);
+    switch (dropPosition) {
+        case -1: // Before
+            if (dropIndex < dragIndex) {
+                list = beforeDropArray.concat(dragItem, dropItem, inDropAndDragArray, afterDragArray);
+            } else {
+                list = beforeDropArray.concat(inDropAndDragArray, dragItem, dropItem, afterDragArray);
+            }
+            break;
+        default: // After
+            if (dropIndex < dragIndex) {
+                list = beforeDropArray.concat(dropItem, dragItem, inDropAndDragArray, afterDragArray);
+            } else {
+                list = beforeDropArray.concat(inDropAndDragArray, dropItem, dragItem, afterDragArray);
+            }
+            break;
+    }
+    return list;
 }

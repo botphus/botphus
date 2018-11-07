@@ -3,50 +3,50 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, IUserContentData} from '../../../interfaces/redux';
+import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, IUnionTaskContentData} from '../../../interfaces/redux';
 
-import {cleanUserDetail, modifyUserData, postCreateUserData, queryUserDetailData} from '../../../actions/user';
+import {cleanUnionTaskDetail, createUnionTaskData, modifyUnionTaskData, queryUnionTaskDetailData} from '../../../actions/union_task';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
-import UserProfileModifyForm from '../../../components/form/user_profile_modify';
+import UnionTaskProfileModifyForm from '../../../components/form/union_task_profile_modify';
 import Loading from '../../../components/loading';
 
-interface IUserProfileProps extends IReduxConnectProps {
+interface IUnionTaskProfileProps extends IReduxConnectProps {
     modal: IModalData;
-    user: IUserContentData;
+    unionTask: IUnionTaskContentData;
 }
 
-function mapStateToProps({modal, user}: IReduxStoreState) {
+function mapStateToProps({modal, unionTask}: IReduxStoreState) {
     return {
         modal,
-        user
+        unionTask,
     };
 }
 
-class DashboardUserProfilePage extends React.Component<IUserProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
+class DashboardUnionTaskProfilePage extends React.Component<IUnionTaskProfileProps & RouteComponentProps<IDetailPageRouteMatchProps>> {
     public componentDidMount() {
         const {dispatch, match} = this.props;
         // Check is create
         if (match.params.id !== 'create') {
-            dispatch(queryUserDetailData(match.params.id));
+            dispatch(queryUnionTaskDetailData(match.params.id));
         }
     }
     public componentWillUnmount() {
         const {dispatch} = this.props;
-        dispatch(cleanUserDetail());
+        dispatch(cleanUnionTaskDetail());
     }
     public render() {
-        const {modal, match, user} = this.props;
+        const {modal, match, unionTask} = this.props;
         // Check loading state
         if (modal.loading) {
             return <Loading />;
         }
         return (
-            <div className="app-dashboard-user-create">
+            <div className="app-dashboard-union-task-create">
                 <Row>
                     <Col span={12}>
-                        <h1>{localePkg.Client.Title.User}</h1>
+                        <h1>{localePkg.Client.Title.UnionTask}</h1>
                     </Col>
                     <Col className="text-right p-t-sm" span={12}>
                         <a className="ant-btn" onClick={this.handleCancel}>
@@ -54,8 +54,8 @@ class DashboardUserProfilePage extends React.Component<IUserProfileProps & Route
                         </a>
                     </Col>
                 </Row>
-                <UserProfileModifyForm
-                    defaultValue={user.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} permission={true} isCreate={match.params.id === 'create'}
+                <UnionTaskProfileModifyForm
+                    defaultValue={unionTask.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={match.params.id === 'create'}
                 />
             </div>
         );
@@ -63,7 +63,7 @@ class DashboardUserProfilePage extends React.Component<IUserProfileProps & Route
     private handleSubmit = (data) => {
         const {dispatch, match} = this.props;
         const isCreate = match.params.id === 'create';
-        const dispatchFunc = isCreate ? postCreateUserData : modifyUserData;
+        const dispatchFunc = isCreate ? createUnionTaskData : modifyUnionTaskData;
         const sendData = isCreate ? data : {
             modifyId: match.params.id,
             ...data
@@ -73,8 +73,8 @@ class DashboardUserProfilePage extends React.Component<IUserProfileProps & Route
         }));
     }
     private handleCancel = () => {
-        routerHistory.push('/dashboard/user/');
+        routerHistory.push('/dashboard/union-task/');
     }
 }
 
-export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardUserProfilePage));
+export default withRouter<RouteComponentProps<IDetailPageRouteMatchProps>>(connect(mapStateToProps)(DashboardUnionTaskProfilePage));

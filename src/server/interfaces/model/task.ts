@@ -35,7 +35,7 @@ export interface ITaskDetailItem extends ITaskListItem {
 export interface ITaskRuleSaveItem {
     id: number; // current ID
     pid: number; // parent ID
-    level?: number; // Tree level
+    level: number; // Tree level
     type: TaskType; // Type
     subType: TaskSubType; // subType
     arguments?: any[]; // Rule arguments

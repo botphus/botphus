@@ -1,6 +1,6 @@
-import {Steps} from 'antd';
+import {Timeline} from 'antd';
 import * as React from 'react';
-const {Step} = Steps;
+const {Item} = Timeline;
 
 import {localePkg} from '../../lib/const';
 
@@ -9,12 +9,32 @@ class NotFoundPage extends React.Component {
         return (
             <div className="app-dashboard">
                 <h1>{localePkg.Client.Desc.Home}</h1>
-                <Steps progressDot>
-                    <Step title={localePkg.Client.Title.Connection} description={localePkg.Client.Desc.Connection} status="finish" />
-                    <Step title={localePkg.Client.Title.Task} description={localePkg.Client.Desc.Task} status="finish" />
-                    <Step title={localePkg.Client.Title.TaskFlow} description={localePkg.Client.Desc.TaskFlow} status="finish" />
-                    <Step title={localePkg.Client.Title.TaskReport} description={localePkg.Client.Desc.TaskReport} status="finish" />
-                </Steps>
+                <Timeline>
+                    <Item>
+                        <p>{localePkg.Client.Title.Connection}</p>
+                        <p className="text-light">{localePkg.Client.Desc.Connection}</p>
+                    </Item>
+                    <Item>
+                        <p>{localePkg.Client.Title.Task}</p>
+                        <p className="text-light">{localePkg.Client.Desc.Task}</p>
+                    </Item>
+                    <Item>
+                        <p>{localePkg.Client.Title.TaskFlow}</p>
+                        <p className="text-light">{localePkg.Client.Desc.TaskFlow}</p>
+                    </Item>
+                    <Item>
+                        <p>{localePkg.Client.Title.TaskReport}</p>
+                        <p className="text-light">{localePkg.Client.Desc.TaskReport}</p>
+                    </Item>
+                    <Item>
+                        <p>{localePkg.Client.Title.UnionTask}</p>
+                        <p className="text-light">{localePkg.Client.Desc.UnionTask}</p>
+                    </Item>
+                    <Item>
+                        <p>{localePkg.Client.Title.UnionTaskFlow}</p>
+                        <p className="text-light">{localePkg.Client.Desc.UnionTaskFlow}</p>
+                    </Item>
+                </Timeline>
             </div>
         );
     }

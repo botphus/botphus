@@ -23,7 +23,8 @@ const localeData: ILocalePackage = {
             TYPE_DOM: 'DOM处理类',
             TYPE_EVENT: '事件类',
             TYPE_PAGE: '页面类',
-            TYPE_TIME: '时间类'
+            TYPE_TIME: '时间类',
+            TYPE_UNION: '联合类'
         },
         TaskTypeDataSubType: {
             SUB_TYPE_MYSQL: 'Mysql查询',
@@ -68,6 +69,10 @@ const localeData: ILocalePackage = {
             CLOSE: '已关闭',
             SUCCESS: '执行成功',
             ONGOING: '正在执行'
+        },
+        TaskTypeUnionSubType: {
+            SUB_TYPE_BLOCK: '阻塞类',
+            SUB_TYPE_NON_BLOCK: '非阻塞类'
         }
     },
     Placehoder: {
@@ -169,7 +174,7 @@ const localeData: ILocalePackage = {
             taskItem: {
                 taskId: '任务',
                 startPage: '起始页面',
-                ignoreError: '忽略错误'
+                ignoreError: '阻塞任务'
             }
         }
     },
@@ -236,7 +241,9 @@ const localeData: ILocalePackage = {
             TaskFlowRule: '测试单元',
             TaskFlowConnection: '连接配置',
             TaskReport: '测试任务报告',
-            User: '用户管理'
+            User: '用户管理',
+            UnionTask: '联合任务',
+            UnionTaskFlow: '联合任务流水'
         },
         Desc: {
             Home: '了解如何使用',
@@ -244,7 +251,9 @@ const localeData: ILocalePackage = {
             Task: '创建一个测试任务并分配成员',
             TaskFlow: '测试任务成员按任务生成测试流水',
             TaskReport: '测试流水执行并生成测试报告',
-            User: '管理所有平台用户'
+            User: '管理所有平台用户',
+            UnionTask: '(可选)多个任务合并形成联合任务,覆盖测试完整功能',
+            UnionTaskFlow: '执行联合任务流水并生成联合任务报告'
         },
         Help: {
             FetchFaild: '获取数据失败',
@@ -264,6 +273,10 @@ const localeData: ILocalePackage = {
             },
             TaskFlow: {
                 connectionId: '如果没有数据类查询规则,你可以不选择'
+            },
+            UnionTask: {
+                ignoreError: '开启时,该任务执行错误将被忽略,自动执行',
+                startPage: '起始页面,可以使用${subDomain}变量来替换具体环境的域名后缀,${subDomain}在联合任务流水中配置'
             }
         }
     }

@@ -10,17 +10,17 @@ import request from '../lib/request';
 
 // actions
 /**
- * Create connection
+ * Create union task
  * @param  {any}                query    Create data
  * @param  {ActionCallbackFunc} callback Callback function
  * @return {ActionThunkFunc}             Thunk fuction
  */
-export function createConnectionData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+export function createUnionTaskData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.CONNECTION, query, 'POST')
+        request(RequestAction.UNION_TASK, query, 'POST')
             .then((res) => {
                 dispatch(updateModel({
                     loadingForm: false
@@ -38,17 +38,17 @@ export function createConnectionData(query: any, callback?: ActionCallbackFunc):
 }
 
 /**
- * Update connection
- * @param  {any}                query    Connection data
+ * Update union task
+ * @param  {any}                query    Union task data
  * @param  {ActionCallbackFunc} callback Callback function
  * @return {ActionThunkFunc}             Thunk fuction
  */
-export function modifyConnectionData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+export function modifyUnionTaskData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.CONNECTION, query, 'PATCH')
+        request(RequestAction.UNION_TASK, query, 'PATCH')
             .then((res) => {
                 dispatch(updateModel({
                     loadingForm: false
@@ -66,20 +66,20 @@ export function modifyConnectionData(query: any, callback?: ActionCallbackFunc):
 }
 
 /**
- * Query connection detail data
- * @param  {string}          id Connection ID
+ * Query union task detail data
+ * @param  {string}          id Union task ID
  * @return {ActionThunkFunc}    Thunk fuction
  */
-export function queryConnectionDetailData(id: string): ActionThunkFunc {
+export function queryUnionTaskDetailData(id: string): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
         }));
-        request(RequestAction.CONNECTION_PROFILE, {
+        request(RequestAction.UNION_TASK_PROFILE, {
             id
         })
             .then((res) => {
-                dispatch(updateConnectionDetail(res.data));
+                dispatch(updateUnionTaskDetail(res.data));
                 dispatch(updateModel({
                     loading: false
                 }));
@@ -93,17 +93,17 @@ export function queryConnectionDetailData(id: string): ActionThunkFunc {
 }
 
 /**
- * Query connection list data
+ * Query union task list data
  * @return {ActionThunkFunc} Thunk fuction
  */
-export function queryConnectionListData(query: any): ActionThunkFunc {
+export function queryUnionTaskListData(query: any): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingTable: true
         }));
-        request(RequestAction.CONNECTION, query)
+        request(RequestAction.UNION_TASK, query)
             .then((res) => {
-                dispatch(updateConnectionList(res.data));
+                dispatch(updateUnionTaskList(res.data));
                 dispatch(updateModel({
                     loadingTable: false
                 }));
@@ -117,45 +117,45 @@ export function queryConnectionListData(query: any): ActionThunkFunc {
 }
 
 /**
- * Update connection list
+ * Update union task list
  * @param  {any}         data Update data
  * @return {IActionData}      Action
  */
-export function updateConnectionList(data: any): IActionData {
+export function updateUnionTaskList(data: any): IActionData {
     return {
         data,
-        type: ActionType.UPDATE_CONNECTION_LIST,
+        type: ActionType.UPDATE_UNION_TASK_LIST,
     };
 }
 
 /**
- * Clean connection list
+ * Clean union task list
  * @return {IActionData} Action
  */
-export function cleanConnectionList(): IActionData {
+export function cleanUnionTaskList(): IActionData {
     return {
-        type: ActionType.CLEAN_CONNECTION_LIST
+        type: ActionType.CLEAN_UNION_TASK_LIST
     };
 }
 
 /**
- * Update connection detail
+ * Update union task detail
  * @param  {Any}         data Update data
  * @return {IActionData}      Action
  */
-export function updateConnectionDetail(data: any): IActionData {
+export function updateUnionTaskDetail(data: any): IActionData {
     return {
         data,
-        type: ActionType.UPDATE_CONNECTION_DETAIL,
+        type: ActionType.UPDATE_UNION_TASK_DETAIL,
     };
 }
 
 /**
- * Clean connection detail
+ * Clean union task detail
  * @return {IActionData} Action
  */
-export function cleanConnectionDetail(): IActionData {
+export function cleanUnionTaskDetail(): IActionData {
     return {
-        type: ActionType.CLEAN_CONNECTION_DETAIL
+        type: ActionType.CLEAN_UNION_TASK_DETAIL
     };
 }

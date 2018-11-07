@@ -14,7 +14,7 @@ import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 import TaskRuleArguments from '../form_item/task_rule_arguments';
 
 const taskTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskType).filter((item) => {
-    return localePkg.Enum.TaskType[item.key];
+    return item.value !== TaskType.TYPE_UNION;
 }).map((item) => {
     return {
         ...item,

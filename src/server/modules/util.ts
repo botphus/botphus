@@ -186,6 +186,7 @@ export function getHttpErrorMsg(request: IAppRequest, err: ISystemError): IHttpR
                         message = localePkg.Schema.requiredError;
                     default:
                         message = localePkg.Schema.commonError;
+                        app.log.warn(err);
                 }
             } else {
                 message = systemCodePkg.unknownError;

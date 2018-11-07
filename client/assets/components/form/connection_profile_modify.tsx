@@ -12,7 +12,7 @@ import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
 
 const typeList = getNumEnumsList(ConnectionType);
 
-class ConnectionModifyProfileForm extends React.Component<IModifyFormProps> {
+class ConnectionProfileModifyForm extends React.Component<IModifyFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -331,4 +331,4 @@ class ConnectionModifyProfileForm extends React.Component<IModifyFormProps> {
     }
 }
 
-export default Form.create()(ConnectionModifyProfileForm);
+export default Form.create()(ConnectionProfileModifyForm);

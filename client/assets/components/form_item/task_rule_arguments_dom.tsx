@@ -1,7 +1,7 @@
 /**
  * Task rule arguments modify: data type
  */
-import {Form, Input, Checkbox} from 'antd';
+import {Form, Input, Switch} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
@@ -50,7 +50,6 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                         {...formItemLayout}
                     >
                         {getFieldDecorator('arguments.humanClick', {
-                            valuePropName: 'checked',
                             initialValue: typeof this.props.arguments[1] === 'boolean' ? this.props.arguments[1] : true,
                             rules: [{
                                 message: getFormFieldErrorMsg(localePkg.Model.Task.ruleItem.arguments.querySelectorHumanClick, [
@@ -59,9 +58,10 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                                     }
                                 ]),
                                 required: true
-                            }]
+                            }],
+                            valuePropName: 'checked',
                         })(
-                            <Checkbox />
+                            <Switch />
                         )}
                     </Item>
                 ) : null}

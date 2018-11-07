@@ -18,7 +18,7 @@ const permissionList = getNumEnumsList(UserPermissionCode).filter((item) => {
     return item.value > 1;
 });
 
-class UserModifyProfileForm extends React.Component<ICreateProfileProps> {
+class UserProfileModifyForm extends React.Component<ICreateProfileProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -192,4 +192,4 @@ class UserModifyProfileForm extends React.Component<ICreateProfileProps> {
     }
 }
 
-export default Form.create()(UserModifyProfileForm);
+export default Form.create()(UserProfileModifyForm);

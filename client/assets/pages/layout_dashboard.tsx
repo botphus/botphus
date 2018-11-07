@@ -72,6 +72,18 @@ class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteCo
                                 <span className="title">{localePkg.Client.Title.TaskFlow}</span>
                             </Menu.Item>
                         ) : null}
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.TASK_MANAGE) ? (
+                            <Menu.Item key="union-task">
+                                <Icon type="ordered-list" theme="outlined" />
+                                <span className="title">{localePkg.Client.Title.UnionTask}</span>
+                            </Menu.Item>
+                        ) : null}
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.TASK_FLOW) ? (
+                            <Menu.Item key="union-task-flow">
+                                <Icon type="file-done" theme="outlined" />
+                                <span className="title">{localePkg.Client.Title.TaskFlow}</span>
+                            </Menu.Item>
+                        ) : null}
                     </Menu>
                 </Sider>
                 <Content>

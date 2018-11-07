@@ -5,12 +5,12 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, ITaskFlowContentData} from '../../../interfaces/redux';
 
-import {cleanTaskFlowDetail, postCreateTaskFlowData, queryTaskFlowDetailData} from '../../../actions/task_flow';
+import {cleanTaskFlowDetail, createTaskFlowData, queryTaskFlowDetailData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
 import {parseLocationSearch} from '../../../lib/util';
 import {routerHistory} from '../../../router';
 
-import TaskFlowCreateProfileForm from '../../../components/form/task_flow_create_profile';
+import TaskFlowProfileCreateForm from '../../../components/form/task_flow_profile_create';
 
 interface ITaskFlowProfileCreateProps extends IReduxConnectProps {
     modal: IModalData;
@@ -55,13 +55,13 @@ class DashboardTaskFlowProfileCreatePage extends React.Component<ITaskFlowProfil
                         </a>
                     </Col>
                 </Row>
-                <TaskFlowCreateProfileForm onSubmit={this.handleSubmit} defaultValue={taskFlow.detail} loading={modal.loadingForm} />
+                <TaskFlowProfileCreateForm onSubmit={this.handleSubmit} defaultValue={taskFlow.detail} loading={modal.loadingForm} />
             </div>
         );
     }
     private handleSubmit = (data) => {
         const {dispatch} = this.props;
-        dispatch(postCreateTaskFlowData(data, (res) => {
+        dispatch(createTaskFlowData(data, (res) => {
             routerHistory.push(`/dashboard/task-flow/profile/${res.data}`);
         }));
     }

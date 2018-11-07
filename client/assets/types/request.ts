@@ -21,4 +21,6 @@ export enum RequestAction {
     'TASK_FLOW' = '/api/task-flow/',
     'TASK_FLOW_PROFILE' = '/api/task-flow/profile/',
     'TASK_FLOW_START' = '/api/task-flow/start/',
+    'UNION_TASK' = '/api/union-task/',
+    'UNION_TASK_PROFILE' = '/api/union-task/profile/',
 }

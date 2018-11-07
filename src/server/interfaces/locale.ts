@@ -23,6 +23,7 @@ export default interface ILocalePackage {
             TYPE_EVENT: string;
             TYPE_TIME: string;
             TYPE_PAGE: string;
+            TYPE_UNION: string;
         };
         TaskTypeDataSubType: {
             SUB_TYPE_MYSQL: string;
@@ -68,6 +69,10 @@ export default interface ILocalePackage {
             SUCCESS: string;
             ONGOING: string;
         };
+        TaskTypeUnionSubType: {
+            SUB_TYPE_BLOCK: string,
+            SUB_TYPE_NON_BLOCK: string
+        }
     };
     Placehoder: {
         Input: string;
@@ -252,6 +257,8 @@ export default interface ILocalePackage {
             TaskFlowConnection: string;
             TaskReport: string;
             User: string;
+            UnionTask: string;
+            UnionTaskFlow: string;
         };
         // Description
         Desc: {
@@ -261,6 +268,8 @@ export default interface ILocalePackage {
             TaskFlow: string;
             TaskReport: string;
             User: string;
+            UnionTask: string;
+            UnionTaskFlow: string;
         };
         Help: {
             FetchFaild: string;
@@ -280,6 +289,10 @@ export default interface ILocalePackage {
             };
             TaskFlow: {
                 connectionId: string;
+            };
+            UnionTask: {
+                ignoreError: string;
+                startPage: string;
             }
         }
     };

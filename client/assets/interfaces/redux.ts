@@ -3,6 +3,7 @@ import {ThunkDispatch} from 'redux-thunk';
 import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/interfaces/model/connection';
 import {ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 import {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
+import {IUnionTaskDetailItem, IUnionTaskListItem} from '../../../src/server/interfaces/model/union_task';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
 import {ActionType} from '../types/redux';
 
@@ -74,6 +75,11 @@ export type ITaskContentData = IContentData<ITaskListItem, ITaskDetailItem>;
 export type ITaskFlowContentData = IContentData<ITaskFlowListItem, ITaskFlowDetailItem>;
 
 /**
+ * Union task content data
+ */
+export type IUnionTaskContentData = IContentData<IUnionTaskListItem, IUnionTaskDetailItem>;
+
+/**
  * Redux connect props
  */
 export interface IReduxConnectProps {
@@ -89,6 +95,7 @@ export interface IReduxStoreState {
     task: ITaskContentData;
     user: IUserContentData;
     taskFlow: ITaskFlowContentData;
+    unionTask: IUnionTaskContentData;
 }
 
 /**

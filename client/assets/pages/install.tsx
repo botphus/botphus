@@ -8,7 +8,7 @@ import {postInstallData} from '../actions/user';
 import {localePkg, welcomePageLayout} from '../lib/const';
 import {routerHistory} from '../router';
 
-import UserModifyProfileForm from '../components/form/user_modify_profile';
+import UserProfileModifyForm from '../components/form/user_profile_modify';
 
 interface IInstallProps extends IReduxConnectProps {
     modal: IModalData;
@@ -27,7 +27,7 @@ class InstallPage extends React.Component<IInstallProps> {
             <Row className="app-welcome" type="flex" align="middle" justify="center">
                 <Col {...welcomePageLayout}>
                     <Card title={localePkg.Client.Title.Install}>
-                        <UserModifyProfileForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={true} />
+                        <UserProfileModifyForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={true} />
                     </Card>
                 </Col>
             </Row>
