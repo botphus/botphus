@@ -2,7 +2,7 @@ import {message} from 'antd';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 import {ITaskReportDetailItem} from '../interfaces/task';
-import {SocketMessageType} from '../types/common';
+import {SocketMessageType, TaskReportType} from '../types/common';
 
 import store from '../store';
 import {socketServer} from './const';
@@ -29,22 +29,27 @@ function onMessage(event) {
         const taskFlowState = store.getState().taskFlow;
         switch (messageType) {
             case SocketMessageType.UPDATE:
-                if (taskFlowState.detail._id) {
-                    const updateMessageList = messageCon.match(/^([^\|]+)\|([^\|]+)\|([\S\s]+)$/);
-                    if (!updateMessageList) {
+                const updateMessageList = messageCon.match(/^([^\|]+)\|([^\|]+)\|([\S\s]+)$/);
+                if (!updateMessageList) {
+                    return;
+                }
+                const updateMessageHead = updateMessageList[1].split('-');
+                const updateTaskReportType = parseInt(updateMessageHead[0], 10);
+                const updateTaskId = updateMessageHead[1];
+                const updateIndex = updateMessageList[2];
+                const updateMessageData = JSON.parse(updateMessageList[3]);
+                // Check task type
+                switch (updateTaskReportType) {
+                    case TaskReportType.TASK:
+                        if (!(taskFlowState.detail._id && updateTaskId === taskFlowState.detail._id)) {
+                            return;
+                        }
+                        const reportData: ITaskReportDetailItem = {
+                            index: updateIndex,
+                            ...updateMessageData
+                        };
+                        store.dispatch(updateTaskFlowReportMap(reportData));
                         return;
-                    }
-                    const updateTaskId = updateMessageList[1];
-                    const updateIndex = updateMessageList[2];
-                    const updateMessageData = JSON.parse(updateMessageList[3]);
-                    if (!taskFlowState.detail._id || updateTaskId !== taskFlowState.detail._id) {
-                        return;
-                    }
-                    const reportData: ITaskReportDetailItem = {
-                        index: updateIndex,
-                        ...updateMessageData
-                    };
-                    store.dispatch(updateTaskFlowReportMap(reportData));
                 }
                 break;
             case SocketMessageType.END:
@@ -52,12 +57,18 @@ function onMessage(event) {
                 if (!endMessageList) {
                     return;
                 }
-                const endTaskId = endMessageList[1];
+                const endMessageHead = endMessageList[1].split('-');
+                const endTaskReportType = parseInt(endMessageHead[0], 10);
+                const endTaskId = endMessageHead[1];
                 const endTaskMessage = endMessageList[2];
-                if (!taskFlowState.detail._id || endTaskId !== taskFlowState.detail._id) {
-                    return;
+                switch (endTaskReportType) {
+                    case TaskReportType.TASK:
+                        if (!(taskFlowState.detail._id && endTaskId === taskFlowState.detail._id)) {
+                            return;
+                        }
+                        store.dispatch(updateTaskFlowStatus(parseInt(endTaskMessage, 10)));
+                        return;
                 }
-                store.dispatch(updateTaskFlowStatus(parseInt(endTaskMessage, 10)));
                 break;
         }
     } catch (e) {

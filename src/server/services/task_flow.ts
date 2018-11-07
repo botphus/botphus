@@ -5,7 +5,7 @@ import {TaskFlow} from '../models/';
 import {ITaskFlowDetailModel, ITaskFlowModel, ITaskFlowModifyModel, ITaskFlowSearchModel, ITaskReportBaseItem} from '../interfaces/model';
 import {SystemCode} from '../types/common';
 import {SocketMessageType} from '../types/socket';
-import {TaskFlowStatus, TaskReportStatus} from '../types/task';
+import {TaskFlowStatus, TaskReportStatus, TaskReportType} from '../types/task';
 
 import {queryConnectionById} from './connection';
 import {queryTaskById, verifyTaskOwner} from './task';
@@ -18,7 +18,7 @@ import {app, createSystemError, localePkg} from '../modules/util';
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name status startPage taskId createdAt updateAt';
+const defaultFields: string = '_id name status taskId createdAt updateAt';
 
 /**
  * Query task flow info by ID
@@ -105,7 +105,7 @@ export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: s
  */
 export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string): Promise<ITaskFlowModel> {
     const taskFlow = Object.assign(new TaskFlow(), taskFlowData, {
-        status: TaskReportStatus.PENDING
+        status: TaskFlowStatus.PENDING
     });
     taskFlow.createdUser = Types.ObjectId(createUser);
     return verifyTaskOwner(taskFlow.taskId, createUser)
@@ -122,6 +122,7 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
                             message: '',
                             receiveData: '',
                             status: flowData.excludeOption[`${taskRule.id}`] ? TaskReportStatus.IGNORE : TaskReportStatus.PENDING,
+                            type: TaskReportType.TASK,
                         };
                     });
                     return createTaskReports(data);
@@ -135,8 +136,8 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
 /**
  * modify task flow by ID
  * @param  {Schema.Types.ObjectId} taskFlowId   Task flow ID
- * @param  {ITaskFlowModifyModel}  taskFlowData task update flow ID
- * @return {Promise<any>}                       Promise with task report id
+ * @param  {ITaskFlowModifyModel}  taskFlowData task flow update ID
+ * @return {Promise<any>}                       Promise with task flow id
  */
 export function modifyTaskFlowById(taskFlowId: Schema.Types.ObjectId, taskFlowData: ITaskFlowModifyModel): Promise<any> {
     return TaskFlow.updateOne({

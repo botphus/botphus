@@ -18,6 +18,14 @@ export enum TaskReportStatus {
 }
 
 /**
+ * Task report type
+ */
+export enum TaskReportType {
+    'TASK' = 1,
+    'UNION_TASK' = 2,
+}
+
+/**
  * Task flow status
  */
 export enum TaskFlowStatus {

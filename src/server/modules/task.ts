@@ -1,5 +1,6 @@
 import {IIndexMap} from '../interfaces/common';
 import {ITaskRuleSaveItem, ITaskRuleTreeItem} from '../interfaces/model/task';
+import {TaskTypeEventSubType} from '../types/task';
 
 /**
  * Translate task flat data to tree data;
@@ -49,4 +50,28 @@ export function getTaskItemRelatedIds(idMap: IIndexMap<number>, taskItem: ITaskR
         startLevel++;
         getTaskItemRelatedIds(idMap, item, startLevel);
     });
+}
+
+/**
+ * Rebuild task rule for botphus task
+ * @param  {ITaskRuleSaveItem[]} ruleItems Rule item list
+ * @return {any[]}                         Botphus task list
+ */
+export function rebuildTaskRuleForBotphusTask(ruleItems: ITaskRuleSaveItem[]): any[] {
+    // Rebuild arguments
+    const rebuildRuleItems: ITaskRuleSaveItem[] = ruleItems.map((item) => {
+        switch (item.subType) {
+            case TaskTypeEventSubType.SUB_TYPE_REQUEST:
+            case TaskTypeEventSubType.SUB_TYPE_RESPONSE:
+                // Check match path
+                if (item.arguments && item.arguments[0] && item.arguments[1]) {
+                    return {...item,
+                        arguments: [item.arguments[0], new Function('request', `return request.url().indexOf("${item.arguments[1]}") >= 0`)]
+                    };
+                }
+                break;
+        }
+        return item;
+    });
+    return getTaskItemTreeList(rebuildRuleItems);
 }

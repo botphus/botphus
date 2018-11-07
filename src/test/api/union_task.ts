@@ -13,7 +13,7 @@ import {assertResMessage} from '../util';
 const client = request(app.server);
 
 export default function() {
-    describe('Task', () => {
+    describe('Union Task', () => {
         let cookieKey: string = '';
         let taskId: Schema.Types.ObjectId;
         let taskName: string = '';

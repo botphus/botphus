@@ -2,6 +2,7 @@ import {Schema, Types} from 'mongoose';
 
 import {Task} from '../models/';
 
+import {IIndexMap} from '../interfaces/common';
 import {ITaskModel, ITaskModifyModel, ITaskSearchModel, ITaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
 import {TaskFlowStatus} from '../types/task';
@@ -61,6 +62,37 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
             _id: -1
         }).exec()
     ]);
+}
+
+/**
+ * Query task list by ids
+ * @param  {string[]}              ids    Task ids
+ * @param  {string}                fields Field list
+ * @return {Promise<ITaskModel[]>}        Promise with task info list
+ */
+export function queryTaskListByIds(ids: string[], fields: string = defaultFields): Promise<ITaskModel[]> {
+    return Task.find({
+        _id: {
+            $in: ids
+        }
+    }).select(fields).exec();
+}
+
+/**
+ * Query task map by ids
+ * @param  {string[]}                       ids    Task ids
+ * @param  {string}                         fields Field list
+ * @return {Promise<IIndexMap<ITaskModel>>}        Promise with task info map
+ */
+export function queryTaskMapByIds(ids: string[], fields: string = defaultFields): Promise<IIndexMap<ITaskModel>> {
+    return queryTaskListByIds(ids, fields)
+        .then((taskList) => {
+            const taskMap: IIndexMap<ITaskModel> = {};
+            taskList.forEach((task) => {
+                taskMap[task._id] = task;
+            });
+            return taskMap;
+        });
 }
 
 /**
@@ -136,7 +168,7 @@ export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, ta
             });
         })
         .then(() => {
-            Task.updateOne({
+            return Task.updateOne({
                 _id: taskId
             }, taskData).exec();
         });

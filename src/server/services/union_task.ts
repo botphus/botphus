@@ -4,9 +4,11 @@ import {UnionTask} from '../models/';
 
 import {IUnionTaskModel, IUnionTaskModifyModel, IUnionTaskSearchModel, IUnionTaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
+import {TaskFlowStatus} from '../types/task';
 
 import {createSystemError, localePkg} from '../modules/util';
 
+import {modifyUnionTaskFlows} from './union_task_flow';
 import {queryUserByIdsWithReferMap} from './user';
 
 /**
@@ -120,9 +122,18 @@ export function queryUnionTaskByIdWithUsers(unionTaskId: Schema.Types.ObjectId, 
  */
 export function modifyUnionTaskById(unionTaskId: Schema.Types.ObjectId, userId: string, unionTaskData: IUnionTaskModifyModel): Promise<any> {
     return verifyUnionTaskOwner(unionTaskId, userId)
-        // todo: modify union task flow
         .then(() => {
-            UnionTask.updateOne({
+            return modifyUnionTaskFlows({
+                status: {
+                    $ne: TaskFlowStatus.CLOSE
+                },
+                unionTaskId,
+            }, {
+                status: TaskFlowStatus.CLOSE
+            });
+        })
+        .then(() => {
+            return UnionTask.updateOne({
                 _id: unionTaskId
             }, unionTaskData).exec();
         });

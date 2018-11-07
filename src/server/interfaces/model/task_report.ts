@@ -1,6 +1,6 @@
 import {Schema} from 'mongoose';
 
-import {TaskReportStatus} from '../../types/task';
+import {TaskReportStatus, TaskReportType} from '../../types/task';
 import {IModifyDateModel} from './';
 
 /**
@@ -9,6 +9,7 @@ import {IModifyDateModel} from './';
 export interface ITaskReportDetailItem {
     index?: string;
     status?: TaskReportStatus;
+    type?: TaskReportType;
     message?: string;
     receiveData?: string;
     flowId?: string;
@@ -23,6 +24,8 @@ export interface ITaskReportBaseItem {
     index: string;
     // Status
     status: TaskReportStatus;
+    // Type
+    type: TaskReportType;
     // Result message
     message: string;
     receiveData: string;

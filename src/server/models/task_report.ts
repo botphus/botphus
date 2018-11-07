@@ -24,6 +24,9 @@ const schema = new Schema({
     status: {
         required: [true, `${localeTaskReportPkg.status}: ${localePkg.Model.requiredError}`],
         type: Number
+    },
+    type: {
+        type: Number
     }
 });
 

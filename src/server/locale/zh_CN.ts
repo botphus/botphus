@@ -176,6 +176,15 @@ const localeData: ILocalePackage = {
                 startPage: '起始页面',
                 ignoreError: '阻塞任务'
             }
+        },
+        UnionTaskFlow: {
+            name: '名称',
+            suffixDomain: '域名后缀',
+            mysqlId: 'MYSQL配置',
+            redisId: 'Redis配置',
+            unionTaskId: '所属联合任务',
+            excludeTask: '过滤任务',
+            status: '状态'
         }
     },
     Service: {
@@ -276,7 +285,7 @@ const localeData: ILocalePackage = {
             },
             UnionTask: {
                 ignoreError: '开启时,该任务执行错误将被忽略,自动执行',
-                startPage: '起始页面,可以使用${subDomain}变量来替换具体环境的域名后缀,${subDomain}在联合任务流水中配置'
+                startPage: '起始页面,可以使用${suffixDomain}变量来替换具体环境的域名后缀,${suffixDomain}在联合任务流水中配置'
             }
         }
     }

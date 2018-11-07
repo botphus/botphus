@@ -1,4 +1,3 @@
-import {ITaskExcludeUnit} from 'botphus-core';
 import {Schema, Types} from 'mongoose';
 
 import {TaskFlowStatus} from '../../types/task';
@@ -8,73 +7,76 @@ import {IIndexMap} from '../common';
 import {IConnectionDetailMysqlItem, IConnectionDetailRedisItem, IMysqlConnectionModel, IRedisConnectionModel} from './connection';
 import {ITaskDetailItem, ITaskModel} from './task';
 import {ITaskReportDetailItem, ITaskReportModel} from './task_report';
+import {IUnionTaskDetailItem, IUnionTaskModel} from './union_task';
 
 /**
  * Return data
  */
 /**
- * Task execution flow list item
+ * Union task execution flow list item
  */
-export interface ITaskFlowListItem {
+export interface IUnionTaskFlowListItem {
     _id?: string;
     name?: string;
-    taskId?: string;
+    unionTaskId?: string;
     createdAt?: string;
     updateAt?: number;
     status?: TaskFlowStatus;
 }
 
 /**
- * Task execution flow detail
+ * Union task execution flow detail
  */
-export interface ITaskFlowDetailItem extends ITaskFlowListItem {
-    startPage?: string;
+export interface IUnionTaskFlowDetailItem extends IUnionTaskFlowListItem {
+    suffixDomain?: string;
     mysqlId?: string;
     mysqlDetail?: IConnectionDetailMysqlItem;
     redisId?: string;
     redisDetail?: IConnectionDetailRedisItem;
-    excludeOption?: ITaskExcludeUnit;
-    taskDetail?: ITaskDetailItem;
+    excludeTask?: IIndexMap<true>;
+    unionTaskMap: IUnionTaskDetailItem;
+    taskDetailMap?: IIndexMap<ITaskDetailItem>;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
 
 /**
- * Task execution flow model
+ * Union task execution flow model
  */
-export interface ITaskFlowModel extends IModifyDateModel {
+export interface IUnionTaskFlowModel extends IModifyDateModel {
     name: string;
-    startPage?: string;
+    suffixDomain?: string;
     // mysql config id
     mysqlId?: Schema.Types.ObjectId;
     // redis config id
     redisId?: Schema.Types.ObjectId;
-    excludeOption?: ITaskExcludeUnit;
-    taskId: Schema.Types.ObjectId;
+    excludeTask?: IIndexMap<true>;
+    unionTaskId: Schema.Types.ObjectId;
     createdUser: Types.ObjectId;
     status: TaskFlowStatus;
 }
 
 /**
- * Task execution flow detail model
+ * Union task execution flow detail model
  */
-export interface ITaskFlowDetailModel extends ITaskFlowModel {
+export interface IUnionTaskFlowDetailModel extends IUnionTaskFlowModel {
     mysqlDetail?: IMysqlConnectionModel;
     redisDetail?: IRedisConnectionModel;
-    taskDetail?: ITaskModel;
+    unionTaskDetail?: IUnionTaskModel;
+    taskDetailMap?: IIndexMap<ITaskModel>;
     taskReportMap?: IIndexMap<ITaskReportModel>;
 }
 
 /**
- * Task execution flow modify model
+ * Union task execution flow modify model
  */
-export interface ITaskFlowModifyModel {
+export interface IUnionTaskFlowModifyModel {
     status: TaskFlowStatus;
 }
 
 /**
- * Task execution flow serach model
+ * Union task execution flow serach model
  */
-export interface ITaskFlowSearchModel {
+export interface IUnionTaskFlowSearchModel {
     name: string;
     status?: TaskFlowStatus;
     createdUser?: Types.ObjectId;

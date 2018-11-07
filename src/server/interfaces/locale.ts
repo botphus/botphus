@@ -182,8 +182,18 @@ export default interface ILocalePackage {
                 taskId: string;
                 startPage: string;
                 ignoreError: string;
-            }
-        }
+            };
+        };
+        // Task flow fields name
+        UnionTaskFlow: {
+            name: string;
+            suffixDomain: string;
+            mysqlId: string;
+            redisId: string;
+            unionTaskId: string;
+            excludeTask: string;
+            status: string;
+        };
     };
     // Service Error
     Service: {

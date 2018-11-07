@@ -5,3 +5,10 @@ db.bp_taskflows.updateMany({
     status: null
 }, { $set: { status : -2 } });
 ```
+
+2. Add task report type:
+```
+db.bp_taskreports.updateMany({
+    type: null
+}, { $set: { type : 1 } });
+```
