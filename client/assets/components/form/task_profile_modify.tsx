@@ -302,8 +302,17 @@ class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfi
     }
     private handleSetRuleitems = (ruleItems) => {
         const {validateFields, setFieldsValue} = this.props.form;
-        ruleItems = ruleItems.sort((before, after) => {
-            return before.level - after.level;
+        // Sort task
+        ruleItems = ruleItems.map((item, index) => {
+            return {
+                ...item,
+                index
+            };
+        }).sort((before, after) => {
+            return (before.level - after.level) *  10000 + (before.index - after.index);
+        });
+        ruleItems.forEach((item) => {
+            delete item.index;
         });
         setFieldsValue({
             ruleItems

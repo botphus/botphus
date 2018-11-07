@@ -194,7 +194,7 @@ class TaskFlowProfileCreateForm extends React.Component<IModifyFormProps, ITaskF
                         >
                             {getFieldDecorator('redisInfo', {
                                 initialValue: defaultValue.redisId ? {
-                                    key: defaultValue.redisId, label: defaultValue.mysqlDetail.name
+                                    key: defaultValue.redisId, label: defaultValue.redisDetail.name
                                 } : undefined
                             })(
                                 <SearchSelect
