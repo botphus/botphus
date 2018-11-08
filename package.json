@@ -72,7 +72,7 @@
     "antd": "^3.10.1",
     "babel-loader": "^8.0.4",
     "blueimp-md5": "^2.10.0",
-    "botphus-core": "^0.3.1",
+    "botphus-core": "^0.3.2",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
     "history": "^4.7.2",
