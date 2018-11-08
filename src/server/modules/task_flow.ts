@@ -54,14 +54,14 @@ export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Prom
  * @param {SocketMessageType}      messageType Message type
  */
 export function sendTaskFlowData(
-    reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.UPDATE): void {
+    reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType: SocketMessageType = SocketMessageType.TASK_UPDATE): void {
     // Update report data
     if (typeof updateData.status === 'number') {
         modifyTaskReportById(reportItem._id, updateData);
     }
     // Send socket message
     switch (messageType) {
-        case SocketMessageType.UPDATE:
+        case SocketMessageType.TASK_UPDATE:
             return send(messageType, `${TaskReportType.TASK}-${reportItem.flowId}|${reportItem.index}|${JSON.stringify(updateData)}`, userId);
         default:
             return send(messageType, `${TaskReportType.TASK}-${reportItem.flowId}|${updateData.message}`, userId);

@@ -2,7 +2,7 @@
  * Socket message Type
  */
 export enum SocketMessageType {
-    'ENTER' = 'enter',
-    'UPDATE' = 'update',
-    'END' = 'end'
+    'USER_ENTER' = 'user_enter',
+    'TASK_UPDATE' = 'task_update',
+    'TASK_END' = 'task_end'
 }

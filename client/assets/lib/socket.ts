@@ -15,7 +15,7 @@ let rws: ReconnectingWebSocket;
 
 function onOpen() {
     log.info('Socket Connect Success');
-    sendSocketMessage(SocketMessageType.ENTER, store.getState().user.owner.id || '');
+    sendSocketMessage(SocketMessageType.USER_ENTER, store.getState().user.owner.id || '');
 }
 
 function onMessage(event) {
@@ -30,7 +30,7 @@ function onMessage(event) {
         const taskFlowState = store.getState().taskFlow;
         const unionTaskFlowState = store.getState().unionTaskFlow;
         switch (messageType) {
-            case SocketMessageType.UPDATE:
+            case SocketMessageType.TASK_UPDATE:
                 const updateMessageList = messageCon.match(/^([^\|]+)\|([^\|]+)\|([\S\s]+)$/);
                 if (!updateMessageList) {
                     return;
@@ -60,7 +60,7 @@ function onMessage(event) {
                         return;
                 }
                 break;
-            case SocketMessageType.END:
+            case SocketMessageType.TASK_END:
                 const endMessageList = messageCon.match(/^([^\|]+)\|([^\|]+)$/);
                 if (!endMessageList) {
                     return;

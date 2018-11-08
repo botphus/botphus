@@ -169,7 +169,7 @@ export function startTaskFlow(taskFlowId: Schema.Types.ObjectId, userId: string)
                         });
                         sendTaskFlowData(flowData.taskReportMap[Object.keys(flowData.taskReportMap)[0]], {
                             message: `${status}`
-                        }, userId, SocketMessageType.END);
+                        }, userId, SocketMessageType.TASK_END);
                         app.log.debug('Process close code:', code);
                     });
                 });
