@@ -5,6 +5,7 @@ export {ITaskRuleSaveItem, ITaskRuleTreeItem, ITaskDetailItem, ITaskListItem} fr
 export {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
 export {ITaskReportDetailItem} from '../../../src/server/interfaces/model/task_report';
 export {IUnionTaskSaveItem} from '../../../src/server/interfaces/model/union_task';
+export {IUnionTaskFlowDetailItem, IUnionTaskFlowListItem} from '../../../src/server/interfaces/model/union_task_flow';
 
 import {TaskSubType, TaskType} from '../types/common';
 

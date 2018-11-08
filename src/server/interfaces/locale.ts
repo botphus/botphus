@@ -102,6 +102,7 @@ export default interface ILocalePackage {
             createdUser: string;
             createdAt: string;
             updateAt: string;
+            _id: string;
         };
         // User fields name
         User: {
@@ -303,6 +304,9 @@ export default interface ILocalePackage {
             UnionTask: {
                 ignoreError: string;
                 startPage: string;
+            };
+            UnionTaskFlow: {
+                suffixDomain: string;
             }
         }
     };

@@ -12,17 +12,17 @@ import request from '../lib/request';
 
 // actions
 /**
- * Create task flow
+ * Create union task flow
  * @param  {any}                query    Create data
  * @param  {ActionCallbackFunc} callback Callback function
  * @return {ActionThunkFunc}             Thunk fuction
  */
-export function createTaskFlowData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+export function createUnionTaskFlowData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingForm: true
         }));
-        request(RequestAction.TASK_FLOW, query, 'POST')
+        request(RequestAction.UNION_TASK_FLOW, query, 'POST')
             .then((res) => {
                 dispatch(updateModel({
                     loadingForm: false
@@ -40,25 +40,25 @@ export function createTaskFlowData(query: any, callback?: ActionCallbackFunc): A
 }
 
 /**
- * Start task flow
- * @param  {string}             taskFlowId Task flow ID
+ * Start union task flow
+ * @param  {string}             taskFlowId Union task flow ID
  * @param  {ActionCallbackFunc} callback   Callback function
  * @return {ActionThunkFunc}               Thunk fuction
  */
-export function startTaskFlowData(taskFlowId: string, callback?: ActionCallbackFunc): ActionThunkFunc {
+export function startUnionTaskFlowData(taskFlowId: string, callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
         }));
-        request(RequestAction.TASK_FLOW_START, {
+        request(RequestAction.UNION_TASK_FLOW_START, {
             id: taskFlowId
         })
             .then((res) => {
                 dispatch(updateModel({
                     loading: false
                 }));
-                dispatch(queryTaskFlowDetailData(taskFlowId));
-                dispatch(updateTaskFlowStatus(TaskFlowStatus.ONGOING));
+                dispatch(queryUnionTaskFlowDetailData(taskFlowId));
+                dispatch(updateUnionTaskFlowStatus(TaskFlowStatus.ONGOING));
                 message.success(res.message);
                 if (callback) {
                     callback(res);
@@ -73,20 +73,20 @@ export function startTaskFlowData(taskFlowId: string, callback?: ActionCallbackF
 }
 
 /**
- * Query task flow detail data
- * @param  {string}          id TaskFlow ID
+ * Query union task flow detail data
+ * @param  {string}          id Union task flow ID
  * @return {ActionThunkFunc}    Thunk fuction
  */
-export function queryTaskFlowDetailData(id: string): ActionThunkFunc {
+export function queryUnionTaskFlowDetailData(id: string): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loading: true
         }));
-        request(RequestAction.TASK_FLOW_PROFILE, {
+        request(RequestAction.UNION_TASK_FLOW_PROFILE, {
             id
         })
             .then((res) => {
-                dispatch(updateTaskFlowDetail(res.data));
+                dispatch(updateUnionTaskFlowDetail(res.data));
                 dispatch(updateModel({
                     loading: false
                 }));
@@ -100,17 +100,17 @@ export function queryTaskFlowDetailData(id: string): ActionThunkFunc {
 }
 
 /**
- * Query task flow list data
+ * Query union task flow list data
  * @return {ActionThunkFunc} Thunk fuction
  */
-export function queryTaskFlowListData(query: any): ActionThunkFunc {
+export function queryUnionTaskFlowListData(query: any): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingTable: true
         }));
-        request(RequestAction.TASK_FLOW, query)
+        request(RequestAction.UNION_TASK_FLOW, query)
             .then((res) => {
-                dispatch(updateTaskFlowList(res.data));
+                dispatch(updateUnionTaskFlowList(res.data));
                 dispatch(updateModel({
                     loadingTable: false
                 }));
@@ -124,45 +124,45 @@ export function queryTaskFlowListData(query: any): ActionThunkFunc {
 }
 
 /**
- * Update task flow list
+ * Update union task flow list
  * @param  {any}         data Update data
  * @return {IActionData}      Action
  */
-export function updateTaskFlowList(data: any): IActionData {
+export function updateUnionTaskFlowList(data: any): IActionData {
     return {
         data,
-        type: ActionType.UPDATE_TASK_FLOW_LIST,
+        type: ActionType.UPDATE_UNION_TASK_FLOW_LIST,
     };
 }
 
 /**
- * Clean task flow list
+ * Clean union task flow list
  * @return {IActionData} Action
  */
-export function cleanTaskFlowList(): IActionData {
+export function cleanUnionTaskFlowList(): IActionData {
     return {
-        type: ActionType.CLEAN_TASK_FLOW_LIST
+        type: ActionType.CLEAN_UNION_TASK_FLOW_LIST
     };
 }
 
 /**
- * Update task flow detail
+ * Update union task flow detail
  * @param  {Any}         data Update data
  * @return {IActionData}      Action
  */
-export function updateTaskFlowDetail(data: any): IActionData {
+export function updateUnionTaskFlowDetail(data: any): IActionData {
     return {
         data,
-        type: ActionType.UPDATE_TASK_FLOW_DETAIL,
+        type: ActionType.UPDATE_UNION_TASK_FLOW_DETAIL,
     };
 }
 
 /**
- * Update task flow report map
+ * Update union task flow report map
  * @param  {[type]}      reportData Report data
  * @return {IActionData}            Action
  */
-export function updateTaskFlowReportMap(reportData: ITaskReportDetailItem): IActionData {
+export function updateUnionTaskFlowReportMap(reportData: ITaskReportDetailItem): IActionData {
     return {
         data: reportData,
         type: ActionType.UPDATE_TASK_FlOW_REPORT_MAP
@@ -170,11 +170,11 @@ export function updateTaskFlowReportMap(reportData: ITaskReportDetailItem): IAct
 }
 
 /**
- * Update task flow status
+ * Update union task flow status
  * @param  {TaskFlowStatus} status Flow status
  * @return {IActionData}           Action
  */
-export function updateTaskFlowStatus(status: TaskFlowStatus): IActionData {
+export function updateUnionTaskFlowStatus(status: TaskFlowStatus): IActionData {
     return {
         data: status,
         type: ActionType.UPDATE_TASK_FlOW_STATUS
@@ -182,11 +182,11 @@ export function updateTaskFlowStatus(status: TaskFlowStatus): IActionData {
 }
 
 /**
- * Clean task flow detail
+ * Clean union task flow detail
  * @return {IActionData} Action
  */
-export function cleanTaskFlowDetail(): IActionData {
+export function cleanUnionTaskFlowDetail(): IActionData {
     return {
-        type: ActionType.CLEAN_TASK_FLOW_DETAIL
+        type: ActionType.CLEAN_UNION_TASK_FLOW_DETAIL
     };
 }

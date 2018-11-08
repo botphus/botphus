@@ -7,6 +7,7 @@ import {IModifyDateModel} from './';
  * Return data
  */
 export interface ITaskReportDetailItem {
+    _id?: string;
     index?: string;
     status?: TaskReportStatus;
     type?: TaskReportType;

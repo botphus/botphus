@@ -80,7 +80,7 @@ const localeData: ILocalePackage = {
         Select: '请选择${field}',
         Search: '请输入${field}搜索',
         NotFound: '未找到${field}',
-        Empty: '${field}没有任何数据'
+        Empty: '${field}为空'
     },
     SystemCode: {
         success: '请求成功',
@@ -100,7 +100,8 @@ const localeData: ILocalePackage = {
         Common: {
             createdUser: '创建用户',
             createdAt: '创建时间',
-            updateAt: '更新时间'
+            updateAt: '更新时间',
+            _id: '数据ID'
         },
         User: {
             email: '邮箱',
@@ -286,6 +287,9 @@ const localeData: ILocalePackage = {
             UnionTask: {
                 ignoreError: '开启时,该任务执行错误将被忽略,自动执行',
                 startPage: '起始页面,可以使用${suffixDomain}变量来替换具体环境的域名后缀,${suffixDomain}在联合任务流水中配置'
+            },
+            UnionTaskFlow: {
+                suffixDomain: '配置该选项,用于替换联合任务配置中的${suffixDomain},配置方法请询问联合任务管理者'
             }
         }
     }

@@ -9,6 +9,7 @@ import {socketServer} from './const';
 import {log} from './util';
 
 import {updateTaskFlowReportMap, updateTaskFlowStatus} from '../actions/task_flow';
+import {updateUnionTaskFlowReportMap, updateUnionTaskFlowStatus} from '../actions/union_task_flow';
 
 let rws: ReconnectingWebSocket;
 
@@ -27,6 +28,7 @@ function onMessage(event) {
         const messageType = result[1];
         const messageCon = result[2];
         const taskFlowState = store.getState().taskFlow;
+        const unionTaskFlowState = store.getState().unionTaskFlow;
         switch (messageType) {
             case SocketMessageType.UPDATE:
                 const updateMessageList = messageCon.match(/^([^\|]+)\|([^\|]+)\|([\S\s]+)$/);
@@ -38,17 +40,23 @@ function onMessage(event) {
                 const updateTaskId = updateMessageHead[1];
                 const updateIndex = updateMessageList[2];
                 const updateMessageData = JSON.parse(updateMessageList[3]);
+                const reportData: ITaskReportDetailItem = {
+                    index: updateIndex,
+                    ...updateMessageData
+                };
                 // Check task type
                 switch (updateTaskReportType) {
                     case TaskReportType.TASK:
                         if (!(taskFlowState.detail._id && updateTaskId === taskFlowState.detail._id)) {
                             return;
                         }
-                        const reportData: ITaskReportDetailItem = {
-                            index: updateIndex,
-                            ...updateMessageData
-                        };
                         store.dispatch(updateTaskFlowReportMap(reportData));
+                        return;
+                    case TaskReportType.UNION_TASK:
+                        if (!(unionTaskFlowState.detail._id && updateTaskId === unionTaskFlowState.detail._id)) {
+                            return;
+                        }
+                        store.dispatch(updateUnionTaskFlowReportMap(reportData));
                         return;
                 }
                 break;
@@ -67,6 +75,12 @@ function onMessage(event) {
                             return;
                         }
                         store.dispatch(updateTaskFlowStatus(parseInt(endTaskMessage, 10)));
+                        return;
+                    case TaskReportType.UNION_TASK:
+                        if (!(unionTaskFlowState.detail._id && endTaskId === unionTaskFlowState.detail._id)) {
+                            return;
+                        }
+                        store.dispatch(updateUnionTaskFlowStatus(parseInt(endTaskMessage, 10)));
                         return;
                 }
                 break;

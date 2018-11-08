@@ -68,7 +68,7 @@ export function queryUnionTaskFlowList(query: IUnionTaskFlowSearchModel, page: n
     if (query.createdUser) {
         condition.createdUser = query.createdUser;
     }
-    if (query.status) {
+    if (typeof query.status === 'number') {
         condition.status = query.status;
     }
     return Promise.all([

@@ -1,4 +1,4 @@
-import {Button, Col, Icon, Row, Tabs, Tooltip} from 'antd';
+import {Button, Col, Icon, Row, Tabs} from 'antd';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
@@ -6,12 +6,12 @@ const {TabPane} = Tabs;
 
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 import {ITaskFlowContentData} from '../../../interfaces/redux';
-import {TaskFlowStatus} from '../../../types/common';
 
 import {queryTaskFlowDetailData, startTaskFlowData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
+import TaskFlowBtn from '../../../components/btn/task_flow';
 import TaskFlowInfo from '../../../components/view/task_flow_info';
 import TaskFlowRule from '../../../components/view/task_flow_rule';
 
@@ -34,58 +34,14 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
     }
     public render() {
         const {taskFlow} = this.props;
-        let $startBtn;
-        switch (taskFlow.detail.status) {
-            case TaskFlowStatus.CLOSE:
-                $startBtn = (
-                    <Tooltip placement="topLeft" title={localePkg.Service.TaskFlow.startForbidden}>
-                        <Button type="primary" className="m-r" disabled>
-                            <Icon type="close-circle" className="m-r-sm" theme="outlined" />
-                            {localePkg.Client.Action.startTaskFlow}
-                        </Button>
-                    </Tooltip>
-                );
-                break;
-            case TaskFlowStatus.SUCCESS:
-                $startBtn = (
-                    <Button type="primary" className="m-r" onClick={this.handleStartTask}>
-                        <Icon type="check-circle" className="m-r-sm" theme="outlined" />
-                        {localePkg.Client.Action.startTaskFlow}
-                    </Button>
-                );
-                break;
-            case TaskFlowStatus.FAILED:
-                $startBtn = (
-                    <Button type="danger" className="m-r" onClick={this.handleStartTask}>
-                        <Icon type="close-circle" className="m-r-sm" theme="outlined" />
-                        {localePkg.Client.Action.restartTaskFlow}
-                    </Button>
-                );
-                break;
-            case TaskFlowStatus.ONGOING:
-                $startBtn = (
-                    <Button type="primary" className="m-r" disabled>
-                        <Icon type="loading" className="m-r-sm" theme="outlined" />
-                        {localePkg.Client.Action.startTaskFlow}
-                    </Button>
-                );
-                break;
-            default:
-                $startBtn = (
-                    <Button type="primary" className="m-r" onClick={this.handleStartTask}>
-                        <Icon type="pause-circle" className="m-r-sm" theme="outlined" />
-                        {localePkg.Client.Action.startTaskFlow}
-                    </Button>
-                );
-        }
         return (
-            <div className="app-dashboard-task-flow-create">
+            <div className="app-dashboard-task-flow-profile">
                 <Row>
                     <Col span={12}>
                         <h1>{localePkg.Client.Title.TaskFlow}</h1>
                     </Col>
                     <Col className="text-right p-t-sm" span={12}>
-                        {$startBtn}
+                        <TaskFlowBtn status={taskFlow.detail.status} onStart={this.handleStartTask} />
                         <Button onClick={this.handleCancel}>
                             <Icon type="left-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.cancel}
                         </Button>
