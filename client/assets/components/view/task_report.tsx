@@ -21,11 +21,11 @@ export default class TaskReport extends React.Component<ITaskReportProps> {
                         <span className="m-r">{localePkg.Model.Common._id}: </span>
                         {report._id}
                     </Col>
-                    <Col span={12}>
+                    <Col span={24}>
                         <span className="m-r">{localePkg.Model.TaskReport.index}: </span>
                         {report.index}
                     </Col>
-                    <Col span={12}>
+                    <Col span={24}>
                         <span className="m-r">{localePkg.Model.TaskReport.status}: </span>
                         {typeof report.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[report.status]] : ''}
                     </Col>

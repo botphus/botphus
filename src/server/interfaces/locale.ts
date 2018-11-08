@@ -307,6 +307,7 @@ export default interface ILocalePackage {
             };
             UnionTaskFlow: {
                 suffixDomain: string;
+                excludeTaskItem: string;
             }
         }
     };

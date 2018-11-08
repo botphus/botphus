@@ -33,6 +33,7 @@ export interface ITaskDetailItem extends ITaskListItem {
  * Task item base interface
  */
 export interface ITaskRuleSaveItem {
+    index?: string;
     id: number; // current ID
     pid: number; // parent ID
     level: number; // Tree level

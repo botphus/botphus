@@ -62,17 +62,10 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
 /**
  * Query task flow detail by user
  * @param  {Schema.Types.ObjectId}         taskFlowId Task flow ID
- * @param  {string}                        userId     User ID
  * @return {Promise<ITaskFlowDetailModel>}            Promise with Task flow Info
  */
-export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<ITaskFlowDetailModel> {
+export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId): Promise<ITaskFlowDetailModel> {
     return queryTaskFlowById(taskFlowId)
-        .then((taskFlow) => {
-            if (taskFlow.createdUser.toString() === userId) {
-                return taskFlow;
-            }
-            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
-        })
         .then((taskFlow) => {
             return Promise.all([
                 Promise.resolve(taskFlow),
@@ -152,7 +145,7 @@ export function modifyTaskFlowById(taskFlowId: Schema.Types.ObjectId, taskFlowDa
  * @return {Promise<void>}                    Promise
  */
 export function startTaskFlow(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<void> {
-    return queryTaskFlowByUser(taskFlowId, userId)
+    return queryTaskFlowByUser(taskFlowId)
         .then((flowData) => {
             // Check flow create date is before task update time
             if (new Date(flowData.createdAt) < new Date(flowData.taskDetail.updateAt)) {

@@ -15,7 +15,7 @@ export function getTaskItemTreeList(items: ITaskRuleSaveItem[]): ITaskRuleTreeIt
         const curItem: ITaskRuleTreeItem = {
             children: [],
             ...item,
-            index: `${item.id}`
+            index: item.index || `${item.id}`
         };
         // If parent
         if (item.pid === 0) {
@@ -64,7 +64,7 @@ export function rebuildTaskRuleForBotphusTask(ruleItems: ITaskRuleSaveItem[]): a
             case TaskTypeEventSubType.SUB_TYPE_REQUEST:
             case TaskTypeEventSubType.SUB_TYPE_RESPONSE:
                 // Check match path
-                if (item.arguments && item.arguments[0] && item.arguments[1]) {
+                if (item.arguments && item.arguments[1]) {
                     return {...item,
                         arguments: [item.arguments[0], new Function('request', `return request.url().indexOf("${item.arguments[1]}") >= 0`)]
                     };

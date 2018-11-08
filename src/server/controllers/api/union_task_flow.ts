@@ -39,7 +39,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
             querystring: queryDetailSchema
         }
     }, (request: IAppRequest, reply) => {
-        return queryUnionTaskFlowByUser(request.query.id, request.session.user.id)
+        return queryUnionTaskFlowByUser(request.query.id)
             .then((data) => {
                 reply.send(getHttpMsg(request, data));
             });

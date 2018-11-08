@@ -289,7 +289,8 @@ const localeData: ILocalePackage = {
                 startPage: '起始页面,可以使用${suffixDomain}变量来替换具体环境的域名后缀,${suffixDomain}在联合任务流水中配置'
             },
             UnionTaskFlow: {
-                suffixDomain: '配置该选项,用于替换联合任务配置中的${suffixDomain},配置方法请询问联合任务管理者'
+                suffixDomain: '配置该选项,用于替换联合任务配置中的${suffixDomain},配置方法请询问联合任务管理者',
+                excludeTaskItem: '该任务已被过滤执行'
             }
         }
     }

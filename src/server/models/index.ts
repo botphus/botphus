@@ -7,6 +7,7 @@ import {TaskFlowStatus, TaskReportStatus} from '../types/task';
 
 import {modifyTaskFlows} from '../services/task_flow';
 import {modifyTaskReports} from '../services/task_report';
+import {modifyUnionTaskFlows} from '../services/union_task_flow';
 
 mongoose.set('useCreateIndex', true);
 mongoose.Promise = Promise;
@@ -25,6 +26,11 @@ mongoose.connect(config.db, {
     app.log.debug('MongoDB connect succeed');
     // Update ongoing task flows & reports to faild
     modifyTaskFlows({
+        status: TaskFlowStatus.ONGOING
+    }, {
+        status: TaskFlowStatus.FAILED
+    });
+    modifyUnionTaskFlows({
         status: TaskFlowStatus.ONGOING
     }, {
         status: TaskFlowStatus.FAILED

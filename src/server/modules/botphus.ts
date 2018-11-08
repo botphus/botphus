@@ -24,7 +24,7 @@ export function listenBotphusTaskMessage(
         if (error) {
             updateData.message = error.stack;
             updateData.status = TaskReportStatus.FAILED;
-            if (error.index) {
+            if (error.index && taskReportMap[error.index]) {
                 return sendFunc(taskReportMap[error.index], updateData, userId);
             }
             // Find cur pending index
@@ -44,22 +44,27 @@ export function listenBotphusTaskMessage(
             return;
         }
         app.log.debug(messageData);
+        const taskReport = taskReportMap[messageData.index];
+        // Check report item, it maybe undefined when addtional task has been executed
+        if (!taskReport) {
+            return;
+        }
         switch (messageData.type) {
             case MessageType.TASK_UNIT_EXEC_START:
                 // Reset info
                 updateData.status = TaskReportStatus.ONGOING;
-                sendFunc(taskReportMap[messageData.index], updateData, userId);
+                sendFunc(taskReport, updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_DATA_RECEIVE:
                 updateData.status = TaskReportStatus.ONGOING;
                 updateData.receiveData = typeof messageData.data === 'object' ? JSON.stringify(messageData.data) : messageData.data;
-                sendFunc(taskReportMap[messageData.index], updateData, userId);
+                sendFunc(taskReport, updateData, userId);
                 break;
             case MessageType.TASK_UNIT_EXEC_END:
                 updateData.status = TaskReportStatus.SUCCESS;
                 // Update report map
-                taskReportMap[messageData.index].status = TaskReportStatus.SUCCESS;
-                sendFunc(taskReportMap[messageData.index], updateData, userId);
+                taskReport.status = TaskReportStatus.SUCCESS;
+                sendFunc(taskReport, updateData, userId);
                 break;
         }
     });

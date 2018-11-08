@@ -56,6 +56,7 @@ export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDet
                     return subProcess;
                 });
         }, (err) => {
+            app.log.error(err);
             throw createSystemError(`${localePkg.Service.TaskFlow.taskCreateError}:${err.message}`, SystemCode.ROUTINE_ERROR);
         });
 }

@@ -32,7 +32,7 @@ function getTaskIds(unionTaskDetail: IUnionTaskModel, unionTaskFlow: IUnionTaskF
     if (unionTaskFlow.excludeTask) {
         taskItems = taskItems
             .filter((item) => {
-                return unionTaskFlow.excludeTask[item.taskId];
+                return !unionTaskFlow.excludeTask[item.taskId];
             });
     }
     return taskItems.map((item) => {
@@ -82,17 +82,10 @@ export function queryUnionTaskFlowList(query: IUnionTaskFlowSearchModel, page: n
 /**
  * Query union task flow detail by user
  * @param  {Schema.Types.ObjectId}              unionTaskFlowId Task flow ID
- * @param  {string}                             userId          User ID
  * @return {Promise<IUnionTaskFlowDetailModel>}                 Promise with Task flow Info
  */
-export function queryUnionTaskFlowByUser(unionTaskFlowId: Schema.Types.ObjectId, userId: string): Promise<IUnionTaskFlowDetailModel> {
+export function queryUnionTaskFlowByUser(unionTaskFlowId: Schema.Types.ObjectId): Promise<IUnionTaskFlowDetailModel> {
     return queryUnionTaskFlowById(unionTaskFlowId)
-        .then((unionTaskFlow) => {
-            if (unionTaskFlow.createdUser.toString() === userId) {
-                return unionTaskFlow;
-            }
-            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
-        })
         .then((unionTaskFlow) => {
             return Promise.all([
                 Promise.resolve(unionTaskFlow),
@@ -186,7 +179,7 @@ export function modifyUnionTaskFlowById(unionTaskFlowId: Schema.Types.ObjectId, 
  * @return {Promise<void>}                         Promise
  */
 export function startUnionTaskFlow(unionTaskFlowId: Schema.Types.ObjectId, userId: string): Promise<void> {
-    return queryUnionTaskFlowByUser(unionTaskFlowId, userId)
+    return queryUnionTaskFlowByUser(unionTaskFlowId)
         .then((flowData) => {
             // Check flow create date is before task update time
             if (new Date(flowData.createdAt) < new Date(flowData.unionTaskDetail.updateAt)) {

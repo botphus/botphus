@@ -34,7 +34,7 @@ export interface IUnionTaskFlowDetailItem extends IUnionTaskFlowListItem {
     redisId?: string;
     redisDetail?: IConnectionDetailRedisItem;
     excludeTask?: IIndexMap<true>;
-    unionTaskMap?: IUnionTaskDetailItem;
+    unionTaskDetail?: IUnionTaskDetailItem;
     taskDetailMap?: IIndexMap<ITaskDetailItem>;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
