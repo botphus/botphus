@@ -10,11 +10,11 @@ import {checkUserPermission, createSystemError, localePkg} from '../modules/util
 function valid(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => void): void {
     const urlInfo = url.parse(request.req.url);
     request.log.debug('Check permission start:', urlInfo.pathname);
-    if (urlInfo.pathname.indexOf('/api')) {
+    if (urlInfo.pathname.indexOf('/api') >= 0) {
         const permissionIndex: string = `${request.req.method.toLowerCase()}:${urlInfo.pathname.replace('/api', '')}`;
         const permissionCode: number = userPermissionMap[permissionIndex];
         // Check login status
-        if (permissionCode === 0) {
+        if (permissionCode >= 0) {
             const err = request.session.user ?
                 null : createSystemError(localePkg.SystemCode.loginForbidden, SystemCode.FORBIDDEN);
             return next(err);

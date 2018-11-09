@@ -34,20 +34,20 @@ export const userPermissionMap: {
     'patch:/task/': UserPermissionCode.TASK_MANAGE,
     'get:/task/': UserPermissionCode.LOGIN,
     'get:/task/profile/': UserPermissionCode.LOGIN,
-    // Task follow
-    'post:/task-follow/': UserPermissionCode.TASK_FLOW,
-    'get:/task-follow/': UserPermissionCode.TASK_FLOW,
-    'get:/task-follow/profile/': UserPermissionCode.TASK_FLOW,
-    'get:/task-follow/start/': UserPermissionCode.TASK_FLOW,
+    // Task flow
+    'post:/task-flow/': UserPermissionCode.TASK_FLOW,
+    'get:/task-flow/': UserPermissionCode.TASK_FLOW,
+    'get:/task-flow/profile/': UserPermissionCode.TASK_FLOW,
+    'get:/task-flow/start/': UserPermissionCode.TASK_FLOW,
     // Union task
     'post:/union-task/': UserPermissionCode.TASK_MANAGE,
     'patch:/union-task/': UserPermissionCode.TASK_MANAGE,
     'get:/union-task/': UserPermissionCode.LOGIN,
     'get:/union-task/profile/': UserPermissionCode.LOGIN,
-    // Union Task follow
-    'post:/union-task-follow/': UserPermissionCode.TASK_FLOW,
-    'get:/union-task-follow/': UserPermissionCode.TASK_FLOW,
-    'get:/union-task-follow/profile/': UserPermissionCode.TASK_FLOW,
-    'get:/union-task-follow/start/': UserPermissionCode.TASK_FLOW,
+    // Union Task flow
+    'post:/union-task-flow/': UserPermissionCode.TASK_FLOW,
+    'get:/union-task-flow/': UserPermissionCode.TASK_FLOW,
+    'get:/union-task-flow/profile/': UserPermissionCode.TASK_FLOW,
+    'get:/union-task-flow/start/': UserPermissionCode.TASK_FLOW,
 };
 /* tslint:enable:object-literal-sort-keys */
