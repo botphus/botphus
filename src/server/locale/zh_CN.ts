@@ -175,7 +175,7 @@ const localeData: ILocalePackage = {
             taskItem: {
                 taskId: '任务',
                 startPage: '起始页面',
-                ignoreError: '阻塞任务'
+                ignoreError: '非阻塞任务'
             }
         },
         UnionTaskFlow: {

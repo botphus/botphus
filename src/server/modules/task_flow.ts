@@ -25,7 +25,7 @@ export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Prom
     return botphusCore.createTask(
         taskFlowData.taskDetail.name,
         new Date(taskFlowData.taskDetail.updateAt).getTime(),
-        rebuildTaskRuleForBotphusTask(taskFlowData.taskDetail.ruleItems)
+        rebuildTaskRuleForBotphusTask(taskFlowData.taskDetail.pageType, taskFlowData.taskDetail.ruleItems)
     )
         .then((taskNo) => {
             const startOption: ITaskStartOption = {

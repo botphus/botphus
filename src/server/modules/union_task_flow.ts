@@ -72,13 +72,11 @@ function rebuildTaskListRuleForBotphusTask(unionTaskFlowData: IUnionTaskFlowDeta
         unionTaskFlowData.unionTaskDetail.taskItems.forEach((taskItem) => {
             const curTask = unionTaskFlowData.taskDetailMap[taskItem.taskId];
             if (curTask) {
-                const curStartOption = defaultStartOption[TaskPageType[curTask.pageType]];
                 // Goto start page
                 let taskRule: any[] = taskItem.startPage ? [
                     {
                         arguments: [
-                            unionTaskFlowData.suffixDomain ? taskItem.startPage.replace(/\${suffixDomain}/g, unionTaskFlowData.suffixDomain) : taskItem.startPage,
-                            curStartOption.startPageOption
+                            unionTaskFlowData.suffixDomain ? taskItem.startPage.replace(/\${suffixDomain}/g, unionTaskFlowData.suffixDomain) : taskItem.startPage
                         ],
                         index: `${taskItem.taskId}-start`,
                         subType: TaskTypePageSubType.SUB_TYPE_GOTO,
@@ -86,7 +84,7 @@ function rebuildTaskListRuleForBotphusTask(unionTaskFlowData: IUnionTaskFlowDeta
                     }
                 ] : [];
                 // Build task
-                taskRule = taskRule.concat(rebuildTaskRuleForBotphusTask(curTask.ruleItems.map((item) => {
+                taskRule = taskRule.concat(rebuildTaskRuleForBotphusTask(curTask.pageType, curTask.ruleItems.map((item) => {
                     return {
                         ...item,
                         index: `${taskItem.taskId}-${item.id}`
