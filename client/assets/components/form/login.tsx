@@ -1,4 +1,4 @@
-import {Button, Form, Input, Icon} from 'antd';
+import {Button, Divider, Form, Icon, Input} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
@@ -75,12 +75,15 @@ class LoginForm extends React.Component<ILoginFormProps> {
                         <Input type="password" placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.password)} />
                     )}
                 </Item>
-                <Item className="text-right clearfix" {...tailFormItemLayout}>
-                    {authLogin ? (
-                        <a className="ant-btn pull-left" href="/auth-login/"><Icon type="safety-certificate" className="m-r-sm" />{localePkg.Client.Action.authLogin}</a>
-                    ) : null}
+                <Item className="text-right" {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>{localePkg.Client.Action.login}</Button>
                 </Item>
+                {authLogin ? (
+                    <div className="m-t text-center">
+                        <Divider />
+                        <a className="ant-btn" href="/auth-login/"><Icon type="safety-certificate" className="m-r-sm" />{localePkg.Client.Action.authLogin}</a>
+                    </div>
+                ) : null}
             </Form>
         );
     }
