@@ -6,7 +6,7 @@ import * as userSchema from '../../schema/user';
 import {SystemCode} from '../../types/common';
 
 import {checkInstallStatus} from '../../services/install';
-import {createUser, modifyUserById, queryUserById, queryUserList, setUserSession, verifyUserLogin} from '../../services/user';
+import {createUser, getUserSession, modifyUserById, queryUserById, queryUserList, verifyUserLogin} from '../../services/user';
 
 import {buildPageInfo, createSystemError, getHttpMsg, getListQueryData, localePkg} from '../../modules/util';
 
@@ -42,7 +42,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     }, (request: IAppRequest, reply) => {
         return verifyUserLogin(request.body.email, request.body.password)
             .then((user) => {
-                request.session.user = setUserSession(user);
+                request.session.user = getUserSession(user);
                 reply.send(getHttpMsg(request, request.session.user));
             });
     });

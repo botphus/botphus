@@ -181,11 +181,11 @@ export function modifyUserById(userId: string, modifyUserId: string, modifyUserP
 }
 
 /**
- * Set user session data
+ * Get user session data
  * @param  {IUserModel}   user User data
  * @return {IUserSession}      User session data
  */
-export function setUserSession(user: IUserModel): IUserSession {
+export function getUserSession(user: IUserModel): IUserSession {
     return {
         email: user.email,
         id: user._id.toString(),

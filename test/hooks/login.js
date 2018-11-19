@@ -9,7 +9,7 @@ hookMod.addHook({
         if (request.query.email) {
             return userService.queryUserByEmail(request.query.email)
                 .then((user) => {
-                request.session.user = userService.setUserSession(user);
+                request.session.user = userService.getUserSession(user);
                 reply.redirect(302, '/dashboard/');
             });
         }
