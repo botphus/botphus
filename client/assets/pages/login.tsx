@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {IModalData, IReduxConnectProps, IReduxStoreState} from '../interfaces/redux';
 
 import {postLoginData} from '../actions/user';
-import {localePkg, welcomePageLayout} from '../lib/const';
+import {authLogin, localePkg, welcomePageLayout} from '../lib/const';
 import {routerHistory} from '../router';
 
 import LoginForm from '../components/form/login';
@@ -27,7 +27,7 @@ class LoginPage extends React.Component<ILoginProps> {
             <Row className="app-welcome" type="flex" align="middle" justify="center">
                 <Col {...welcomePageLayout}>
                     <Card title={localePkg.Client.Title.Login}>
-                        <LoginForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} />
+                        <LoginForm defaultValue={{}} onSubmit={this.handleSubmit} loading={modal.loadingForm} authLogin={authLogin} />
                     </Card>
                 </Col>
             </Row>

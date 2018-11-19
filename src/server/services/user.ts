@@ -2,7 +2,7 @@ import {Schema} from 'mongoose';
 
 import {User} from '../models/';
 
-import {IUserCreateModel, IUserModel, IUserModifyModel, IUserReferMap, IUserSearchModel} from '../interfaces/model';
+import {IUserCreateModel, IUserModel, IUserModifyModel, IUserReferMap, IUserSearchModel, IUserSession} from '../interfaces/model';
 import {SystemCode} from '../types/common';
 import {UserPermissionCode} from '../types/user';
 
@@ -178,4 +178,18 @@ export function modifyUserById(userId: string, modifyUserId: string, modifyUserP
     return User.updateOne({
         _id: userId
     }, userData).exec();
+}
+
+/**
+ * Set user session data
+ * @param  {IUserModel}   user User data
+ * @return {IUserSession}      User session data
+ */
+export function setUserSession(user: IUserModel): IUserSession {
+    return {
+        email: user.email,
+        id: user._id.toString(),
+        nickname: user.nickname,
+        permission: user.permission
+    };
 }

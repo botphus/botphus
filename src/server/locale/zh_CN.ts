@@ -226,6 +226,7 @@ const localeData: ILocalePackage = {
             next: '下一步',
             prev: '上一步',
             login: '登录',
+            authLogin: '第三方授权登录',
             logout: '登出',
             submit: '提交',
             search: '搜索',

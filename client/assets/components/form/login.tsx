@@ -1,4 +1,4 @@
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, Icon} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
 
@@ -7,13 +7,17 @@ import {IFormProps} from '../../interfaces/common';
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
 
-class LoginForm extends React.Component<IFormProps> {
+interface ILoginFormProps extends IFormProps {
+    authLogin?: boolean;
+}
+
+class LoginForm extends React.Component<ILoginFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
     }
     public render() {
-        const {defaultValue, loading} = this.props;
+        const {defaultValue, loading, authLogin} = this.props;
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
         const emailError = isFieldTouched('email') && getFieldError('email');
         const passwordError = isFieldTouched('password') && getFieldError('password');
@@ -71,7 +75,10 @@ class LoginForm extends React.Component<IFormProps> {
                         <Input type="password" placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.User.password)} />
                     )}
                 </Item>
-                <Item className="text-right" {...tailFormItemLayout}>
+                <Item className="text-right clearfix" {...tailFormItemLayout}>
+                    {authLogin ? (
+                        <a className="ant-btn pull-left" href="/auth-login/"><Icon type="safety-certificate" className="m-r-sm" />{localePkg.Client.Action.authLogin}</a>
+                    ) : null}
                     <Button type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>{localePkg.Client.Action.login}</Button>
                 </Item>
             </Form>

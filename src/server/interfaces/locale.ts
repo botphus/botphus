@@ -241,6 +241,7 @@ export default interface ILocalePackage {
             next: string;
             prev: string;
             login: string;
+            authLogin: string;
             logout: string;
             submit: string;
             search: string;
