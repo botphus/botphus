@@ -14,7 +14,7 @@ import {log} from '../../lib/util';
 interface IMemberMultiSelectProps {
     delayTime?: number; // Request delay time
     value?: LabeledValue[];
-    onChange?: (value: LabeledValue) => void;
+    onChange?: (value: LabeledValue[]) => void;
 }
 
 interface IMemberMultiSelectState {

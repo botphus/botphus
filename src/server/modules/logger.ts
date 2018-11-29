@@ -10,11 +10,9 @@ const reqIdmaxInt = 100000;
 
 // Set default pretty config
 const prettyConf: pino.PrettyOptions = {
-    forceColor: true,
     /**
      * For pino-pretty setting
      */
-    // @ts-ignore
     translateTime: 'SYS:yyyy-mm-dd HH:MM:ss'
 };
 
