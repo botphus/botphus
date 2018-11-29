@@ -58,7 +58,7 @@ class ConnectionSearchForm extends React.Component<IFormProps> {
                             {getFieldDecorator('type', {
                                 initialValue: defaultValue.type,
                             })(
-                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Connection.type)}>
+                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Connection.type)} allowClear>
                                     {typeList.map((item, index) => {
                                         return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
                                     })}

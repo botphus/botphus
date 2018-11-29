@@ -1,7 +1,7 @@
 import * as fp from 'fastify-plugin';
 import * as uid from 'uid';
 
-import {IAppReply, IAppRequest} from '../interfaces/common';
+import {IAppReply, IAppRequest, ISessionConfig} from '../interfaces/common';
 
 import cache, {getRedisKey} from '../modules/cache';
 import config from '../modules/config';
@@ -13,16 +13,15 @@ const sessionRedisExpire: number = config.sessionRedisExpire * 60 * 60 * 1000;
 
 /**
  * Generate session data
- * @param  {string} id Session ID
- * @return {any}       Session data
+ * @param  {string}         id Session ID
+ * @return {ISessionConfig}    Session data
  */
-function generate(id?: string): any {
-    const session: any = {};
+function generate(id?: string): ISessionConfig {
+    const session: ISessionConfig = {};
     if (id) {
         session.id = id;
     } else {
-        session.id = `${new Date().getTime()}${uid(18)}`;
-        session.id = createMD5Sign(session.id, sessionSecret);
+        session.id = createMD5Sign(`${new Date().getTime()}${uid(18)}`, sessionSecret);
     }
     return session;
 }
@@ -31,7 +30,7 @@ function generate(id?: string): any {
  * Init session
  */
 export function init(request: IAppRequest, _reply: IAppReply, next: (err?: Error) => void): void {
-    const id = request.cookies[sessionCookieKey];
+    const id: string = request.cookies[sessionCookieKey];
     if (!id) {
         request.session = generate();
         next();
@@ -62,7 +61,7 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
     if (!request.session) {
         return next();
     }
-    const id = request.session.id;
+    const id: string = request.session.id;
     const sessionKeys = Object.keys(request.session);
     if (id && sessionKeys.length === 1 // No data need save
         ||
@@ -91,7 +90,7 @@ export function save(request: IAppRequest, reply: IAppReply, _payload: any, next
  * Clear session
  */
 export function clear(request: IAppRequest, reply: IAppReply): Promise<void> {
-    const id = request.cookies[sessionCookieKey];
+    const id: string = request.cookies[sessionCookieKey];
     request.session = null;
     return cache.del(getRedisKey(id))
         .then(() => {

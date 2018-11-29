@@ -1,12 +1,21 @@
-import {Button, Col, Form, Input, Row} from 'antd';
+import {Button, Col, Form, Input, Row, Select} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
+const {Option} = Select;
 
-import {IFormProps} from '../../interfaces/common';
+import {IFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
+import {TaskFlowStatus} from '../../types/common';
 
 import {formInlineItemLayout, formValidRules, localePkg} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
-import {filterEmptyFields} from '../../lib/util';
+import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
+
+const statusList: INumEnumValueWithLabel[] = getNumEnumsList(TaskFlowStatus).map((item) => {
+    return {
+        ...item,
+        label: localePkg.Enum.TaskFlowStatus[item.key]
+    };
+});
 
 class TaskFlowSearchForm extends React.Component<IFormProps> {
     public componentDidMount() {
@@ -38,6 +47,22 @@ class TaskFlowSearchForm extends React.Component<IFormProps> {
                                 }],
                             })(
                                 <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.TaskFlow.name)} />
+                            )}
+                        </Item>
+                    </Col>
+                    <Col span={8}>
+                        <Item
+                            label={localePkg.Model.TaskFlow.status}
+                            {...formInlineItemLayout}
+                        >
+                            {getFieldDecorator('status', {
+                                initialValue: defaultValue.status,
+                            })(
+                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.TaskFlow.status)} allowClear>
+                                    {statusList.map((item, index) => {
+                                        return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
+                                    })}
+                                </Select>
                             )}
                         </Item>
                     </Col>

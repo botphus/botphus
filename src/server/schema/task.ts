@@ -65,10 +65,7 @@ export const searchSchema = {
                 return item.value;
             }),
             type: 'integer'
-        },
-        userId: {
-            type: 'string'
-        },
+        }
     }, pageInfo),
     type: 'object'
 };

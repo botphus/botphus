@@ -11,9 +11,12 @@ import {localePkg} from '../../lib/const';
 import {formatNumber} from '../../lib/format';
 import {getTaskItemTreeList} from '../../lib/task';
 
+import TaskReport from './task_report';
+
 interface ITaskFlowRuleProps {
     list: ITaskRuleSaveItem[];
     reportMap: IIndexMap<ITaskReportDetailItem>;
+    prefix?: string;
 }
 
 interface ITaskFlowRuleState {
@@ -29,7 +32,7 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
     }
     public render() {
         const {selectIndex} = this.state;
-        const {list, reportMap} = this.props;
+        const {list, reportMap, prefix} = this.props;
         if (list.length === 0) {
             return null;
         }
@@ -44,7 +47,8 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
         // Translate flat data to tree data
         const treeData = getTaskItemTreeList(list);
         const loop = (data: ITaskRuleTreeItem[]) => data.map((item) => {
-            const curReport: ITaskReportDetailItem = reportMap[item.index] || {};
+            const index = `${prefix || ''}${item.index}`;
+            const curReport: ITaskReportDetailItem = reportMap[index] || {};
             statusCount[TaskReportStatus[typeof curReport.status === 'number' ? curReport.status : TaskReportStatus.IGNORE]] += 1;
             let disabled: boolean = false;
             let $reportStatusIcon;
@@ -73,9 +77,9 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
                 </div>
             );
             if (item.children && item.children.length) {
-                return <TreeNode disabled={disabled} key={item.index} title={titleTitle} index={item.index}>{loop(item.children)}</TreeNode>;
+                return <TreeNode disabled={disabled} key={index} title={titleTitle} index={index}>{loop(item.children)}</TreeNode>;
             }
-            return <TreeNode disabled={disabled} key={item.index} title={titleTitle} index={item.index} />;
+            return <TreeNode disabled={disabled} key={index} title={titleTitle} index={index} />;
         });
         const $children = loop(treeData);
         const progressPercent = formatNumber((statusCount.SUCCESS / list.length) * 100, 2);
@@ -98,11 +102,7 @@ export default class TaskFlowRule extends React.Component<ITaskFlowRuleProps, IT
                     visible={selectIndex !== ''}
                     width={500}
                 >
-                    <p>{localePkg.Model.TaskReport.index}: {selectReport.index}</p>
-                    <p>{localePkg.Model.TaskReport.status}:
-                        {typeof selectReport.status === 'number' ? localePkg.Enum.TaskReportStatus[TaskReportStatus[selectReport.status]] : ''}</p>
-                    <p>{localePkg.Model.TaskReport.message}</p>
-                    <p>{selectReport.message || '-'}</p>
+                    <TaskReport report={selectReport} />
                 </Drawer>
             </div>
         );

@@ -5,11 +5,11 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, ITaskContentData} from '../../../interfaces/redux';
 
-import {cleanTaskDetail, modifyTaskData, postCreateTaskData, queryTaskDetailData} from '../../../actions/task';
+import {cleanTaskDetail, createTaskData, modifyTaskData, queryTaskDetailData} from '../../../actions/task';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
-import TaskModifyProfileForm from '../../../components/form/task_modify_profile';
+import TaskProfileModifyForm from '../../../components/form/task_profile_modify';
 import Loading from '../../../components/loading';
 
 interface ITaskProfileProps extends IReduxConnectProps {
@@ -54,7 +54,7 @@ class DashboardTaskProfilePage extends React.Component<ITaskProfileProps & Route
                         </a>
                     </Col>
                 </Row>
-                <TaskModifyProfileForm
+                <TaskProfileModifyForm
                     defaultValue={task.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={match.params.id === 'create'}
                 />
             </div>
@@ -63,7 +63,7 @@ class DashboardTaskProfilePage extends React.Component<ITaskProfileProps & Route
     private handleSubmit = (data) => {
         const {dispatch, match} = this.props;
         const isCreate = match.params.id === 'create';
-        const dispatchFunc = isCreate ? postCreateTaskData : modifyTaskData;
+        const dispatchFunc = isCreate ? createTaskData : modifyTaskData;
         const sendData = isCreate ? data : {
             modifyId: match.params.id,
             ...data

@@ -1,3 +1,4 @@
+import {loadHook} from './modules/hook';
 import router from './modules/router';
 import './modules/socket'; // Socket server
 
@@ -8,5 +9,8 @@ import './filters/prepend';
 import './filters/append';
 
 export default function(): Promise<void> {
-    return router();
+    return loadHook()
+        .then(() => {
+            return router();
+        });
 }

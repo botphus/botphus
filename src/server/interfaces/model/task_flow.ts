@@ -1,6 +1,7 @@
 import {ITaskExcludeUnit} from 'botphus-core';
 import {Schema, Types} from 'mongoose';
 
+import {TaskFlowStatus} from '../../types/task';
 import {IModifyDateModel} from './';
 
 import {IIndexMap} from '../common';
@@ -12,27 +13,27 @@ import {ITaskReportDetailItem, ITaskReportModel} from './task_report';
  * Return data
  */
 /**
- * Task flow list item
+ * Task execution flow list item
  */
 export interface ITaskFlowListItem {
     _id?: string;
     name?: string;
-    taskId?: Schema.Types.ObjectId;
-    taskName?: string;
+    taskId?: string;
     createdAt?: string;
     updateAt?: number;
+    status?: TaskFlowStatus;
 }
 
 /**
- * Task detail
+ * Task execution flow detail
  */
 export interface ITaskFlowDetailItem extends ITaskFlowListItem {
     startPage?: string;
-    mysqlId?: Schema.Types.ObjectId;
+    mysqlId?: string;
     mysqlDetail?: IConnectionDetailMysqlItem;
-    redisId?: Schema.Types.ObjectId;
+    redisId?: string;
     redisDetail?: IConnectionDetailRedisItem;
-    taskId?: Schema.Types.ObjectId;
+    excludeOption?: ITaskExcludeUnit;
     taskDetail?: ITaskDetailItem;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
 }
@@ -47,9 +48,10 @@ export interface ITaskFlowModel extends IModifyDateModel {
     mysqlId?: Schema.Types.ObjectId;
     // redis config id
     redisId?: Schema.Types.ObjectId;
-    excludeOption: ITaskExcludeUnit;
+    excludeOption?: ITaskExcludeUnit;
     taskId: Schema.Types.ObjectId;
     createdUser: Types.ObjectId;
+    status: TaskFlowStatus;
 }
 
 /**
@@ -63,9 +65,17 @@ export interface ITaskFlowDetailModel extends ITaskFlowModel {
 }
 
 /**
+ * Task execution flow modify model
+ */
+export interface ITaskFlowModifyModel {
+    status: TaskFlowStatus;
+}
+
+/**
  * Task execution flow serach model
  */
 export interface ITaskFlowSearchModel {
     name: string;
+    status?: TaskFlowStatus;
     createdUser?: Types.ObjectId;
 }

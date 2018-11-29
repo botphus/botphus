@@ -17,7 +17,9 @@ const normalPagePuppeteerLaunchOption: LaunchOptions = process.platform === 'win
  * Normal page startPageOption
  * @type {Object}
  */
-const normalPageStartPageOption: NavigationOptions = {};
+const normalPageStartPageOption: NavigationOptions = {
+    waitUntil: 'networkidle2'
+};
 
 export const defaultStartOption: IIndexMap<ITaskStartOption> = {
     NORMAL: {

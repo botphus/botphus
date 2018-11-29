@@ -4,6 +4,7 @@ import * as recursive from 'recursive-readdir';
 import {app} from './util';
 
 export default function(): Promise<void> {
+    app.log.debug('Load controllers start');
     const routerPath = path.join(__dirname, '../controllers/');
     return recursive(routerPath).then((files) => {
         files.forEach((filePath) => {
@@ -15,5 +16,6 @@ export default function(): Promise<void> {
                 prefix: curPrefix
             });
         });
+        app.log.debug('Load controllers end');
     });
 }

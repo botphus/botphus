@@ -23,7 +23,8 @@ const localeData: ILocalePackage = {
             TYPE_DOM: 'DOM处理类',
             TYPE_EVENT: '事件类',
             TYPE_PAGE: '页面类',
-            TYPE_TIME: '时间类'
+            TYPE_TIME: '时间类',
+            TYPE_UNION: '联合类'
         },
         TaskTypeDataSubType: {
             SUB_TYPE_MYSQL: 'Mysql查询',
@@ -61,13 +62,25 @@ const localeData: ILocalePackage = {
             SUCCESS: '执行成功',
             IGNORE: '跳过执行',
             ONGOING: '执行中'
+        },
+        TaskFlowStatus: {
+            PENDING: '待执行',
+            FAILED: '执行失败',
+            CLOSE: '已关闭',
+            SUCCESS: '执行成功',
+            ONGOING: '正在执行'
+        },
+        TaskTypeUnionSubType: {
+            SUB_TYPE_BLOCK: '阻塞类',
+            SUB_TYPE_NON_BLOCK: '非阻塞类'
         }
     },
     Placehoder: {
         Input: '请输入${field}',
         Select: '请选择${field}',
         Search: '请输入${field}搜索',
-        NotFound: '未找到${field}'
+        NotFound: '未找到${field}',
+        Empty: '${field}为空'
     },
     SystemCode: {
         success: '请求成功',
@@ -87,7 +100,8 @@ const localeData: ILocalePackage = {
         Common: {
             createdUser: '创建用户',
             createdAt: '创建时间',
-            updateAt: '更新时间'
+            updateAt: '更新时间',
+            _id: '数据ID'
         },
         User: {
             email: '邮箱',
@@ -125,6 +139,7 @@ const localeData: ILocalePackage = {
                     mysql: 'SQL语句',
                     redis: 'Redis命令',
                     querySelector: 'DOM选择器',
+                    querySelectorHumanClick: '模拟自然人点击',
                     querySelectorText: '输入文本',
                     querySelectorAttrName: '属性名',
                     querySelectorAttrValue: '属性值',
@@ -143,13 +158,34 @@ const localeData: ILocalePackage = {
             mysqlId: 'MYSQL配置',
             redisId: 'Redis配置',
             taskId: '所属任务',
-            excludeOption: '过滤单元'
+            excludeOption: '过滤单元',
+            status: '状态'
         },
         TaskReport: {
             index: '单元编号',
             status: '单元执行状态',
             message: '单元执行信息',
+            receiveData: '接收数据',
             flowId: '所属流水'
+        },
+        UnionTask: {
+            name: '名称',
+            members: '成员',
+            taskItems: '任务列表',
+            taskItem: {
+                taskId: '任务',
+                startPage: '起始页面',
+                ignoreError: '非阻塞任务'
+            }
+        },
+        UnionTaskFlow: {
+            name: '名称',
+            suffixDomain: '域名后缀',
+            mysqlId: 'MYSQL配置',
+            redisId: 'Redis配置',
+            unionTaskId: '所属联合任务',
+            excludeTask: '过滤任务',
+            status: '状态'
         }
     },
     Service: {
@@ -184,11 +220,13 @@ const localeData: ILocalePackage = {
             detail: '详情',
             modify: '编辑',
             remove: '删除',
+            copy: '拷贝',
             cancel: '返回',
             top: '置顶',
             next: '下一步',
             prev: '上一步',
             login: '登录',
+            authLogin: '第三方授权登录',
             logout: '登出',
             submit: '提交',
             search: '搜索',
@@ -214,7 +252,9 @@ const localeData: ILocalePackage = {
             TaskFlowRule: '测试单元',
             TaskFlowConnection: '连接配置',
             TaskReport: '测试任务报告',
-            User: '用户管理'
+            User: '用户管理',
+            UnionTask: '联合任务',
+            UnionTaskFlow: '联合任务流水'
         },
         Desc: {
             Home: '了解如何使用',
@@ -222,7 +262,9 @@ const localeData: ILocalePackage = {
             Task: '创建一个测试任务并分配成员',
             TaskFlow: '测试任务成员按任务生成测试流水',
             TaskReport: '测试流水执行并生成测试报告',
-            User: '管理所有平台用户'
+            User: '管理所有平台用户',
+            UnionTask: '(可选)多个任务合并形成联合任务,覆盖测试完整功能',
+            UnionTaskFlow: '执行联合任务流水并生成联合任务报告'
         },
         Help: {
             FetchFaild: '获取数据失败',
@@ -235,12 +277,21 @@ const localeData: ILocalePackage = {
                 arguments: {
                     redis: '如set name 111,请注意方法名均为小写',
                     querySelector: 'Chrome中可以使用"控制台->Elements->右键对应节点->Copy->Copy selector"快速选择节点',
+                    querySelectorHumanClick: '当你点击的地方可能被浮动的元素(如浮动广告)覆盖时,请取消该选择.否则可能引起点击触发失败的情况发生.',
                     eventTimeout: '超过该设置时间则视为监听失败',
                     eventPath: '模糊匹配,只有该地址才进行监听'
                 }
             },
             TaskFlow: {
                 connectionId: '如果没有数据类查询规则,你可以不选择'
+            },
+            UnionTask: {
+                ignoreError: '开启时,该任务执行错误将被忽略,自动执行',
+                startPage: '起始页面,可以使用${suffixDomain}变量来替换具体环境的域名后缀,${suffixDomain}在联合任务流水中配置'
+            },
+            UnionTaskFlow: {
+                suffixDomain: '配置该选项,用于替换联合任务配置中的${suffixDomain},配置方法请询问联合任务管理者',
+                excludeTaskItem: '该任务已被过滤执行'
             }
         }
     }

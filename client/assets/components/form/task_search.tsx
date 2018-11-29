@@ -58,7 +58,7 @@ class TaskSearchForm extends React.Component<IFormProps> {
                             {getFieldDecorator('pageType', {
                                 initialValue: defaultValue.pageType,
                             })(
-                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.pageType)}>
+                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.pageType)} allowClear>
                                     {pageTypeList.map((item, index) => {
                                         return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
                                     })}

@@ -5,11 +5,11 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import {IConnectionContentData, IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 
-import {cleanConnectionDetail, modifyConnectionData, postCreateConnectionData, queryConnectionDetailData} from '../../../actions/connection';
+import {cleanConnectionDetail, createConnectionData, modifyConnectionData, queryConnectionDetailData} from '../../../actions/connection';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
-import ConnectionModifyProfileForm from '../../../components/form/connection_modify_profile';
+import ConnectionProfileModifyForm from '../../../components/form/connection_profile_modify';
 import Loading from '../../../components/loading';
 
 interface IConnectionProfileProps extends IReduxConnectProps {
@@ -54,7 +54,7 @@ class DashboardConnectionProfilePage extends React.Component<IConnectionProfileP
                         </a>
                     </Col>
                 </Row>
-                <ConnectionModifyProfileForm
+                <ConnectionProfileModifyForm
                     defaultValue={connection.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} isCreate={match.params.id === 'create'}
                 />
             </div>
@@ -63,7 +63,7 @@ class DashboardConnectionProfilePage extends React.Component<IConnectionProfileP
     private handleSubmit = (data) => {
         const {dispatch, match} = this.props;
         const isCreate = match.params.id === 'create';
-        const dispatchFunc = isCreate ? postCreateConnectionData : modifyConnectionData;
+        const dispatchFunc = isCreate ? createConnectionData : modifyConnectionData;
         const sendData = isCreate ? data : {
             modifyId: match.params.id,
             ...data

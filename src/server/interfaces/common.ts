@@ -1,4 +1,3 @@
-import * as cookie from 'cookie';
 import * as fastify from 'fastify';
 import * as http from 'http';
 import * as http2 from 'http2';
@@ -79,9 +78,6 @@ export interface IHttpResponseMessage {
  * App request
  */
 export interface IAppRequest extends fastify.FastifyRequest<http.IncomingMessage | http2.Http2ServerRequest> {
-    cookies?: {
-        [index: string]: any
-    };
     session?: ISessionConfig;
     initSession?: ISessionConfig;
     originalUrl?: string;
@@ -91,9 +87,7 @@ export interface IAppRequest extends fastify.FastifyRequest<http.IncomingMessage
 /**
  * App replay
  */
-export interface IAppReply extends fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse> {
-    setCookie?: (name: string, value: string, options?: cookie.CookieSerializeOptions) => fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse>;
-}
+export type IAppReply = fastify.FastifyReply<http.ServerResponse | http2.Http2ServerResponse>;
 
 /**
  * index map
@@ -111,7 +105,7 @@ export type IAppRouterConfig = IIndexMap<UserPermissionCode>;
  * Session
  */
 export interface ISessionConfig {
-    [index: string]: any;
+    id?: string;
     user?: IUserSession;
 }
 

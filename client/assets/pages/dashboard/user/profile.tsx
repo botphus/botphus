@@ -9,7 +9,7 @@ import {cleanUserDetail, modifyUserData, postCreateUserData, queryUserDetailData
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
-import UserModifyProfileForm from '../../../components/form/user_modify_profile';
+import UserProfileModifyForm from '../../../components/form/user_profile_modify';
 import Loading from '../../../components/loading';
 
 interface IUserProfileProps extends IReduxConnectProps {
@@ -54,7 +54,7 @@ class DashboardUserProfilePage extends React.Component<IUserProfileProps & Route
                         </a>
                     </Col>
                 </Row>
-                <UserModifyProfileForm
+                <UserProfileModifyForm
                     defaultValue={user.detail} onSubmit={this.handleSubmit} loading={modal.loadingForm} permission={true} isCreate={match.params.id === 'create'}
                 />
             </div>

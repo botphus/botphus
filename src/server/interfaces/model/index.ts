@@ -13,3 +13,5 @@ export * from './connection';
 export * from './task';
 export * from './task_flow';
 export * from './task_report';
+export * from './union_task';
+export * from './union_task_flow';

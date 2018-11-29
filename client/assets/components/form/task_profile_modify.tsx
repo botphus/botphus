@@ -11,14 +11,14 @@ import {TaskPageType} from '../../types/common';
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
 import {validRuleItems} from '../../lib/task';
-import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
+import {filterEmptyFields, getNumEnumsList, sortItems} from '../../lib/util';
 
 import MemberMultiSelect from '../form_item/member_multi_select';
 import TaskRule from '../form_item/task_rule';
 import Loading from '../loading';
 import TaskRuleModifyForm from './task_rule_modify';
 
-interface ITaskModifyProfileFormState {
+interface ITaskProfileModifyFormState {
     tab: 'basic' | 'rule';
     taskRuleId: number;
     taskRuleParentId: number;
@@ -32,7 +32,7 @@ const pageTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskPageType).map
     };
 });
 
-class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModifyProfileFormState> {
+class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfileModifyFormState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -53,7 +53,11 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         const pageTypeError = isFieldTouched('pageType') && getFieldError('pageType');
         const membersError = isFieldTouched('members') && getFieldError('members');
         getFieldDecorator('ruleItems', {
-            initialValue: defaultValue.ruleItems || []
+            initialValue: defaultValue.ruleItems || [],
+            rules: [{
+                required: true,
+                type: 'array',
+            }]
         });
         const ruleItems: ITaskRuleSaveItem[] = getFieldValue('ruleItems');
         return (
@@ -84,7 +88,7 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                                     required: true
                                 }],
                             })(
-                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} />
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} disabled={!isCreate} />
                             )}
                         </Item>
                         <Item
@@ -141,14 +145,13 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
                                     <Icon className="m-r-sm" type="info-circle" theme="filled" /><span className="text-light">{localePkg.Client.Help.taskRuleEventEmptyTip}</span>
                                 </span>
                         )}>
-                            <TaskRule value={ruleItems} onChange={this.handleModifyRuleModel} onRemove={this.handleRemoveRule} onDrag={this.handleDragRule} />
                             {ruleItems.length === 0 ? (
                                 <Alert message={getFormFieldErrorMsg(localePkg.Model.Task.ruleItems, [
                                     {
                                         type: 'required'
                                     }
                                 ])} />
-                            ) : null}
+                            ) : <TaskRule value={ruleItems} onChange={this.handleModifyRuleModel} onRemove={this.handleRemoveRule} onDrag={this.handleDragRule} />}
                             <div className="text-center m-t"><Button onClick={() => this.handleModifyRuleModel(0, 0)}>{localePkg.Client.Action.addTaskRule}</Button></div>
                         </Card>
                         <Item className="text-right" {...tailFormItemLayout}>
@@ -251,38 +254,7 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
         });
         // if dropPosition means sort, Change sort
         if (dropPosition !== 0) {
-            let dropIndex: number = -1;
-            let dragIndex: number = -1;
-            newRuleItems.some(((item, index) => {
-                if (dropIndex === -1 && item.id === dropId) {
-                    dropIndex = index;
-                }
-                if (dragIndex === -1 && item.id === dragKey) {
-                    dragIndex = index;
-                }
-                return dropIndex >= 0 && dragIndex >= 0;
-            }));
-            const beforeDropArray = newRuleItems.slice(0, dropIndex < dragIndex ? dropIndex : dragIndex);
-            const dropItem = newRuleItems.slice(dropIndex, dropIndex + 1);
-            const inDropAndDragArray = dropIndex < dragIndex ? newRuleItems.slice(dropIndex + 1, dragIndex) : newRuleItems.slice(dragIndex + 1, dropIndex);
-            const dragItem = newRuleItems.slice(dragIndex, dragIndex + 1);
-            const afterDragArray = newRuleItems.slice(dropIndex < dragIndex ? dragIndex + 1 : dropIndex + 1);
-            switch (dropPosition) {
-                case -1: // Before
-                    if (dropIndex < dragIndex) {
-                        newRuleItems = beforeDropArray.concat(dragItem, inDropAndDragArray, dropItem, afterDragArray);
-                    } else {
-                        newRuleItems = beforeDropArray.concat(inDropAndDragArray, dragItem, dropItem, afterDragArray);
-                    }
-                    break;
-                case 1: // After
-                    if (dropIndex < dragIndex) {
-                        newRuleItems = beforeDropArray.concat(dropItem, inDropAndDragArray, dragItem, afterDragArray);
-                    } else {
-                        newRuleItems = beforeDropArray.concat(inDropAndDragArray, dropItem, dragItem, afterDragArray);
-                    }
-                    break;
-            }
+            newRuleItems = sortItems<ITaskRuleSaveItem, number>(newRuleItems, 'id', dropPosition, dropId, dragKey);
         }
         this.handleSetRuleitems(newRuleItems);
     }
@@ -330,8 +302,17 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
     }
     private handleSetRuleitems = (ruleItems) => {
         const {validateFields, setFieldsValue} = this.props.form;
-        ruleItems = ruleItems.sort((before, after) => {
-            return before.level - after.level;
+        // Sort task
+        ruleItems = ruleItems.map((item, index) => {
+            return {
+                ...item,
+                index
+            };
+        }).sort((before, after) => {
+            return (before.level - after.level) *  10000 + (before.index - after.index);
+        });
+        ruleItems.forEach((item) => {
+            delete item.index;
         });
         setFieldsValue({
             ruleItems
@@ -342,4 +323,4 @@ class TaskModifyProfileForm extends React.Component<IModifyFormProps, ITaskModif
     }
 }
 
-export default Form.create()(TaskModifyProfileForm);
+export default Form.create()(TaskProfileModifyForm);

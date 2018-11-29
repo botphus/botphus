@@ -15,11 +15,11 @@ import {filterEmptyFields} from '../../lib/util';
 import SearchSelect from '../form_item/search_select';
 import TaskRuleExclude from '../form_item/task_rule_exclude';
 
-interface ITaskFlowCreateProfileFormState {
+interface ITaskFlowProfileCreateFormState {
     tab: 'basic' | 'rule' | 'connection';
 }
 
-class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskFlowCreateProfileFormState> {
+class TaskFlowProfileCreateForm extends React.Component<IModifyFormProps, ITaskFlowProfileCreateFormState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -114,7 +114,7 @@ class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskF
                                 }],
                             })(
                                 <SearchSelect
-                                    autoLoad={true}
+                                    autoLoad={defaultValue.taskId ? false : true}
                                     apiAction={RequestAction.TASK}
                                     listName={localePkg.Model.Task.name}
                                     searchField="name"
@@ -194,7 +194,7 @@ class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskF
                         >
                             {getFieldDecorator('redisInfo', {
                                 initialValue: defaultValue.redisId ? {
-                                    key: defaultValue.redisId, label: defaultValue.mysqlDetail.name
+                                    key: defaultValue.redisId, label: defaultValue.redisDetail.name
                                 } : undefined
                             })(
                                 <SearchSelect
@@ -253,4 +253,4 @@ class TaskFlowCreateProfileForm extends React.Component<IModifyFormProps, ITaskF
     }
 }
 
-export default Form.create()(TaskFlowCreateProfileForm);
+export default Form.create()(TaskFlowProfileCreateForm);

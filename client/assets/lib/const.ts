@@ -16,6 +16,8 @@ export const salt = $app.getAttribute('data-salt') || '';
 const socket = $app.getAttribute('data-socket') || '';
 // If socket is number, build websocket server. otherwise, set socket server with socket
 export const socketServer = /^\d+$/.test(socket) ? `${protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:${socket}` : socket;
+// Auth login
+export const authLogin = $app.getAttribute('data-auth-login') === 'true';
 
 // Client language package
 export const localePkg: ILocalePackage = localeSystem;

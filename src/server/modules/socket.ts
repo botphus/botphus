@@ -40,7 +40,7 @@ if (config.socket === 'local') {
                 return;
             }
             switch (messageType) {
-                case SocketMessageType.ENTER:
+                case SocketMessageType.USER_ENTER:
                     ws.userId = messageString;
                     break;
             }

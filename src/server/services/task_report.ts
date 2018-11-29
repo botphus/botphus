@@ -24,7 +24,7 @@ export function queryTaskReportById(taskReportId: Schema.Types.ObjectId, fields:
 export function queryTaskReportMap(taskFlowId: Schema.Types.ObjectId): Promise<IIndexMap<ITaskReportModel>> {
     return TaskReport.find({
         flowId: taskFlowId
-    }).select('index status message flowId').exec()
+    }).select('index status message receiveData flowId').exec()
         .then((taskReportList) => {
             const taskReportMap: IIndexMap<ITaskReportModel> = {};
             taskReportList.forEach((taskReport) => {
@@ -64,17 +64,26 @@ export function modifyTaskReportById(taskReportId: Schema.Types.ObjectId, taskRe
  * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
  * @return {Promise<void[]>}                  Pend success
  */
-export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promise<ITaskReportModel[]> {
-    return TaskReport.find({
+export function pendTaskReportByFlowId(taskFlowId: Schema.Types.ObjectId): Promise<any> {
+    return modifyTaskReports({
         flowId: taskFlowId,
         status: {
             $in: [TaskReportStatus.FAILED, TaskReportStatus.SUCCESS]
         }
-    })
-        .then((taskReportList) => {
-            return Promise.all(taskReportList.map((taskReport) => {
-                taskReport.status = TaskReportStatus.PENDING;
-                return taskReport.save();
-            }));
-        });
+    }, {
+        message: '',
+        receiveData: '',
+        status: TaskReportStatus.PENDING,
+    });
+}
+
+/**
+ * Modify task reports
+ * @param  {any}                    query      Update query condition
+ * @param  {ITaskReportModifyModel} updateData Update data
+ * @return {Promise<any>}                      Promise
+ */
+export function modifyTaskReports(query: any, updateData: ITaskReportModifyModel): Promise<any> {
+    return TaskReport.updateMany(query, updateData)
+        .exec();
 }

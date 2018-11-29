@@ -168,5 +168,38 @@ export default function() {
                 })
                 .catch(done);
         });
+        it('Login with third-party when redirect', (done) => {
+            client.get('/auth-login/')
+                .expect(302)
+                .expect((res) => {
+                    assert(res.header.location === `/auth-login/?email=${testAdminEmail}`);
+                })
+                .end(done);
+        });
+        it('Login with third-party', (done) => {
+            client.get(`/auth-login/?email=${testAdminEmail}`)
+                .expect(302)
+                .expect((res: IRequestData) => {
+                    assert(res.header['set-cookie'] && res.header['set-cookie'].length === 1);
+                    assert(res.header['set-cookie'][0].match(sessionReg));
+                    assert(res.header.location === '/dashboard/');
+                    cookieKey = res.header['set-cookie'][0].replace(sessionReg, '$1');
+                })
+                .end(done);
+        });
+        it('Get user list with third-party login', (done) => {
+            client.get('/api/user/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.page === 1);
+                    assert(res.body.data.pageSize === 10);
+                    assert(res.body.data.total === 2);
+                    assert(res.body.data.content.length === 2);
+                })
+                .end(done);
+        });
     });
 }

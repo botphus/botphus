@@ -27,7 +27,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         }
     }, (request: IAppRequest, reply) => {
         buildPageInfo(request);
-        request.query.userId = request.session.user.id;
+        request.query.createdUser = request.session.user.id;
         return queryTaskFlowList(getListQueryData(request.query), request.query.page, request.query.pageSize)
             .then((data) => {
                 reply.send(getHttpMsg(request, data));
@@ -39,7 +39,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
             querystring: queryDetailSchema
         }
     }, (request: IAppRequest, reply) => {
-        return queryTaskFlowByUser(request.query.id, request.session.user.id)
+        return queryTaskFlowByUser(request.query.id)
             .then((data) => {
                 reply.send(getHttpMsg(request, data));
             });

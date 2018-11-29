@@ -15,7 +15,7 @@ import request from '../lib/request';
  * @param  {ActionCallbackFunc} callback Callback function
  * @return {ActionThunkFunc}             Thunk fuction
  */
-export function postCreateTaskData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
+export function createTaskData(query: any, callback?: ActionCallbackFunc): ActionThunkFunc {
     return (dispatch) => {
         dispatch(updateModel({
             loadingForm: true

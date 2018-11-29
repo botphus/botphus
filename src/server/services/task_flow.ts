@@ -2,22 +2,23 @@ import {Schema, Types} from 'mongoose';
 
 import {TaskFlow} from '../models/';
 
-import {ITaskFlowDetailModel, ITaskFlowModel, ITaskFlowSearchModel, ITaskReportBaseItem} from '../interfaces/model';
+import {ITaskFlowDetailModel, ITaskFlowModel, ITaskFlowModifyModel, ITaskFlowSearchModel, ITaskReportBaseItem} from '../interfaces/model';
 import {SystemCode} from '../types/common';
-import {TaskReportStatus} from '../types/task';
+import {SocketMessageType} from '../types/socket';
+import {TaskFlowStatus, TaskReportStatus, TaskReportType} from '../types/task';
 
 import {queryConnectionById} from './connection';
 import {queryTaskById, verifyTaskOwner} from './task';
 import {createTaskReports, pendTaskReportByFlowId, queryTaskReportMap} from './task_report';
 
-import {buildAndRunBotphusTask} from '../modules/task_flow';
-import {createSystemError, localePkg} from '../modules/util';
+import {buildAndRunBotphusTask, sendTaskFlowData} from '../modules/task_flow';
+import {app, createSystemError, localePkg} from '../modules/util';
 
 /**
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name startPage taskId createdAt';
+const defaultFields: string = '_id name status taskId createdAt updateAt';
 
 /**
  * Query task flow info by ID
@@ -47,6 +48,9 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
     if (query.createdUser) {
         condition.createdUser = query.createdUser;
     }
+    if (typeof query.status === 'number') {
+        condition.status = query.status;
+    }
     return Promise.all([
         TaskFlow.countDocuments(condition).exec(),
         TaskFlow.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
@@ -58,17 +62,10 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
 /**
  * Query task flow detail by user
  * @param  {Schema.Types.ObjectId}         taskFlowId Task flow ID
- * @param  {string}                        userId     User ID
  * @return {Promise<ITaskFlowDetailModel>}            Promise with Task flow Info
  */
-export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<ITaskFlowDetailModel> {
+export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId): Promise<ITaskFlowDetailModel> {
     return queryTaskFlowById(taskFlowId)
-        .then((taskFlow) => {
-            if (taskFlow.createdUser.toString() === userId) {
-                return taskFlow;
-            }
-            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
-        })
         .then((taskFlow) => {
             return Promise.all([
                 Promise.resolve(taskFlow),
@@ -100,7 +97,9 @@ export function queryTaskFlowByUser(taskFlowId: Schema.Types.ObjectId, userId: s
  * @return {Promise<ITaskFlowModel>}              Promise with task flow Info
  */
 export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string): Promise<ITaskFlowModel> {
-    const taskFlow = Object.assign(new TaskFlow(), taskFlowData);
+    const taskFlow = Object.assign(new TaskFlow(), taskFlowData, {
+        status: TaskFlowStatus.PENDING
+    });
     taskFlow.createdUser = Types.ObjectId(createUser);
     return verifyTaskOwner(taskFlow.taskId, createUser)
         .then(() => {
@@ -114,7 +113,9 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
                             flowId: flowData.id,
                             index: `${taskRule.id}`,
                             message: '',
+                            receiveData: '',
                             status: flowData.excludeOption[`${taskRule.id}`] ? TaskReportStatus.IGNORE : TaskReportStatus.PENDING,
+                            type: TaskReportType.TASK,
                         };
                     });
                     return createTaskReports(data);
@@ -126,21 +127,62 @@ export function createTaskFlow(taskFlowData: ITaskFlowModel, createUser: string)
 }
 
 /**
+ * modify task flow by ID
+ * @param  {Schema.Types.ObjectId} taskFlowId   Task flow ID
+ * @param  {ITaskFlowModifyModel}  taskFlowData task flow update ID
+ * @return {Promise<any>}                       Promise with task flow id
+ */
+export function modifyTaskFlowById(taskFlowId: Schema.Types.ObjectId, taskFlowData: ITaskFlowModifyModel): Promise<any> {
+    return TaskFlow.updateOne({
+        _id: taskFlowId
+    }, taskFlowData).exec();
+}
+
+/**
  * Start task flow
  * @param  {Schema.Types.ObjectId} taskFlowId Task flow ID
  * @param  {string}                userId     Create User ID
  * @return {Promise<void>}                    Promise
  */
 export function startTaskFlow(taskFlowId: Schema.Types.ObjectId, userId: string): Promise<void> {
-    return queryTaskFlowByUser(taskFlowId, userId)
+    return queryTaskFlowByUser(taskFlowId)
         .then((flowData) => {
             // Check flow create date is before task update time
             if (new Date(flowData.createdAt) < new Date(flowData.taskDetail.updateAt)) {
+                modifyTaskFlowById(taskFlowId, {
+                    status: TaskFlowStatus.CLOSE
+                });
                 throw createSystemError(localePkg.Service.TaskFlow.startForbidden, SystemCode.FORBIDDEN);
             }
             return pendTaskReportByFlowId(taskFlowId)
                 .then(() => {
+                    modifyTaskFlowById(flowData._id, {
+                        status: TaskFlowStatus.ONGOING
+                    });
                     return buildAndRunBotphusTask(flowData);
+                })
+                .then((subProcess) => {
+                    subProcess.on('close', (code) => {
+                        const status = code === 0 || !code ? TaskFlowStatus.SUCCESS : TaskFlowStatus.FAILED;
+                        modifyTaskFlowById(flowData._id, {
+                            status
+                        });
+                        sendTaskFlowData(flowData.taskReportMap[Object.keys(flowData.taskReportMap)[0]], {
+                            message: `${status}`
+                        }, userId, SocketMessageType.TASK_END);
+                        app.log.debug('Process close code:', code);
+                    });
                 });
         });
+}
+
+/**
+ * Modify task flows
+ * @param  {any}                    query      Update query condition
+ * @param  {ITaskReportModifyModel} updateData Update data
+ * @return {Promise<any>}                      Promise
+ */
+export function modifyTaskFlows(query: any, updateData: ITaskFlowModifyModel): Promise<any> {
+    return TaskFlow.updateMany(query, updateData)
+        .exec();
 }

@@ -23,6 +23,7 @@ export default interface ILocalePackage {
             TYPE_EVENT: string;
             TYPE_TIME: string;
             TYPE_PAGE: string;
+            TYPE_UNION: string;
         };
         TaskTypeDataSubType: {
             SUB_TYPE_MYSQL: string;
@@ -61,12 +62,24 @@ export default interface ILocalePackage {
             IGNORE: string;
             ONGOING: string;
         };
+        TaskFlowStatus: {
+            PENDING: string;
+            FAILED: string;
+            CLOSE: string;
+            SUCCESS: string;
+            ONGOING: string;
+        };
+        TaskTypeUnionSubType: {
+            SUB_TYPE_BLOCK: string,
+            SUB_TYPE_NON_BLOCK: string
+        }
     };
     Placehoder: {
         Input: string;
         Select: string;
         Search: string;
         NotFound: string;
+        Empty: string;
     };
     // System code error message
     SystemCode: {
@@ -89,6 +102,7 @@ export default interface ILocalePackage {
             createdUser: string;
             createdAt: string;
             updateAt: string;
+            _id: string;
         };
         // User fields name
         User: {
@@ -129,6 +143,7 @@ export default interface ILocalePackage {
                     mysql: string;
                     redis: string;
                     querySelector: string;
+                    querySelectorHumanClick: string;
                     querySelectorText: string;
                     querySelectorAttrName: string;
                     querySelectorAttrValue: string;
@@ -149,13 +164,36 @@ export default interface ILocalePackage {
             redisId: string;
             taskId: string;
             excludeOption: string;
+            status: string;
         };
         // Task report
         TaskReport: {
             index: string;
             status: string;
             message: string;
+            receiveData: string;
             flowId: string;
+        };
+        // Union task
+        UnionTask: {
+            name: string;
+            members: string;
+            taskItems: string;
+            taskItem: {
+                taskId: string;
+                startPage: string;
+                ignoreError: string;
+            };
+        };
+        // Task flow fields name
+        UnionTaskFlow: {
+            name: string;
+            suffixDomain: string;
+            mysqlId: string;
+            redisId: string;
+            unionTaskId: string;
+            excludeTask: string;
+            status: string;
         };
     };
     // Service Error
@@ -197,11 +235,13 @@ export default interface ILocalePackage {
             detail: string;
             modify: string;
             remove: string;
+            copy: string;
             cancel: string;
             top: string;
             next: string;
             prev: string;
             login: string;
+            authLogin: string;
             logout: string;
             submit: string;
             search: string;
@@ -229,6 +269,8 @@ export default interface ILocalePackage {
             TaskFlowConnection: string;
             TaskReport: string;
             User: string;
+            UnionTask: string;
+            UnionTaskFlow: string;
         };
         // Description
         Desc: {
@@ -238,6 +280,8 @@ export default interface ILocalePackage {
             TaskFlow: string;
             TaskReport: string;
             User: string;
+            UnionTask: string;
+            UnionTaskFlow: string;
         };
         Help: {
             FetchFaild: string;
@@ -250,12 +294,21 @@ export default interface ILocalePackage {
                 arguments: {
                     redis: string;
                     querySelector: string;
+                    querySelectorHumanClick: string;
                     eventTimeout: string;
                     eventPath: string;
                 };
             };
             TaskFlow: {
                 connectionId: string;
+            };
+            UnionTask: {
+                ignoreError: string;
+                startPage: string;
+            };
+            UnionTaskFlow: {
+                suffixDomain: string;
+                excludeTaskItem: string;
             }
         }
     };

@@ -2,11 +2,14 @@ import {Schema, Types} from 'mongoose';
 
 import {Task} from '../models/';
 
+import {IIndexMap} from '../interfaces/common';
 import {ITaskModel, ITaskModifyModel, ITaskSearchModel, ITaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
+import {TaskFlowStatus} from '../types/task';
 
 import {createSystemError, localePkg} from '../modules/util';
 
+import {modifyTaskFlows} from './task_flow';
 import {queryUserByIdsWithReferMap} from './user';
 
 /**
@@ -16,7 +19,7 @@ import {queryUserByIdsWithReferMap} from './user';
 const defaultFields: string = '_id pageType name createdAt updateAt';
 
 /**
- * Query Task info by id
+ * Query task info by id
  * @param  {Schema.Types.ObjectId} taskId Task ID
  * @param  {string}                fields Field list
  * @return {Promise<ITaskModel>}          Promise with Task Info
@@ -26,7 +29,7 @@ export function queryTaskById(taskId: Schema.Types.ObjectId, fields: string = nu
 }
 
 /**
- * Query Task list
+ * Query task list
  * @param  {IUserSearchModel}                query    Query condition
  * @param  {number}                          page     Page
  * @param  {number}                          pageSize Page size
@@ -62,6 +65,37 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
 }
 
 /**
+ * Query task list by ids
+ * @param  {string[]}              ids    Task ids
+ * @param  {string}                fields Field list
+ * @return {Promise<ITaskModel[]>}        Promise with task info list
+ */
+export function queryTaskListByIds(ids: string[], fields: string = defaultFields): Promise<ITaskModel[]> {
+    return Task.find({
+        _id: {
+            $in: ids
+        }
+    }).select(fields).exec();
+}
+
+/**
+ * Query task map by ids
+ * @param  {string[]}                       ids    Task ids
+ * @param  {string}                         fields Field list
+ * @return {Promise<IIndexMap<ITaskModel>>}        Promise with task info map
+ */
+export function queryTaskMapByIds(ids: string[], fields: string = defaultFields): Promise<IIndexMap<ITaskModel>> {
+    return queryTaskListByIds(ids, fields)
+        .then((taskList) => {
+            const taskMap: IIndexMap<ITaskModel> = {};
+            taskList.forEach((task) => {
+                taskMap[task._id] = task;
+            });
+            return taskMap;
+        });
+}
+
+/**
  * Verify task's owner
  * @param  {Schema.Types.ObjectId} taskId Task ID
  * @param  {string}                userId User ID
@@ -92,9 +126,10 @@ export function createTask(taskData: ITaskModel, createUser: string): Promise<IT
 }
 
 /**
- * [queryTaskByUsers description]
- * @param  {Schema.Types.ObjectId} taskId Task ID
- * @return {Promise<ITaskModel>}          User ID
+ * Query task by id with users info
+ * @param  {Schema.Types.ObjectId}   taskId Task ID
+ * @param  {string}                  userId User ID
+ * @return {Promise<ITaskUserModel>}        Task info with user info
  */
 export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: string): Promise<ITaskUserModel> {
     return verifyTaskOwner(taskId, userId)
@@ -122,6 +157,16 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
  */
 export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, taskData: ITaskModifyModel): Promise<any> {
     return verifyTaskOwner(taskId, userId)
+        .then(() => {
+            return modifyTaskFlows({
+                status: {
+                    $ne: TaskFlowStatus.CLOSE
+                },
+                taskId,
+            }, {
+                status: TaskFlowStatus.CLOSE
+            });
+        })
         .then(() => {
             return Task.updateOne({
                 _id: taskId

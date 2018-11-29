@@ -3,8 +3,9 @@ import {ThunkDispatch} from 'redux-thunk';
 import {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/interfaces/model/connection';
 import {ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 import {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
+import {IUnionTaskDetailItem, IUnionTaskListItem} from '../../../src/server/interfaces/model/union_task';
+import {IUnionTaskFlowDetailItem, IUnionTaskFlowListItem} from '../../../src/server/interfaces/model/union_task_flow';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
-import {TaskFlowStatus} from '../types/common';
 import {ActionType} from '../types/redux';
 
 /**
@@ -72,9 +73,17 @@ export type ITaskContentData = IContentData<ITaskListItem, ITaskDetailItem>;
 /**
  * Task flow content data
  */
-export interface ITaskFlowContentData extends IContentData<ITaskFlowListItem, ITaskFlowDetailItem> {
-    flowStatus?: TaskFlowStatus;
-}
+export type ITaskFlowContentData = IContentData<ITaskFlowListItem, ITaskFlowDetailItem>;
+
+/**
+ * Union task content data
+ */
+export type IUnionTaskContentData = IContentData<IUnionTaskListItem, IUnionTaskDetailItem>;
+
+/**
+ * Union task flow content data
+ */
+export type IUnionTaskFlowContentData = IContentData<IUnionTaskFlowListItem, IUnionTaskFlowDetailItem>;
 
 /**
  * Redux connect props
@@ -92,6 +101,8 @@ export interface IReduxStoreState {
     task: ITaskContentData;
     user: IUserContentData;
     taskFlow: ITaskFlowContentData;
+    unionTask: IUnionTaskContentData;
+    unionTaskFlow: IUnionTaskFlowContentData;
 }
 
 /**

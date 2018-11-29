@@ -1,6 +1,6 @@
 {
   "name": "botphus",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Botphus task management website",
   "private": true,
   "directories": {
@@ -13,7 +13,7 @@
     "build:client": "webpack -p",
     "commit": "npm run test",
     "test": "npm run lint && npm run build:server && npm run test:cover",
-    "test:unit": "node ./test/create_config && mocha ./dist/test/ && node ./test/remove_config",
+    "test:unit": "node ./test/create_test_file && mocha ./dist/test/ && node ./test/remove_test_file",
     "test:cover": "nyc --reporter=lcov npm run test:unit",
     "lint": "tslint -c tslint.json -p tsconfig.json && tslint -c tslint.json -p ./client/tsconfig.json",
     "dev:server": "tsc -w",
@@ -107,7 +107,7 @@
   },
   "dependencies": {
     "@types/serve-favicon": "^2.2.30",
-    "botphus-core": "^0.2.2",
+    "botphus-core": "^0.3.4",
     "clone-deep": "^4.0.0",
     "cookie": "^0.3.1",
     "fastify": "^1.12.1",

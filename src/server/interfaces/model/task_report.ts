@@ -1,15 +1,18 @@
 import {Schema} from 'mongoose';
 
-import {TaskReportStatus} from '../../types/task';
+import {TaskReportStatus, TaskReportType} from '../../types/task';
 import {IModifyDateModel} from './';
 
 /**
  * Return data
  */
 export interface ITaskReportDetailItem {
+    _id?: string;
     index?: string;
     status?: TaskReportStatus;
+    type?: TaskReportType;
     message?: string;
+    receiveData?: string;
     flowId?: string;
     updateAt?: Date;
 }
@@ -22,8 +25,11 @@ export interface ITaskReportBaseItem {
     index: string;
     // Status
     status: TaskReportStatus;
+    // Type
+    type: TaskReportType;
     // Result message
     message: string;
+    receiveData: string;
     // Execution flow ID
     flowId: Schema.Types.ObjectId;
 }
@@ -39,4 +45,5 @@ export interface ITaskReportModel extends ITaskReportBaseItem, IModifyDateModel 
 export interface ITaskReportModifyModel {
     status?: TaskReportStatus;
     message?: string;
+    receiveData?: string;
 }
