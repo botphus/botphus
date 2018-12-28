@@ -11,6 +11,7 @@ export interface ITaskReportDetailItem {
     index?: string;
     status?: TaskReportStatus;
     type?: TaskReportType;
+    context?: string;
     message?: string;
     receiveData?: string;
     flowId?: string;
@@ -27,8 +28,8 @@ export interface ITaskReportBaseItem {
     status: TaskReportStatus;
     // Type
     type: TaskReportType;
-    // Result message
-    message: string;
+    context?: string;
+    message?: string;
     receiveData: string;
     // Execution flow ID
     flowId: Schema.Types.ObjectId;
@@ -44,6 +45,7 @@ export interface ITaskReportModel extends ITaskReportBaseItem, IModifyDateModel 
  */
 export interface ITaskReportModifyModel {
     status?: TaskReportStatus;
+    context?: string;
     message?: string;
     receiveData?: string;
 }

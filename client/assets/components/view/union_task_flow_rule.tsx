@@ -2,14 +2,14 @@ import {Card} from 'antd';
 import * as React from 'react';
 
 import {IIndexMap} from '../../interfaces/common';
-import {ITaskDetailItem, ITaskReportDetailItem, IUnionTaskSaveItem} from '../../interfaces/task';
+import {ITaskDetailItem, ITaskReportDetailItem, IUnionTaskClientSaveItem} from '../../interfaces/task';
 
 import {localePkg} from '../../lib/const';
 
 import TaskFlowRule from './task_flow_rule';
 
 interface IUnionTaskFlowRuleProps {
-    taskItems: IUnionTaskSaveItem[];
+    taskItems: IUnionTaskClientSaveItem[];
     taskDetailMap: IIndexMap<ITaskDetailItem>;
     reportMap: IIndexMap<ITaskReportDetailItem>;
 }

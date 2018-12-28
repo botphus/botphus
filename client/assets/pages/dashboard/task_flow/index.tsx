@@ -39,7 +39,13 @@ class DashboardTaskFlowPage extends React.Component<ITaskFlowProps> {
         const columns: Array<ColumnProps<any>> = [
             {
                 dataIndex: 'name',
-                title: localePkg.Model.TaskFlow.name
+                title: localePkg.Model.TaskFlow.name,
+                width: '20%'
+            },
+            {
+                dataIndex: 'taskName',
+                title: localePkg.Model.TaskFlow.taskId,
+                width: '20%'
             },
             {
                 dataIndex: 'status',

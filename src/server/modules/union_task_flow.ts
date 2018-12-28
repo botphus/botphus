@@ -1,5 +1,4 @@
-import BotphusCore, {ITaskStartOption} from 'botphus-core';
-import {ChildProcess} from 'child_process';
+import BotphusServerRunner, {IProcessPoolWorkEvent, ITaskStartOption} from '@botphus/server-runner';
 
 import {ITaskReportModel, ITaskReportModifyModel} from '../interfaces/model/task_report';
 import {IUnionTaskFlowDetailModel} from '../interfaces/model/union_task_flow';
@@ -9,19 +8,18 @@ import {SocketMessageType} from '../types/socket';
 import {TaskPageType, TaskReportType, TaskType, TaskTypePageSubType, TaskTypeUnionSubType} from '../types/task';
 
 import {modifyTaskReportById} from '../services/task_report';
-import {listenBotphusTaskMessage} from './botphus';
+import {listenBotphusTaskMessage, rebuildTaskRuleForBotphusTask} from './botphus';
 import {send} from './socket';
-import {rebuildTaskRuleForBotphusTask} from './task';
 import {app, createSystemError, localePkg} from './util';
 
-const botphusCore = new BotphusCore();
+const botphusServerRunner = new BotphusServerRunner();
 
 /**
  * Build and run botphus task
- * @param  {ITaskFlowDetailModel}  taskFlowData Task flow data
- * @return {Promise<ChildProcess>}              Promise with child process
+ * @param  {IUnionTaskFlowDetailModel}      unionTaskFlowData Union task flow data
+ * @return {Promise<IProcessPoolWorkEvent>}                   Promise with event
  */
-export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDetailModel): Promise<ChildProcess> {
+export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDetailModel): Promise<IProcessPoolWorkEvent> {
     let lastModifyDate: Date = new Date(); // Default set now
     let pageType: TaskPageType = TaskPageType.NORMAL;
     if (unionTaskFlowData.taskDetailMap) {
@@ -37,7 +35,7 @@ export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDet
             }
         });
     }
-    return botphusCore.createTask(
+    return botphusServerRunner.createTask(
         `uniontask-${unionTaskFlowData.unionTaskDetail.name}`,
         lastModifyDate.getTime(),
         rebuildTaskListRuleForBotphusTask(unionTaskFlowData)
@@ -50,10 +48,10 @@ export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDet
             };
             app.log.debug(unionTaskFlowData._id, 'startOption:');
             app.log.debug(startOption);
-            return botphusCore.startTask(taskNo, '', startOption)
-                .then((subProcess) => {
-                    listenBotphusTaskMessage(subProcess, unionTaskFlowData.taskReportMap, unionTaskFlowData.createdUser.toString(), sendUnionTaskFlowData);
-                    return subProcess;
+            return botphusServerRunner.startTask(taskNo, '', startOption)
+                .then((event) => {
+                    listenBotphusTaskMessage(event, unionTaskFlowData.taskReportMap, unionTaskFlowData.createdUser.toString(), sendUnionTaskFlowData);
+                    return event;
                 });
         }, (err) => {
             app.log.error(err);
@@ -70,7 +68,7 @@ function rebuildTaskListRuleForBotphusTask(unionTaskFlowData: IUnionTaskFlowDeta
     const taskList: any[] = [];
     if (unionTaskFlowData.unionTaskDetail) {
         unionTaskFlowData.unionTaskDetail.taskItems.forEach((taskItem) => {
-            const curTask = unionTaskFlowData.taskDetailMap[taskItem.taskId];
+            const curTask = unionTaskFlowData.taskDetailMap[taskItem.taskId.toString()];
             if (curTask) {
                 // Goto start page
                 let taskRule: any[] = taskItem.startPage ? [

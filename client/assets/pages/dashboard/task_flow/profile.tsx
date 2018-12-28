@@ -7,7 +7,7 @@ const {TabPane} = Tabs;
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 import {ITaskFlowContentData} from '../../../interfaces/redux';
 
-import {queryTaskFlowDetailData, startTaskFlowData} from '../../../actions/task_flow';
+import {cleanTaskFlowDetail, queryTaskFlowDetailData, startTaskFlowData} from '../../../actions/task_flow';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
@@ -31,6 +31,10 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
     public componentDidMount() {
         const {match} = this.props;
         this.handleGetDetail(match.params.id);
+    }
+    public componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch(cleanTaskFlowDetail());
     }
     public render() {
         const {taskFlow} = this.props;

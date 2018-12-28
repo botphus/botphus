@@ -1,4 +1,3 @@
-import {ITaskExcludeUnit} from 'botphus-core';
 import {Schema, Types} from 'mongoose';
 
 import {TaskFlowStatus} from '../../types/task';
@@ -10,6 +9,11 @@ import {ITaskDetailItem, ITaskModel} from './task';
 import {ITaskReportDetailItem, ITaskReportModel} from './task_report';
 
 /**
+ * Task exclude unit map
+ */
+interface ITaskExcludeUnit extends IIndexMap<true> {}
+
+/**
  * Return data
  */
 /**
@@ -19,6 +23,7 @@ export interface ITaskFlowListItem {
     _id?: string;
     name?: string;
     taskId?: string;
+    taskName?: string;
     createdAt?: string;
     updateAt?: number;
     status?: TaskFlowStatus;
@@ -50,6 +55,7 @@ export interface ITaskFlowModel extends IModifyDateModel {
     redisId?: Schema.Types.ObjectId;
     excludeOption?: ITaskExcludeUnit;
     taskId: Schema.Types.ObjectId;
+    taskName?: string;
     createdUser: Types.ObjectId;
     status: TaskFlowStatus;
 }

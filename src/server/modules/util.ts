@@ -282,3 +282,24 @@ export function getNumEnumsList(enums: any): INumEnumValue[] {
         };
     });
 }
+
+/**
+ * Remove list's item with duplicate key & return item's value of this key
+ * @type T current interface
+ * @type K the key type of interface
+ * @param   {T[]}         list Source list
+ * @param   {K}           key  list item's key
+ * @returns {Array<T[K]>}      Result list
+ */
+export function getUnduplicatedFieldInList<T, K extends keyof T>(list: T[], key: K): Array<T[K]> {
+    const map = new Set<string>();
+    const result: Array<T[K]> = [];
+    list.forEach((item) => {
+        const curKey = item[key].toString();
+        if (!map.has(curKey)) {
+            map.add(curKey);
+            result.push(item[key]);
+        }
+    });
+    return result;
+}

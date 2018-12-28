@@ -21,7 +21,7 @@ export interface IUnionTaskListItem {
  */
 export interface IUnionTaskDetailItem extends IUnionTaskListItem {
     members?: IUserReferModel[];
-    taskItems?: IUnionTaskSaveItem[];
+    taskItems?: IUnionTaskClientSaveItem[];
     createdUser?: string;
     createdUserName?: string;
 }
@@ -30,6 +30,16 @@ export interface IUnionTaskDetailItem extends IUnionTaskListItem {
  * Union task item base interface
  */
 export interface IUnionTaskSaveItem {
+    taskId: Schema.Types.ObjectId; // current ID
+    name: string; // Task name
+    startPage?: string; // Start page path
+    ignoreError: boolean; // Ignore execution error
+}
+
+/**
+ * Union task item base interface for client
+ */
+export interface IUnionTaskClientSaveItem {
     taskId: string; // current ID
     name: string; // Task name
     startPage?: string; // Start page path

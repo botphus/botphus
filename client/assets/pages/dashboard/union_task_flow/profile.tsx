@@ -7,7 +7,7 @@ const {TabPane} = Tabs;
 import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
 import {IUnionTaskFlowContentData} from '../../../interfaces/redux';
 
-import {queryUnionTaskFlowDetailData, startUnionTaskFlowData} from '../../../actions/union_task_flow';
+import {cleanUnionTaskFlowDetail, queryUnionTaskFlowDetailData, startUnionTaskFlowData} from '../../../actions/union_task_flow';
 import {localePkg} from '../../../lib/const';
 import {routerHistory} from '../../../router';
 
@@ -31,6 +31,10 @@ class DashboardUnionTaskFlowProfilePage extends React.Component<ITaskFlowProfile
     public componentDidMount() {
         const {match} = this.props;
         this.handleGetDetail(match.params.id);
+    }
+    public componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch(cleanUnionTaskFlowDetail());
     }
     public render() {
         const {unionTaskFlow} = this.props;

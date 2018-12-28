@@ -42,6 +42,10 @@ class DashboardUnionTaskFlowPage extends React.Component<IUnionTaskFlowProps> {
                 title: localePkg.Model.UnionTaskFlow.name
             },
             {
+                dataIndex: 'unionTaskName',
+                title: localePkg.Model.UnionTaskFlow.unionTaskId
+            },
+            {
                 dataIndex: 'status',
                 title: localePkg.Model.UnionTaskFlow.status,
                 render(status) {

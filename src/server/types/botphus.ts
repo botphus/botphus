@@ -1,4 +1,4 @@
-import {ITaskStartOption} from 'botphus-core';
+import {ITaskStartOption} from '@botphus/server-runner';
 import {LaunchOptions, NavigationOptions} from 'puppeteer';
 
 import {IIndexMap} from '../interfaces/common';

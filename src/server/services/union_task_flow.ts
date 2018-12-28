@@ -11,15 +11,15 @@ import {buildAndRunUnionBotphusTask, sendUnionTaskFlowData} from '../modules/uni
 import {queryConnectionById} from './connection';
 import {queryTaskListByIds, queryTaskMapByIds} from './task';
 import {createTaskReports, pendTaskReportByFlowId, queryTaskReportMap} from './task_report';
-import {queryUnionTaskById, verifyUnionTaskOwner} from './union_task';
+import {queryUnionTaskById, queryUnionTaskMapByIds, verifyUnionTaskOwner} from './union_task';
 
-import {app, createSystemError, localePkg} from '../modules/util';
+import {app, createSystemError, getUnduplicatedFieldInList, localePkg} from '../modules/util';
 
 /**
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id name status taskId createdAt updateAt';
+const defaultFields: string = '_id name status unionTaskId createdAt updateAt';
 
 /**
  * Get task ID list from union task detail
@@ -27,12 +27,12 @@ const defaultFields: string = '_id name status taskId createdAt updateAt';
  * @param  {IUnionTaskFlowModel} unionTaskFlow   Union task flow detail
  * @return {string[]}                            Task ID list
  */
-function getTaskIds(unionTaskDetail: IUnionTaskModel, unionTaskFlow: IUnionTaskFlowModel): string[] {
+function getTaskIds(unionTaskDetail: IUnionTaskModel, unionTaskFlow: IUnionTaskFlowModel): Schema.Types.ObjectId[] {
     let taskItems = unionTaskDetail.taskItems || [];
     if (unionTaskFlow.excludeTask) {
         taskItems = taskItems
             .filter((item) => {
-                return !unionTaskFlow.excludeTask[item.taskId];
+                return !unionTaskFlow.excludeTask[item.taskId.toString()];
             });
     }
     return taskItems.map((item) => {
@@ -76,7 +76,24 @@ export function queryUnionTaskFlowList(query: IUnionTaskFlowSearchModel, page: n
         UnionTaskFlow.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()
-    ]);
+    ])
+        .then((data) => {
+            const ids = getUnduplicatedFieldInList<IUnionTaskFlowModel, 'unionTaskId'>(data[1], 'unionTaskId');
+            return queryUnionTaskMapByIds(ids, '_id name')
+                .then((map) => {
+                    data[1] = data[1].map((item) => {
+                        const curTask = map[item.unionTaskId.toString()];
+                        let unionTaskName: string = '';
+                        if (curTask) {
+                            unionTaskName = curTask.name;
+                        }
+                        return Object.assign(item.toObject(), {
+                            unionTaskName
+                        });
+                    });
+                    return data;
+                });
+        });
 }
 
 /**
@@ -195,8 +212,8 @@ export function startUnionTaskFlow(unionTaskFlowId: Schema.Types.ObjectId, userI
                     });
                     return buildAndRunUnionBotphusTask(flowData);
                 })
-                .then((subProcess) => {
-                    subProcess.on('close', (code) => {
+                .then((event) => {
+                    event.on('exit', (code) => {
                         const status = code === 0 || !code ? TaskFlowStatus.SUCCESS : TaskFlowStatus.FAILED;
                         modifyUnionTaskFlowById(flowData._id, {
                             status

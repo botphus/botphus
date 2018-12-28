@@ -1,5 +1,4 @@
-import BotphusCore, {ITaskStartOption} from 'botphus-core';
-import {ChildProcess} from 'child_process';
+import BotphusCore, {IProcessPoolWorkEvent, ITaskStartOption} from '@botphus/server-runner';
 
 import {ITaskFlowDetailModel} from '../interfaces/model/task_flow';
 import {ITaskReportModel, ITaskReportModifyModel} from '../interfaces/model/task_report';
@@ -9,19 +8,18 @@ import {SocketMessageType} from '../types/socket';
 import {TaskPageType, TaskReportType} from '../types/task';
 
 import {modifyTaskReportById} from '../services/task_report';
-import {listenBotphusTaskMessage} from './botphus';
+import {listenBotphusTaskMessage, rebuildTaskRuleForBotphusTask} from './botphus';
 import {send} from './socket';
-import {rebuildTaskRuleForBotphusTask} from './task';
 import {app, createSystemError, localePkg} from './util';
 
 const botphusCore = new BotphusCore();
 
 /**
  * Build and run botphus task
- * @param  {ITaskFlowDetailModel}  taskFlowData Task flow data
- * @return {Promise<ChildProcess>}              Promise with child process
+ * @param  {ITaskFlowDetailModel}           taskFlowData Task flow data
+ * @return {Promise<IProcessPoolWorkEvent>}              Promise with Event
  */
-export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Promise<ChildProcess> {
+export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Promise<IProcessPoolWorkEvent> {
     return botphusCore.createTask(
         taskFlowData.taskDetail.name,
         new Date(taskFlowData.taskDetail.updateAt).getTime(),

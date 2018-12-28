@@ -3,12 +3,12 @@ import {AntTreeNodeDropEvent} from 'antd/lib/tree/Tree';
 import * as React from 'react';
 const {TreeNode} = Tree;
 
-import {IUnionTaskSaveItem} from '../../interfaces/task';
+import {IUnionTaskClientSaveItem} from '../../interfaces/task';
 
 import {localePkg} from '../../lib/const';
 
 interface ITaskRuleProps {
-    value: IUnionTaskSaveItem[];
+    value: IUnionTaskClientSaveItem[];
     checkValue?: string[];
     onCheck?: (checkedKeys) => void;
     onChange?: (taskId: string) => void;

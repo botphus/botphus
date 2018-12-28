@@ -1,3 +1,4 @@
+import {destoryPool} from '@botphus/server-runner';
 import * as request from 'supertest';
 
 import {clientType} from './types';
@@ -35,7 +36,7 @@ describe('Botphus', () => {
     clearData();
     after('Close connection connection', (done) => {
         close();
-        Promise.all([mongoose.disconnect(), cacheClient.quit()])
+        Promise.all([mongoose.disconnect(), cacheClient.quit(), destoryPool()])
             .then(() => {
                 done();
             });

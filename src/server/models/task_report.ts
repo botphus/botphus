@@ -8,6 +8,9 @@ import {ITaskReportModel} from '../interfaces/model';
 const localeTaskReportPkg = localePkg.Model.TaskReport;
 
 const schema = new Schema({
+    context: {
+        type: String
+    },
     flowId: {
         type: Schema.Types.ObjectId
     },

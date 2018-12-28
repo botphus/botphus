@@ -4,7 +4,7 @@ export {IConnectionDetailItem, IConnectionListItem} from '../../../src/server/in
 export {ITaskRuleSaveItem, ITaskRuleTreeItem, ITaskDetailItem, ITaskListItem} from '../../../src/server/interfaces/model/task';
 export {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interfaces/model/task_flow';
 export {ITaskReportDetailItem} from '../../../src/server/interfaces/model/task_report';
-export {IUnionTaskSaveItem} from '../../../src/server/interfaces/model/union_task';
+export {IUnionTaskClientSaveItem} from '../../../src/server/interfaces/model/union_task';
 export {IUnionTaskFlowDetailItem, IUnionTaskFlowListItem} from '../../../src/server/interfaces/model/union_task_flow';
 
 import {TaskSubType, TaskType} from '../types/common';

@@ -1,6 +1,6 @@
 {
   "name": "botphus",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Botphus task management website",
   "private": true,
   "directories": {
@@ -106,8 +106,8 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@botphus/server-runner": "^0.1.0",
     "@types/serve-favicon": "^2.2.30",
-    "botphus-core": "^0.3.4",
     "clone-deep": "^4.0.0",
     "cookie": "^0.3.1",
     "fastify": "^1.12.1",

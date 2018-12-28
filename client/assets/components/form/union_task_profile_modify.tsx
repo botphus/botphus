@@ -4,7 +4,7 @@ const {Item} = Form;
 const {TabPane} = Tabs;
 
 import {IModifyFormProps} from '../../interfaces/common';
-import {IUnionTaskSaveItem} from '../../interfaces/task';
+import {IUnionTaskClientSaveItem} from '../../interfaces/task';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
@@ -18,7 +18,7 @@ import UnionTaskItemModifyForm from './union_task_item_modify';
 interface IUnionTaskProfileModifyFormState {
     tab: 'basic' | 'rule';
     taskId: string;
-    taskItem?: IUnionTaskSaveItem;
+    taskItem?: IUnionTaskClientSaveItem;
 }
 
 class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnionTaskProfileModifyFormState> {
@@ -46,7 +46,7 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
                 type: 'array',
             }]
         });
-        const taskItems: IUnionTaskSaveItem[] = getFieldValue('taskItems');
+        const taskItems: IUnionTaskClientSaveItem[] = getFieldValue('taskItems');
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Tabs activeKey={tab} onChange={this.handleChangeTab}>
@@ -162,7 +162,7 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
     // Handle model for task rule modify
     private handleModifyTaskModel = (taskId: string) => {
         const {getFieldValue} = this.props.form;
-        const taskItems: IUnionTaskSaveItem[] = getFieldValue('taskItems');
+        const taskItems: IUnionTaskClientSaveItem[] = getFieldValue('taskItems');
         let taskItem: any;
         if (taskId !== 'create') {
             taskItems.some((item) => {
@@ -185,7 +185,7 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
     }
     private handleRemoveTask = (taskId: string) => {
         const {getFieldValue} = this.props.form;
-        const taskItems: IUnionTaskSaveItem[] = getFieldValue('taskItems');
+        const taskItems: IUnionTaskClientSaveItem[] = getFieldValue('taskItems');
         const newTaskItems = taskItems.filter((item) => {
             return item.taskId !== taskId;
         });
@@ -202,15 +202,15 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
     }
     private handleDragTask = (dropKey: string, dragKey: string, dropPosition: number) => {
         const {getFieldValue} = this.props.form;
-        const taskItems: IUnionTaskSaveItem[] = getFieldValue('taskItems');
-        const newRuleItems = sortItems<IUnionTaskSaveItem, string>(taskItems, 'taskId', dropPosition, dropKey, dragKey);
+        const taskItems: IUnionTaskClientSaveItem[] = getFieldValue('taskItems');
+        const newRuleItems = sortItems<IUnionTaskClientSaveItem, string>(taskItems, 'taskId', dropPosition, dropKey, dragKey);
         this.handleSetTaskitems(newRuleItems);
     }
     private handleModifyTask = (data) => {
         const {taskId} = this.state;
         const {getFieldValue} = this.props.form;
-        const taskItems: IUnionTaskSaveItem[] = getFieldValue('taskItems');
-        let newTaskItems: IUnionTaskSaveItem[];
+        const taskItems: IUnionTaskClientSaveItem[] = getFieldValue('taskItems');
+        let newTaskItems: IUnionTaskClientSaveItem[];
         if (taskId === 'create') {
             newTaskItems = taskItems.concat([data]);
         } else {

@@ -8,11 +8,11 @@ import {SocketMessageType} from '../types/socket';
 import {TaskFlowStatus, TaskReportStatus, TaskReportType} from '../types/task';
 
 import {queryConnectionById} from './connection';
-import {queryTaskById, verifyTaskOwner} from './task';
+import {queryTaskById, queryTaskMapByIds, verifyTaskOwner} from './task';
 import {createTaskReports, pendTaskReportByFlowId, queryTaskReportMap} from './task_report';
 
 import {buildAndRunBotphusTask, sendTaskFlowData} from '../modules/task_flow';
-import {app, createSystemError, localePkg} from '../modules/util';
+import {app, createSystemError, getUnduplicatedFieldInList, localePkg} from '../modules/util';
 
 /**
  * Default user find fields
@@ -56,7 +56,24 @@ export function queryTaskFlowList(query: ITaskFlowSearchModel, page: number, pag
         TaskFlow.find(condition).select(fields).skip((page - 1) * pageSize).limit(pageSize).sort({
             _id: -1
         }).exec()
-    ]);
+    ])
+        .then((data) => {
+            const ids = getUnduplicatedFieldInList<ITaskFlowModel, 'taskId'>(data[1], 'taskId');
+            return queryTaskMapByIds(ids, '_id name')
+                .then((map) => {
+                    data[1] = data[1].map((item) => {
+                        const curTask = map[item.taskId.toString()];
+                        let taskName: string = '';
+                        if (curTask) {
+                            taskName = curTask.name;
+                        }
+                        return Object.assign(item.toObject(), {
+                            taskName
+                        });
+                    });
+                    return data;
+                });
+        });
 }
 
 /**
@@ -161,8 +178,8 @@ export function startTaskFlow(taskFlowId: Schema.Types.ObjectId, userId: string)
                     });
                     return buildAndRunBotphusTask(flowData);
                 })
-                .then((subProcess) => {
-                    subProcess.on('close', (code) => {
+                .then((event) => {
+                    event.on('exit', (code) => {
                         const status = code === 0 || !code ? TaskFlowStatus.SUCCESS : TaskFlowStatus.FAILED;
                         modifyTaskFlowById(flowData._id, {
                             status

@@ -2,7 +2,7 @@ import {message} from 'antd';
 import * as React from 'react';
 
 import {IIndexMap} from '../../interfaces/common';
-import {IUnionTaskSaveItem} from '../../interfaces/task';
+import {IUnionTaskClientSaveItem} from '../../interfaces/task';
 import {RequestAction} from '../../types/request';
 
 import {localePkg} from '../../lib/const';
@@ -20,7 +20,7 @@ interface IUnionTaskRuleExcludeProps {
 
 interface IUnionTaskRuleExcludeState {
     loading: boolean;
-    listData: IUnionTaskSaveItem[];
+    listData: IUnionTaskClientSaveItem[];
 }
 
 export default class UnionTaskRuleExclude extends React.Component<IUnionTaskRuleExcludeProps, IUnionTaskRuleExcludeState> {

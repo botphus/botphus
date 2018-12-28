@@ -66,11 +66,11 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
 
 /**
  * Query task list by ids
- * @param  {string[]}              ids    Task ids
- * @param  {string}                fields Field list
- * @return {Promise<ITaskModel[]>}        Promise with task info list
+ * @param  {Schema.Types.ObjectId[]} ids    Task ids
+ * @param  {string}                  fields Field list
+ * @return {Promise<ITaskModel[]>}          Promise with task info list
  */
-export function queryTaskListByIds(ids: string[], fields: string = defaultFields): Promise<ITaskModel[]> {
+export function queryTaskListByIds(ids: Schema.Types.ObjectId[], fields: string = defaultFields): Promise<ITaskModel[]> {
     return Task.find({
         _id: {
             $in: ids
@@ -80,11 +80,14 @@ export function queryTaskListByIds(ids: string[], fields: string = defaultFields
 
 /**
  * Query task map by ids
- * @param  {string[]}                       ids    Task ids
+ * @param  {Schema.Types.ObjectId[]}        ids    Task ids
  * @param  {string}                         fields Field list
  * @return {Promise<IIndexMap<ITaskModel>>}        Promise with task info map
  */
-export function queryTaskMapByIds(ids: string[], fields: string = defaultFields): Promise<IIndexMap<ITaskModel>> {
+export function queryTaskMapByIds(ids: Schema.Types.ObjectId[], fields: string = defaultFields): Promise<IIndexMap<ITaskModel>> {
+    if (ids.length === 0) {
+        return Promise.resolve({});
+    }
     return queryTaskListByIds(ids, fields)
         .then((taskList) => {
             const taskMap: IIndexMap<ITaskModel> = {};

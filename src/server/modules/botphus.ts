@@ -1,26 +1,31 @@
-import {MessageType, TaskMessage} from 'botphus-core';
-import {ChildProcess} from 'child_process';
+import {IProcessPoolWorkEvent, MessageType, TaskMessage} from '@botphus/server-runner';
 
 import {IIndexMap} from '../interfaces/common';
+import {ITaskRuleSaveItem} from '../interfaces/model/task';
 import {ITaskReportModel, ITaskReportModifyModel} from '../interfaces/model/task_report';
+import {defaultStartOption} from '../types/botphus';
 import {SocketMessageType} from '../types/socket';
-import {TaskReportStatus} from '../types/task';
+import {TaskPageType, TaskReportStatus, TaskTypeEventSubType, TaskTypePageSubType} from '../types/task';
 
-import {app} from './util';
+import {getTaskItemTreeList} from './task';
+import {app, isObjEmpty} from './util';
 
 /**
  * Listen task messsage that botphus child process send
- * @param {ChildProcess}                subProcess    Child process
+ * @param {IProcessPoolWorkEvent}       event         Event listener
  * @param {IIndexMap<ITaskReportModel>} taskReportMap Task report map
  * @param {string}                      userId        User ID
  * @param {Function}                    sendFunc      Send message func
  */
 export function listenBotphusTaskMessage(
-    subProcess: ChildProcess, taskReportMap: IIndexMap<ITaskReportModel>, userId: string,
+    event: IProcessPoolWorkEvent, taskReportMap: IIndexMap<ITaskReportModel>, userId: string,
     sendFunc: (reportItem: ITaskReportModel, updateData: ITaskReportModifyModel, userId: string, messageType?: SocketMessageType) => void
 ): void {
-    subProcess.on('message', ([error, messageData]: TaskMessage) => {
+    event.on('message', ([error, messageData]: TaskMessage) => {
         const updateData: ITaskReportModifyModel = {};
+        if (messageData && !isObjEmpty(messageData.context)) {
+            updateData.context = JSON.stringify(messageData.context);
+        }
         if (error) {
             updateData.message = error.stack;
             updateData.status = TaskReportStatus.FAILED;
@@ -68,4 +73,47 @@ export function listenBotphusTaskMessage(
                 break;
         }
     });
+}
+
+/**
+ * Rebuild task rule for botphus task
+ * @param  {ITaskRuleSaveItem[]} ruleItems Rule item list
+ * @return {any[]}                         Botphus task list
+ */
+export function rebuildTaskRuleForBotphusTask(pageType: TaskPageType, ruleItems: ITaskRuleSaveItem[]): any[] {
+    // Rebuild arguments
+    const rebuildRuleItems: ITaskRuleSaveItem[] = ruleItems.map((item) => {
+        switch (item.subType) {
+            // Add check function
+            case TaskTypeEventSubType.SUB_TYPE_REQUEST:
+            case TaskTypeEventSubType.SUB_TYPE_RESPONSE:
+                // Check match path
+                if (item.arguments && item.arguments[1]) {
+                    return {...item,
+                        arguments: [item.arguments[0],
+                        /* tslint:disable */
+                        new Function('request', `return request.url().indexOf("${item.arguments[1]}") >= 0`)]
+                        /* tslint:enable */
+                    };
+                }
+                break;
+            // Add page option
+            case TaskTypePageSubType.SUB_TYPE_GOTO:
+                if (item.arguments && !item.arguments[1]) {
+                    return {...item,
+                        arguments: [item.arguments[0], defaultStartOption[TaskPageType[pageType]].startPageOption]
+                    };
+                }
+                break;
+            case TaskTypePageSubType.SUB_TYPE_RELOAD:
+                if (item.arguments && item.arguments.length === 0) {
+                    return {...item,
+                        arguments: [defaultStartOption[TaskPageType[pageType]].startPageOption]
+                    };
+                }
+                break;
+        }
+        return item;
+    });
+    return getTaskItemTreeList(rebuildRuleItems);
 }

@@ -2,6 +2,7 @@ import {Schema, Types} from 'mongoose';
 
 import {UnionTask} from '../models/';
 
+import {IIndexMap} from '../interfaces/common';
 import {IUnionTaskModel, IUnionTaskModifyModel, IUnionTaskSearchModel, IUnionTaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
 import {TaskFlowStatus} from '../types/task';
@@ -58,6 +59,40 @@ export function queryUnionTaskList(query: IUnionTaskSearchModel, page: number, p
             _id: -1
         }).exec()
     ]);
+}
+
+/**
+ * Query union task list by ids
+ * @param  {Schema.Types.ObjectId[]}    ids    Union task ids
+ * @param  {string}                     fields Field list
+ * @return {Promise<IUnionTaskModel[]>}        Promise with union task info list
+ */
+export function queryUnionTaskListByIds(ids: Schema.Types.ObjectId[], fields: string = defaultFields): Promise<IUnionTaskModel[]> {
+    return UnionTask.find({
+        _id: {
+            $in: ids
+        }
+    }).select(fields).exec();
+}
+
+/**
+ * Query union task map by ids
+ * @param  {Schema.Types.ObjectId[]}             ids    Union task ids
+ * @param  {string}                              fields Field list
+ * @return {Promise<IIndexMap<IUnionTaskModel>>}        Promise with union union task info map
+ */
+export function queryUnionTaskMapByIds(ids: Schema.Types.ObjectId[], fields: string = defaultFields): Promise<IIndexMap<IUnionTaskModel>> {
+    if (ids.length === 0) {
+        return Promise.resolve({});
+    }
+    return queryUnionTaskListByIds(ids, fields)
+        .then((unionTaskList) => {
+            const unionTaskMap: IIndexMap<IUnionTaskModel> = {};
+            unionTaskList.forEach((task) => {
+                unionTaskMap[task._id] = task;
+            });
+            return unionTaskMap;
+        });
 }
 
 /**

@@ -19,6 +19,7 @@ export interface IUnionTaskFlowListItem {
     _id?: string;
     name?: string;
     unionTaskId?: string;
+    unionTaskName?: string;
     createdAt?: string;
     updateAt?: number;
     status?: TaskFlowStatus;
@@ -51,6 +52,7 @@ export interface IUnionTaskFlowModel extends IModifyDateModel {
     redisId?: Schema.Types.ObjectId;
     excludeTask?: IIndexMap<true>;
     unionTaskId: Schema.Types.ObjectId;
+    unionTaskName?: string;
     createdUser: Types.ObjectId;
     status: TaskFlowStatus;
 }
