@@ -5,7 +5,7 @@ import {Task} from '../models/';
 import {IIndexMap} from '../interfaces/common';
 import {ITaskModel, ITaskModifyModel, ITaskSearchModel, ITaskUserModel} from '../interfaces/model';
 import {SystemCode} from '../types/common';
-import {TaskFlowStatus} from '../types/task';
+import {TaskFlowStatus, TaskStatus} from '../types/task';
 
 import {createSystemError, localePkg} from '../modules/util';
 
@@ -16,7 +16,7 @@ import {queryUserByIdsWithReferMap} from './user';
  * Default user find fields
  * @type {String}
  */
-const defaultFields: string = '_id pageType name createdAt updateAt';
+const defaultFields: string = '_id pageType name createdAt updateAt createdUser';
 
 /**
  * Query task info by id
@@ -55,6 +55,9 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
     }
     if (query.pageType) {
         condition.pageType = query.pageType;
+    }
+    if (query.status) {
+        condition.status = query.status;
     }
     return Promise.all([
         Task.countDocuments(condition).exec(),
@@ -99,36 +102,6 @@ export function queryTaskMapByIds(ids: Schema.Types.ObjectId[], fields: string =
 }
 
 /**
- * Verify task's owner
- * @param  {Schema.Types.ObjectId} taskId Task ID
- * @param  {string}                userId User ID
- * @return {Promise<ITaskModel>}          Promise with Task Info
- */
-export function verifyTaskOwner(taskId: Schema.Types.ObjectId, userId: string): Promise<ITaskModel> {
-    return queryTaskById(taskId)
-        .then((task) => {
-            if (task && (task.createdUser.toString() === userId || task.members.some((memberId) => {
-                return memberId.toString() === userId;
-            }))) {
-                return task;
-            }
-            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
-        });
-}
-
-/**
- * Createa task info
- * @param  {ITaskModel}            taskData   Task data
- * @param  {string}                createUser Create user ID
- * @return {Promise<ITaskModel>}              Promise with task Info
- */
-export function createTask(taskData: ITaskModel, createUser: string): Promise<ITaskModel> {
-    const task = Object.assign(new Task(), taskData);
-    task.createdUser = Types.ObjectId(createUser);
-    return task.save();
-}
-
-/**
  * Query task by id with users info
  * @param  {Schema.Types.ObjectId}   taskId Task ID
  * @param  {string}                  userId User ID
@@ -152,11 +125,57 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
 }
 
 /**
+ * Verify task's owner
+ * @param  {Schema.Types.ObjectId} taskId Task ID
+ * @param  {string}                userId User ID
+ * @return {Promise<ITaskModel>}          Promise with Task Info
+ */
+export function verifyTaskOwner(taskId: Schema.Types.ObjectId, userId: string): Promise<ITaskModel> {
+    return queryTaskById(taskId)
+        .then((task) => {
+            if (task && (task.createdUser.toString() === userId || task.members.some((memberId) => {
+                return memberId.toString() === userId;
+            }))) {
+                return task;
+            }
+            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
+        });
+}
+
+/**
+ * Verify task's creator
+ * @param  {Schema.Types.ObjectId} taskId Task ID
+ * @param  {string}                userId User ID
+ * @return {Promise<ITaskModel>}          Promise with Task Info
+ */
+export function verifyTaskCreator(taskId: Schema.Types.ObjectId, userId: string): Promise<ITaskModel> {
+    return queryTaskById(taskId)
+        .then((task) => {
+            if (task && (task.createdUser.toString() === userId)) {
+                return task;
+            }
+            throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
+        });
+}
+
+/**
+ * Createa task info
+ * @param  {ITaskModel}            taskData   Task data
+ * @param  {string}                createUser Create user ID
+ * @return {Promise<ITaskModel>}              Promise with action info
+ */
+export function createTask(taskData: ITaskModel, createUser: string): Promise<ITaskModel> {
+    const task = Object.assign(new Task(), taskData);
+    task.createdUser = Types.ObjectId(createUser);
+    return task.save();
+}
+
+/**
  * Modify task info
  * @param  {Schema.Types.ObjectId} taskId   Task ID
  * @param  {string}                userId   User ID
  * @param  {ITaskModifyModel}      taskData Task data
- * @return {Promise<ITaskModel>}            Promise with task id
+ * @return {Promise<ITaskModel>}            Promise with action info
  */
 export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, taskData: ITaskModifyModel): Promise<any> {
     return verifyTaskOwner(taskId, userId)
@@ -174,5 +193,22 @@ export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, ta
             return Task.updateOne({
                 _id: taskId
             }, taskData).exec();
+        });
+}
+
+/**
+ * Delete task info
+ * @param  {Schema.Types.ObjectId} taskId Task ID
+ * @param  {string}                userId User ID
+ * @return {Promise<any>}                 Promise with action info
+ */
+export function deleteTaskById(taskId: Schema.Types.ObjectId, userId: string): Promise<any> {
+    return verifyTaskCreator(taskId, userId)
+        .then(() => {
+            return Task.updateOne({
+                _id: taskId
+            }, {
+                status: TaskStatus.DISABLE
+            }).exec();
         });
 }

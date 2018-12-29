@@ -1,10 +1,11 @@
 import * as fastify from 'fastify';
 
 import {IAppRequest} from '../../interfaces/common';
-import {queryDetailSchema} from '../../schema/common';
+import {modifyDetailSchema, queryDetailSchema} from '../../schema/common';
 import * as unionTaskSchema from '../../schema/union_task';
+import {TaskStatus} from '../../types/task';
 
-import {createUnionTask, modifyUnionTaskById, queryUnionTaskByIdWithUsers, queryUnionTaskList} from '../../services/union_task';
+import {createUnionTask, deleteUnionTaskById, modifyUnionTaskById, queryUnionTaskByIdWithUsers, queryUnionTaskList} from '../../services/union_task';
 
 import {buildPageInfo, getHttpMsg, getListQueryData} from '../../modules/util';
 
@@ -31,6 +32,17 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
                 reply.send(getHttpMsg(request, null));
             });
     });
+    // Delete union task profile
+    app.delete('/', {
+        schema: {
+            body: modifyDetailSchema
+        }
+    }, (request: IAppRequest, reply) => {
+        return deleteUnionTaskById(request.body.id, request.session.user.id)
+            .then(() => {
+                reply.send(getHttpMsg(request, null));
+            });
+    });
     // Search union task
     app.get('/', {
         schema: {
@@ -39,6 +51,7 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
     }, (request: IAppRequest, reply) => {
         buildPageInfo(request);
         request.query.userId = request.session.user.id;
+        request.query.status = TaskStatus.ENABLE;
         return queryUnionTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
             .then((data) => {
                 reply.send(getHttpMsg(request, data));

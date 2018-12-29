@@ -22,7 +22,7 @@ export default class TaskRuleArgumentsData extends React.Component<ITaskRuleArgu
                 return (
                     <Item
                         validateStatus={argumentsMysqlError ? 'error' : 'success'}
-                        help={argumentsMysqlError || ''}
+                        help={argumentsMysqlError || localePkg.Client.Help.TaskRuleItem.context.contextUse}
                         label={localePkg.Model.Task.ruleItem.arguments.mysql}
                         {...formItemLayout}
                     >
@@ -45,7 +45,12 @@ export default class TaskRuleArgumentsData extends React.Component<ITaskRuleArgu
                 return (
                     <Item
                         validateStatus={argumentsRedisError ? 'error' : 'success'}
-                        help={argumentsRedisError || localePkg.Client.Help.TaskRuleItem.arguments.redis}
+                        help={argumentsRedisError || (
+                            <ol>
+                                <li>{localePkg.Client.Help.TaskRuleItem.arguments.redis}</li>
+                                <li>{localePkg.Client.Help.TaskRuleItem.context.contextUse}</li>
+                            </ol>
+                        )}
                         label={localePkg.Model.Task.ruleItem.arguments.redis}
                         {...formItemLayout}
                     >

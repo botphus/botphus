@@ -75,7 +75,7 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
                                     required: true
                                 }],
                             })(
-                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} disabled={!isCreate} />
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} />
                             )}
                         </Item>
                         <Item

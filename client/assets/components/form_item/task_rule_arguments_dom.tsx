@@ -24,7 +24,12 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
             <div>
                 <Item
                     validateStatus={argumentsQuerySelectorError ? 'error' : 'success'}
-                    help={argumentsQuerySelectorError || localePkg.Client.Help.TaskRuleItem.arguments.querySelector}
+                    help={argumentsQuerySelectorError || (
+                        <ol>
+                            <li>{localePkg.Client.Help.TaskRuleItem.arguments.querySelector}</li>
+                            <li>{localePkg.Client.Help.TaskRuleItem.context.contextUse}</li>
+                        </ol>
+                    )}
                     label={localePkg.Model.Task.ruleItem.arguments.querySelector}
                     {...formItemLayout}
                 >
@@ -45,7 +50,12 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                 {subType === TaskTypeDomSubType.SUB_TYPE_CLICK ? (
                     <Item
                         validateStatus={argumentsHumanClickError ? 'error' : 'success'}
-                        help={argumentsHumanClickError || localePkg.Client.Help.TaskRuleItem.arguments.querySelectorHumanClick}
+                        help={argumentsHumanClickError || (
+                            <ol>
+                                <li>{localePkg.Client.Help.TaskRuleItem.arguments.querySelectorHumanClick}</li>
+                                <li>{localePkg.Client.Help.TaskRuleItem.context.contextUse}</li>
+                            </ol>
+                        )}
                         label={localePkg.Model.Task.ruleItem.arguments.querySelectorHumanClick}
                         {...formItemLayout}
                     >
@@ -68,7 +78,7 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                 {subType === TaskTypeDomSubType.SUB_TYPE_KEYBOARD ? (
                     <Item
                         validateStatus={argumentsHumanClickError ? 'error' : 'success'}
-                        help={argumentsQuerySelectorTextError || ''}
+                        help={argumentsQuerySelectorTextError || localePkg.Client.Help.TaskRuleItem.context.contextUse}
                         label={localePkg.Model.Task.ruleItem.arguments.querySelectorText}
                         {...formItemLayout}
                     >
@@ -90,7 +100,7 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                 {subType === TaskTypeDomSubType.SUB_TYPE_GET_ATTR || subType === TaskTypeDomSubType.SUB_TYPE_SET_ATTR ? (
                     <Item
                         validateStatus={argumentsQuerySelectorAttrNameError ? 'error' : 'success'}
-                        help={argumentsQuerySelectorAttrNameError || ''}
+                        help={argumentsQuerySelectorAttrNameError || localePkg.Client.Help.TaskRuleItem.context.contextUse}
                         label={localePkg.Model.Task.ruleItem.arguments.querySelectorAttrName}
                         {...formItemLayout}
                     >
@@ -112,7 +122,7 @@ export default class TaskRuleArgumentsDom extends React.Component<ITaskRuleArgum
                 {subType === TaskTypeDomSubType.SUB_TYPE_SET_ATTR ? (
                     <Item
                         validateStatus={argumentsQuerySelectorAttrValueError ? 'error' : 'success'}
-                        help={argumentsQuerySelectorAttrValueError || ''}
+                        help={argumentsQuerySelectorAttrValueError || localePkg.Client.Help.TaskRuleItem.context.contextUse}
                         label={localePkg.Model.Task.ruleItem.arguments.querySelectorAttrValue}
                         {...formItemLayout}
                     >

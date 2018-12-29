@@ -1,13 +1,13 @@
-import {Col, Icon, Row, Table} from 'antd';
+import {Col, Icon, Popconfirm, Row, Table} from 'antd';
 import {ColumnProps} from 'antd/lib/table/interface';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import {IModalData, IReduxConnectProps, IReduxStoreState, ITaskContentData} from '../../../interfaces/redux';
+import {IModalData, IReduxConnectProps, IReduxStoreState, ITaskContentData, IUserContentData} from '../../../interfaces/redux';
 import {TaskPageType} from '../../../types/common';
 
-import {cleanTaskList, queryTaskListData} from '../../../actions/task';
+import {cleanTaskList, queryTaskListData, removeTaskData} from '../../../actions/task';
 import {localePkg} from '../../../lib/const';
 import {formatDate} from '../../../lib/format';
 import {getPageData} from '../../../lib/util';
@@ -17,12 +17,14 @@ import TaskSearchForm from '../../../components/form/task_search';
 interface ITaskProps extends IReduxConnectProps {
     modal: IModalData;
     task: ITaskContentData;
+    user: IUserContentData;
 }
 
-function mapStateToProps({modal, task}: IReduxStoreState) {
+function mapStateToProps({modal, task, user}: IReduxStoreState) {
     return {
         modal,
-        task
+        task,
+        user
     };
 }
 
@@ -35,7 +37,7 @@ class DashboardTaskPage extends React.Component<ITaskProps> {
         this.handleGetList();
     }
     public render() {
-        const {task, modal} = this.props;
+        const {task, modal, user} = this.props;
         const columns: Array<ColumnProps<any>> = [
             {
                 dataIndex: 'name',
@@ -65,11 +67,20 @@ class DashboardTaskPage extends React.Component<ITaskProps> {
             {
                 fixed: 'right',
                 key: 'action',
+                render: (row) => {
+                    return (
+                        <div>
+                            <Link to={`/dashboard/task/profile/${row._id}`} className="m-r">{localePkg.Client.Action.modify}</Link>
+                            {row.createdUser === user.owner.id ? (
+                                <Popconfirm title={localePkg.Client.Help.removeAction} onConfirm={() => this.handleRemove(row._id)}>
+                                    <a>{localePkg.Client.Action.remove}</a>
+                                </Popconfirm>
+                            ) : null}
+                        </div>
+                    );
+                },
                 title: localePkg.Client.Action.title,
                 width: 100,
-                render(row) {
-                    return <Link to={`/dashboard/task/profile/${row._id}`}>{localePkg.Client.Action.modify}</Link>;
-                }
             }
         ];
         return (
@@ -113,6 +124,14 @@ class DashboardTaskPage extends React.Component<ITaskProps> {
             ...data,
             page: 1
         });
+    }
+    private handleRemove = (id: string) => {
+        const {dispatch} = this.props;
+        dispatch(removeTaskData(id, () => {
+            this.handleGetList({
+                page: 1
+            });
+        }));
     }
 }
 

@@ -30,6 +30,20 @@ export const queryDetailSchema = {
 };
 
 /**
+ * Modify detail schema
+ * @type {Object}
+ */
+export const modifyDetailSchema = {
+    properties: {
+        id: {
+            type: 'string'
+        }
+    },
+    required: ['id'],
+    type: 'object'
+};
+
+/**
  * Modify schema
  * @type {Object}
  */

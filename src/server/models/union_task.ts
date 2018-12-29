@@ -29,10 +29,14 @@ const schema = new Schema({
             })
         ]
     },
+    status: {
+        default: 1,
+        type: Number
+    },
     taskItems: {
         required: [true, `${localeTaskPkg.taskItems}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.Mixed
-    }
+    },
 });
 
 schema.plugin(modifyDate);

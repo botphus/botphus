@@ -88,7 +88,7 @@ class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfi
                                     required: true
                                 }],
                             })(
-                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} disabled={!isCreate} />
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} />
                             )}
                         </Item>
                         <Item

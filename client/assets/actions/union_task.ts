@@ -66,6 +66,36 @@ export function modifyUnionTaskData(query: any, callback?: ActionCallbackFunc): 
 }
 
 /**
+ * remove union task
+ * @param  {string}             id       Union task ID
+ * @param  {ActionCallbackFunc} callback Callback function
+ * @return {ActionThunkFunc}             Thunk fuction
+ */
+export function removeUnionTaskData(id: string, callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loadingForm: true
+        }));
+        request(RequestAction.UNION_TASK, {
+            id
+        }, 'DELETE')
+            .then((res) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
  * Query union task detail data
  * @param  {string}          id Union task ID
  * @return {ActionThunkFunc}    Thunk fuction

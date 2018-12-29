@@ -1,12 +1,12 @@
-import {Col, Icon, Row, Table} from 'antd';
+import {Col, Icon, Popconfirm, Row, Table} from 'antd';
 import {ColumnProps} from 'antd/lib/table/interface';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import {IModalData, IReduxConnectProps, IReduxStoreState, IUnionTaskContentData} from '../../../interfaces/redux';
+import {IModalData, IReduxConnectProps, IReduxStoreState, IUnionTaskContentData, IUserContentData} from '../../../interfaces/redux';
 
-import {cleanUnionTaskList, queryUnionTaskListData} from '../../../actions/union_task';
+import {cleanUnionTaskList, queryUnionTaskListData, removeUnionTaskData} from '../../../actions/union_task';
 import {localePkg} from '../../../lib/const';
 import {formatDate} from '../../../lib/format';
 import {getPageData} from '../../../lib/util';
@@ -16,12 +16,14 @@ import UnionTaskSearchForm from '../../../components/form/union_task_search';
 interface ITaskProps extends IReduxConnectProps {
     modal: IModalData;
     unionTask: IUnionTaskContentData;
+    user: IUserContentData;
 }
 
-function mapStateToProps({modal, unionTask}: IReduxStoreState) {
+function mapStateToProps({modal, unionTask, user}: IReduxStoreState) {
     return {
         modal,
-        unionTask
+        unionTask,
+        user
     };
 }
 
@@ -34,7 +36,7 @@ class DashboardUnionTaskPage extends React.Component<ITaskProps> {
         this.handleGetList();
     }
     public render() {
-        const {unionTask, modal} = this.props;
+        const {unionTask, modal, user} = this.props;
         const columns: Array<ColumnProps<any>> = [
             {
                 dataIndex: 'name',
@@ -57,11 +59,20 @@ class DashboardUnionTaskPage extends React.Component<ITaskProps> {
             {
                 fixed: 'right',
                 key: 'action',
+                render: (row) => {
+                    return (
+                        <div>
+                            <Link to={`/dashboard/union-task/profile/${row._id}`} className="m-r">{localePkg.Client.Action.modify}</Link>
+                            {row.createdUser === user.owner.id ? (
+                                <Popconfirm title={localePkg.Client.Help.removeAction} onConfirm={() => this.handleRemove(row._id)}>
+                                    <a>{localePkg.Client.Action.remove}</a>
+                                </Popconfirm>
+                            ) : null}
+                        </div>
+                    );
+                },
                 title: localePkg.Client.Action.title,
                 width: 100,
-                render(row) {
-                    return <Link to={`/dashboard/union-task/profile/${row._id}`}>{localePkg.Client.Action.modify}</Link>;
-                }
             }
         ];
         return (
@@ -105,6 +116,14 @@ class DashboardUnionTaskPage extends React.Component<ITaskProps> {
             ...data,
             page: 1
         });
+    }
+    private handleRemove = (id: string) => {
+        const {dispatch} = this.props;
+        dispatch(removeUnionTaskData(id, () => {
+            this.handleGetList({
+                page: 1
+            });
+        }));
     }
 }
 

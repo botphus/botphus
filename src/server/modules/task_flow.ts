@@ -21,7 +21,7 @@ const botphusCore = new BotphusCore();
  */
 export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Promise<IProcessPoolWorkEvent> {
     return botphusCore.createTask(
-        taskFlowData.taskDetail.name,
+        taskFlowData.taskDetail._id.toString(),
         new Date(taskFlowData.taskDetail.updateAt).getTime(),
         rebuildTaskRuleForBotphusTask(taskFlowData.taskDetail.pageType, taskFlowData.taskDetail.ruleItems)
     )

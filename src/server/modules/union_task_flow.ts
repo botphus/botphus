@@ -36,7 +36,7 @@ export function buildAndRunUnionBotphusTask(unionTaskFlowData: IUnionTaskFlowDet
         });
     }
     return botphusServerRunner.createTask(
-        `uniontask-${unionTaskFlowData.unionTaskDetail.name}`,
+        unionTaskFlowData.unionTaskDetail._id.toString(),
         lastModifyDate.getTime(),
         rebuildTaskListRuleForBotphusTask(unionTaskFlowData)
     )

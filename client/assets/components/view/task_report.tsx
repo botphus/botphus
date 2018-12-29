@@ -32,6 +32,8 @@ export default class TaskReport extends React.Component<ITaskReportProps> {
                 </Row>
                 <Divider>{localePkg.Model.TaskReport.receiveData}</Divider>
                 <div>{report.receiveData || getFormFieldPlaceholder(localePkg.Placehoder.Empty, localePkg.Model.TaskReport.receiveData)}</div>
+                <Divider>{localePkg.Model.TaskReport.context}</Divider>
+                <div>{report.context || getFormFieldPlaceholder(localePkg.Placehoder.Empty, localePkg.Model.TaskReport.context)}</div>
                 <Divider>{localePkg.Model.TaskReport.message}</Divider>
                 <div>{report.message || getFormFieldPlaceholder(localePkg.Placehoder.Empty, localePkg.Model.TaskReport.message)}</div>
             </div>

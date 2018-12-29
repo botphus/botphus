@@ -21,7 +21,7 @@ export default class TaskRuleArgumentsPage extends React.Component<ITaskRuleArgu
                 return (
                     <Item
                         validateStatus={argumentsGotoPathError ? 'error' : 'success'}
-                        help={argumentsGotoPathError || ''}
+                        help={argumentsGotoPathError || localePkg.Client.Help.TaskRuleItem.context.contextUse}
                         label={localePkg.Model.Task.ruleItem.arguments.gotoPath}
                         {...formItemLayout}
                     >

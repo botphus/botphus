@@ -223,7 +223,12 @@ class TaskRuleModifyForm extends React.Component<IModifyFormProps> {
                                 </Item>
                                 <Item
                                     validateStatus={assertionError ? 'error' : 'success'}
-                                    help={localePkg.Client.Help.TaskRuleItem.assertion}
+                                    help={(
+                                        <ol>
+                                            <li>{localePkg.Client.Help.TaskRuleItem.assertion}</li>
+                                            <li>{localePkg.Client.Help.TaskRuleItem.context.contextAdd}</li>
+                                        </ol>
+                                    )}
                                     label={localePkg.Model.Task.ruleItem.assertion}
                                     {...formItemLayout}
                                 >

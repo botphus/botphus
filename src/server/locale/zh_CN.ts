@@ -164,6 +164,7 @@ const localeData: ILocalePackage = {
         TaskReport: {
             index: '单元编号',
             status: '单元执行状态',
+            context: '单元执行上下文',
             message: '单元执行信息',
             receiveData: '接收数据',
             flowId: '所属流水'
@@ -280,6 +281,10 @@ const localeData: ILocalePackage = {
                     querySelectorHumanClick: '当你点击的地方可能被浮动的元素(如浮动广告)覆盖时,请取消该选择.否则可能引起点击触发失败的情况发生.',
                     eventTimeout: '超过该设置时间则视为监听失败',
                     eventPath: '模糊匹配,只有该地址才进行监听'
+                },
+                context: {
+                    contextAdd: '你可以使用`context.field`来设置上下文内容.如`context.name = data.name`,设置上下文中的`name`字段为`data.name`的内容',
+                    contextUse: '你可以在参数中添加${field}来使用上下文字段.如`${name}`,即为使用上下文中的`name`字段(`context.name`)'
                 }
             },
             TaskFlow: {

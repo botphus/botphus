@@ -32,6 +32,7 @@ export const userPermissionMap: {
     // Task
     'post:/task/': UserPermissionCode.TASK_MANAGE,
     'patch:/task/': UserPermissionCode.TASK_MANAGE,
+    'delete:/task/': UserPermissionCode.TASK_MANAGE,
     'get:/task/': UserPermissionCode.LOGIN,
     'get:/task/profile/': UserPermissionCode.LOGIN,
     // Task flow
@@ -42,6 +43,7 @@ export const userPermissionMap: {
     // Union task
     'post:/union-task/': UserPermissionCode.TASK_MANAGE,
     'patch:/union-task/': UserPermissionCode.TASK_MANAGE,
+    'delete:/union-task/': UserPermissionCode.TASK_MANAGE,
     'get:/union-task/': UserPermissionCode.LOGIN,
     'get:/union-task/profile/': UserPermissionCode.LOGIN,
     // Union Task flow

@@ -170,6 +170,7 @@ export default interface ILocalePackage {
         TaskReport: {
             index: string;
             status: string;
+            context: string;
             message: string;
             receiveData: string;
             flowId: string;
@@ -298,6 +299,10 @@ export default interface ILocalePackage {
                     eventTimeout: string;
                     eventPath: string;
                 };
+                context: {
+                    contextAdd: string;
+                    contextUse: string;
+                }
             };
             TaskFlow: {
                 connectionId: string;

@@ -1,6 +1,6 @@
 import {Schema, Types} from 'mongoose';
 
-import {TaskPageType, TaskSubType, TaskType} from '../../types/task';
+import {TaskPageType, TaskStatus, TaskSubType, TaskType} from '../../types/task';
 
 import {IModifyDateModel} from './';
 import {IUserReferModel} from './user';
@@ -15,6 +15,7 @@ export interface ITaskListItem {
     _id?: string;
     name?: string;
     pageType?: TaskPageType;
+    createdUser?: string;
     createdAt?: string;
     updateAt?: string;
 }
@@ -25,7 +26,6 @@ export interface ITaskListItem {
 export interface ITaskDetailItem extends ITaskListItem {
     members?: IUserReferModel[];
     ruleItems?: ITaskRuleSaveItem[];
-    createdUser?: string;
     createdUserName?: string;
 }
 
@@ -80,6 +80,7 @@ export interface ITaskSearchModel {
     name?: string;
     pageType?: TaskPageType;
     userId?: Schema.Types.ObjectId;
+    status?: TaskStatus;
 }
 
 /**
@@ -87,6 +88,7 @@ export interface ITaskSearchModel {
  */
 export interface ITaskModifyModel {
     name?: string;
+    status?: TaskStatus;
     pageType?: TaskPageType;
     members?: Schema.Types.ObjectId[];
     ruleItems?: ITaskRuleSaveItem[];

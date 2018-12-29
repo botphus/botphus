@@ -1,5 +1,7 @@
 import {Schema, Types} from 'mongoose';
 
+import {TaskStatus} from '../../types/task';
+
 import {IModifyDateModel} from './';
 import {IUserReferModel} from './user';
 
@@ -73,6 +75,7 @@ export interface IUnionTaskUserModel extends IModifyDateModel {
 export interface IUnionTaskSearchModel {
     name?: string;
     userId?: Schema.Types.ObjectId;
+    status?: TaskStatus;
 }
 
 /**
@@ -80,6 +83,7 @@ export interface IUnionTaskSearchModel {
  */
 export interface IUnionTaskModifyModel {
     name: string;
+    status?: TaskStatus;
     members: Schema.Types.ObjectId[];
     taskItems: IUnionTaskSaveItem[];
 }

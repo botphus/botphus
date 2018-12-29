@@ -7,6 +7,14 @@ export enum TaskPageType {
 }
 
 /**
+ * Task status
+ */
+export enum TaskStatus {
+    'ENABLE' = 1,
+    'DISABLE' = -1
+}
+
+/**
  * Task report status
  */
 export enum TaskReportStatus {

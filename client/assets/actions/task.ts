@@ -66,6 +66,36 @@ export function modifyTaskData(query: any, callback?: ActionCallbackFunc): Actio
 }
 
 /**
+ * Remove task
+ * @param  {string}             id       Task ID
+ * @param  {ActionCallbackFunc} callback Callback function
+ * @return {ActionThunkFunc}             Thunk fuction
+ */
+export function removeTaskData(id: string, callback?: ActionCallbackFunc): ActionThunkFunc {
+    return (dispatch) => {
+        dispatch(updateModel({
+            loadingForm: true
+        }));
+        request(RequestAction.TASK, {
+            id
+        }, 'DELETE')
+            .then((res) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                if (callback) {
+                    callback(res);
+                }
+            }).catch((err) => {
+                dispatch(updateModel({
+                    loadingForm: false
+                }));
+                message.error(err.message);
+            });
+    };
+}
+
+/**
  * Query task detail data
  * @param  {string}          id Task ID
  * @return {ActionThunkFunc}    Thunk fuction

@@ -136,5 +136,48 @@ export default function() {
                 })
                 .end(done);
         });
+        it('Remove data', (done) => {
+            client.delete('/api/task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .send({
+                    id: taskId,
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(!res.body.data);
+                })
+                .end(done);
+        });
+        it('Get task list', (done) => {
+            client.get('/api/task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.page === 1);
+                    assert(res.body.data.pageSize === 10);
+                    assert(res.body.data.total === 0);
+                    assert(res.body.data.content.length === 0);
+                })
+                .end(done);
+        });
+        it('Create again', (done) => {
+            client.post('/api/task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .send({
+                    name: taskName + ' test',
+                    pageType: TaskPageType.NORMAL,
+                    ruleItems: taskRuleList
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    taskId = res.body.data;
+                })
+                .end(done);
+        });
     });
 }

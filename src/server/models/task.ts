@@ -36,7 +36,11 @@ const schema = new Schema({
     ruleItems: {
         required: [true, `${localeTaskPkg.ruleItems}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.Mixed
-    }
+    },
+    status: {
+        default: 1,
+        type: Number
+    },
 });
 
 schema.plugin(modifyDate);

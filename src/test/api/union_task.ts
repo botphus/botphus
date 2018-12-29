@@ -160,5 +160,53 @@ export default function() {
                 })
                 .end(done);
         });
+        it('Delete data', (done) => {
+            client.delete('/api/union-task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .send({
+                    id: unionTaskId,
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(!res.body.data);
+                })
+                .end(done);
+        });
+        it('Get union task list', (done) => {
+            client.get('/api/union-task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    assert(res.body.data.page === 1);
+                    assert(res.body.data.pageSize === 10);
+                    assert(res.body.data.total === 0);
+                    assert(res.body.data.content.length === 0);
+                })
+                .end(done);
+        });
+        it('Create again', (done) => {
+            client.post('/api/union-task/')
+                .set('Cookie', config.sessionCookieKey + '=' + cookieKey)
+                .send({
+                    name: unionTaskName + ' test',
+                    taskItems: [
+                        {
+                            ignoreError: false,
+                            name: taskName,
+                            taskId,
+                        }
+                    ]
+                })
+                .expect(200)
+                .expect((res: IRequestData) => {
+                    assertResMessage(res);
+                    assert(res.body.data);
+                    unionTaskId = res.body.data;
+                })
+                .end(done);
+        });
     });
 }
