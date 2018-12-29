@@ -205,6 +205,16 @@ export function modifyTaskById(taskId: Schema.Types.ObjectId, userId: string, ta
 export function deleteTaskById(taskId: Schema.Types.ObjectId, userId: string): Promise<any> {
     return verifyTaskCreator(taskId, userId)
         .then(() => {
+            return modifyTaskFlows({
+                status: {
+                    $ne: TaskFlowStatus.CLOSE
+                },
+                taskId,
+            }, {
+                status: TaskFlowStatus.CLOSE
+            });
+        })
+        .then(() => {
             return Task.updateOne({
                 _id: taskId
             }, {

@@ -202,6 +202,16 @@ export function modifyUnionTaskById(unionTaskId: Schema.Types.ObjectId, userId: 
 export function deleteUnionTaskById(unionTaskId: Schema.Types.ObjectId, userId: string): Promise<any> {
     return verifyUnionTaskCreator(unionTaskId, userId)
         .then(() => {
+            return modifyUnionTaskFlows({
+                status: {
+                    $ne: TaskFlowStatus.CLOSE
+                },
+                unionTaskId,
+            }, {
+                status: TaskFlowStatus.CLOSE
+            });
+        })
+        .then(() => {
             return UnionTask.updateOne({
                 _id: unionTaskId
             }, {
