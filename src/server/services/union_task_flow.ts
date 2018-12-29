@@ -221,7 +221,7 @@ export function startUnionTaskFlow(unionTaskFlowId: Schema.Types.ObjectId, userI
                         sendUnionTaskFlowData(flowData.taskReportMap[Object.keys(flowData.taskReportMap)[0]], {
                             message: `${status}`
                         }, userId, SocketMessageType.TASK_END);
-                        app.log.debug('Process close code:', code);
+                        app.log.debug('Event close code:', code);
                     });
                 });
         });

@@ -11,7 +11,7 @@ import {getTaskItemTreeList} from './task';
 import {app, isObjEmpty} from './util';
 
 /**
- * Listen task messsage that botphus child process send
+ * Listen task messsage that botphus event send
  * @param {IProcessPoolWorkEvent}       event         Event listener
  * @param {IIndexMap<ITaskReportModel>} taskReportMap Task report map
  * @param {string}                      userId        User ID

@@ -35,9 +35,9 @@ export function buildAndRunBotphusTask(taskFlowData: ITaskFlowDetailModel): Prom
             app.log.debug(taskFlowData._id, 'startOption:');
             app.log.debug(startOption);
             return botphusCore.startTask(taskNo, taskFlowData.startPage || '', startOption)
-                .then((subProcess) => {
-                    listenBotphusTaskMessage(subProcess, taskFlowData.taskReportMap, taskFlowData.createdUser.toString(), sendTaskFlowData);
-                    return subProcess;
+                .then((event) => {
+                    listenBotphusTaskMessage(event, taskFlowData.taskReportMap, taskFlowData.createdUser.toString(), sendTaskFlowData);
+                    return event;
                 });
         }, (err) => {
             throw createSystemError(`${localePkg.Service.TaskFlow.taskCreateError}:${err.message}`, SystemCode.ROUTINE_ERROR);
