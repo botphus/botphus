@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 const {TabPane} = Tabs;
 
-import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
+import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, IUserContentData} from '../../../interfaces/redux';
 import {IUnionTaskFlowContentData} from '../../../interfaces/redux';
 
 import {cleanUnionTaskFlowDetail, queryUnionTaskFlowDetailData, startUnionTaskFlowData} from '../../../actions/union_task_flow';
@@ -18,12 +18,14 @@ import UnionTaskFlowRule from '../../../components/view/union_task_flow_rule';
 interface ITaskFlowProfileProps extends IReduxConnectProps {
     modal: IModalData;
     unionTaskFlow: IUnionTaskFlowContentData;
+    user: IUserContentData;
 }
 
-function mapStateToProps({modal, unionTaskFlow}: IReduxStoreState) {
+function mapStateToProps({modal, unionTaskFlow, user}: IReduxStoreState) {
     return {
         modal,
-        unionTaskFlow
+        unionTaskFlow,
+        user
     };
 }
 
@@ -37,7 +39,7 @@ class DashboardUnionTaskFlowProfilePage extends React.Component<ITaskFlowProfile
         dispatch(cleanUnionTaskFlowDetail());
     }
     public render() {
-        const {unionTaskFlow} = this.props;
+        const {unionTaskFlow, user} = this.props;
         return (
             <div className="app-dashboard-union-task-flow-profile">
                 <Row>
@@ -45,7 +47,7 @@ class DashboardUnionTaskFlowProfilePage extends React.Component<ITaskFlowProfile
                         <h1>{localePkg.Client.Title.UnionTaskFlow}</h1>
                     </Col>
                     <Col className="text-right p-t-sm" span={12}>
-                        <TaskFlowBtn status={unionTaskFlow.detail.status} onStart={this.handleStartTask} />
+                        {unionTaskFlow.detail.createdUser === user.owner.id ? <TaskFlowBtn status={unionTaskFlow.detail.status} onStart={this.handleStartTask} /> : null}
                         <Button onClick={this.handleCancel}>
                             <Icon type="left-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.cancel}
                         </Button>

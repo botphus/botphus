@@ -37,6 +37,9 @@ const schema = new Schema({
         required: [true, `${localeTaskPkg.taskItems}: ${localePkg.Model.requiredError}`],
         type: Schema.Types.Mixed
     },
+    userGroups: {
+        type: [Schema.Types.ObjectId]
+    },
 });
 
 schema.plugin(modifyDate);

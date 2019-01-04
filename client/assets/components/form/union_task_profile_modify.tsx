@@ -12,6 +12,7 @@ import {filterEmptyFields, sortItems} from '../../lib/util';
 
 import MemberMultiSelect from '../form_item/member_multi_select';
 import UnionTaskRule from '../form_item/union_task_rule';
+import UserGroupMultiSelect from '../form_item/user_group_multi_select';
 import Loading from '../loading';
 import UnionTaskItemModifyForm from './union_task_item_modify';
 
@@ -39,6 +40,7 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
         const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, getFieldValue} = this.props.form;
         const nameError = isFieldTouched('name') && getFieldError('name');
         const membersError = isFieldTouched('members') && getFieldError('members');
+        const userGroupsError = isFieldTouched('userGroups') && getFieldError('userGroups');
         getFieldDecorator('taskItems', {
             initialValue: defaultValue.taskItems || [],
             rules: [{
@@ -95,6 +97,23 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
                                 <MemberMultiSelect />
                             )}
                         </Item>
+                        <Item
+                            validateStatus={userGroupsError ? 'error' : 'success'}
+                            help={userGroupsError || ''}
+                            label={localePkg.Model.UnionTask.userGroups}
+                            {...formItemLayout}
+                        >
+                            {getFieldDecorator('userGroups', {
+                                initialValue: defaultValue.userGroups ? defaultValue.userGroups.map((item) => {
+                                    return {
+                                        key: item._id,
+                                        label: item.name
+                                    };
+                                }) : []
+                            })(
+                                <UserGroupMultiSelect />
+                            )}
+                        </Item>
                         <Item className="text-right" {...tailFormItemLayout}>
                             <Button type="primary" loading={loading} onClick={() => this.handleChangeTab('rule')}>
                                 {localePkg.Client.Action.next}
@@ -148,6 +167,9 @@ class UnionTaskProfileModifyForm extends React.Component<IModifyFormProps, IUnio
             if (!err) {
                 const result = {...values};
                 result.members = result.members.map((item) => {
+                    return item.key;
+                });
+                result.userGroups = result.userGroups.map((item) => {
                     return item.key;
                 });
                 onSubmit(filterEmptyFields(result));

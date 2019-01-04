@@ -93,8 +93,11 @@ const baseProperties = {
         type: 'integer'
     },
     ruleItems: 'taskRuleItems#',
-    userGroupId: {
-        type: 'string'
+    userGroups: {
+        items: {
+            type: 'string'
+        },
+        type: 'array'
     }
 };
 

@@ -134,7 +134,7 @@ const localeData: ILocalePackage = {
             name: '名称',
             pageType: '页面类型',
             members: '成员',
-            userGroupId: '所属用户组',
+            userGroups: '所属用户组',
             ruleItems: '规则列表',
             ruleItem: {
                 name: '规则名称',
@@ -177,6 +177,7 @@ const localeData: ILocalePackage = {
         UnionTask: {
             name: '名称',
             members: '成员',
+            userGroups: '所属用户组',
             taskItems: '任务列表',
             taskItem: {
                 taskId: '任务',

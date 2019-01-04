@@ -2,7 +2,7 @@ import {Schema} from 'mongoose';
 
 import {UserGroup} from '../models/';
 
-import {IUserGroupModel, IUserGroupModifyModel, IUserGroupReferModel, IUserGroupSearchModel} from '../interfaces/model';
+import {IUserGroupModel, IUserGroupModifyModel, IUserGroupReferUserModel, IUserGroupSearchModel} from '../interfaces/model';
 
 import {queryUserByIdsWithReferMap} from './user';
 
@@ -53,10 +53,10 @@ export function queryUserGroupByUserId(userId: string, fields: string = defaultF
  * @param  {Schema.Types.ObjectId}   userGroupId User group ID
  * @return {Promise<ITaskUserModel>}             User group info with user info
  */
-export function queryUserGroupByIdWithUsers(userGroupId: Schema.Types.ObjectId): Promise<IUserGroupReferModel> {
+export function queryUserGroupByIdWithUsers(userGroupId: Schema.Types.ObjectId): Promise<IUserGroupReferUserModel> {
     return queryUserGroupById(userGroupId)
         .then((userGroup) => {
-            const userGroupInfo: IUserGroupReferModel = Object.assign({}, userGroup.toObject());
+            const userGroupInfo: IUserGroupReferUserModel = Object.assign({}, userGroup.toObject());
             return queryUserByIdsWithReferMap(userGroup.members)
                 .then((userMap) => {
                     userGroupInfo.members = userGroup.members.map((groupUserId) => {

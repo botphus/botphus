@@ -55,9 +55,11 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         request.query.status = TaskStatus.ENABLE;
         return queryUserGroupByUserId(request.session.user.id, '_id')
             .then((groupList) => {
-                request.query.userGroupIds = groupList.map((item) => {
-                    return item.id;
-                });
+                if (groupList && groupList.length > 0) {
+                    request.query.userGroups = groupList.map((item) => {
+                        return item.id;
+                    });
+                }
                 return queryTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
                     .then((data) => {
                         reply.send(getHttpMsg(request, data));

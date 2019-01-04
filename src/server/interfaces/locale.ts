@@ -139,7 +139,7 @@ export default interface ILocalePackage {
             name: string;
             pageType: string;
             members: string;
-            userGroupId: string;
+            userGroups: string;
             ruleItems: string;
             ruleItem: {
                 name: string;
@@ -185,6 +185,7 @@ export default interface ILocalePackage {
         UnionTask: {
             name: string;
             members: string;
+            userGroups: string;
             taskItems: string;
             taskItem: {
                 taskId: string;

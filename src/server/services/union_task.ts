@@ -11,6 +11,7 @@ import {createSystemError, localePkg} from '../modules/util';
 
 import {modifyUnionTaskFlows} from './union_task_flow';
 import {queryUserByIdsWithReferMap} from './user';
+import {queryUserGroupByIds} from './user_group';
 
 /**
  * Default user find fields
@@ -52,6 +53,19 @@ export function queryUnionTaskList(query: IUnionTaskSearchModel, page: number, p
                 members: query.userId
             }
         ];
+    }
+    if (query.userGroups) {
+        if (condition.$or) {
+            condition.$or.push({
+                userGroups: {
+                    $in: query.userGroups
+                }
+            });
+        } else {
+            condition.userGroups = {
+                $in: query.userGroups
+            };
+        }
     }
     if (query.status) {
         condition.status = query.status;
@@ -108,14 +122,25 @@ export function queryUnionTaskByIdWithUsers(unionTaskId: Schema.Types.ObjectId, 
     return verifyUnionTaskOwner(unionTaskId, userId)
         .then((unionTask) => {
             const unionTaskInfo: IUnionTaskUserModel = Object.assign({}, unionTask.toObject());
-            return queryUserByIdsWithReferMap(unionTask.members.concat([unionTaskInfo.createdUser]))
-                .then((userMap) => {
+            return Promise.all([
+                queryUserByIdsWithReferMap(unionTask.members.concat([unionTaskInfo.createdUser])),
+                unionTask.userGroups && unionTask.userGroups.length > 0 ? queryUserGroupByIds(unionTask.userGroups) : null
+            ])
+                .then(([userMap, userGroups]) => {
                     unionTaskInfo.members = unionTask.members.map((taskUserId) => {
                         return userMap[taskUserId.toString()];
                     }).filter((userInfo) => {
                         return !!userInfo;
                     });
                     unionTaskInfo.createdUserName = userMap[unionTaskInfo.createdUser.toString()].nickname;
+                    if (userGroups) {
+                        unionTaskInfo.userGroups = userGroups.map((item) => {
+                            return {
+                                _id: item._id,
+                                name: item.name
+                            };
+                        });
+                    }
                     return unionTaskInfo;
                 });
         });
@@ -134,6 +159,20 @@ export function verifyUnionTaskOwner(unionTaskId: Schema.Types.ObjectId, userId:
                 return memberId.toString() === userId;
             }))) {
                 return unionTask;
+            }
+            // If has user group IDs, check member
+            if (unionTask.userGroups) {
+                return queryUserGroupByIds(unionTask.userGroups, '_id members')
+                    .then((userGroups) => {
+                        if (userGroups.some((userGroup) => {
+                            return userGroup.members.some((memberId) => {
+                                return memberId.toString() === userId;
+                            });
+                        })) {
+                            return unionTask;
+                        }
+                        throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
+                    });
             }
             throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
         });

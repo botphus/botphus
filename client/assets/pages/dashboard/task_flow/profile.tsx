@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 const {TabPane} = Tabs;
 
-import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState} from '../../../interfaces/redux';
+import {IDetailPageRouteMatchProps, IModalData, IReduxConnectProps, IReduxStoreState, IUserContentData} from '../../../interfaces/redux';
 import {ITaskFlowContentData} from '../../../interfaces/redux';
 
 import {cleanTaskFlowDetail, queryTaskFlowDetailData, startTaskFlowData} from '../../../actions/task_flow';
@@ -18,12 +18,14 @@ import TaskFlowRule from '../../../components/view/task_flow_rule';
 interface ITaskFlowProfileProps extends IReduxConnectProps {
     modal: IModalData;
     taskFlow: ITaskFlowContentData;
+    user: IUserContentData;
 }
 
-function mapStateToProps({modal, taskFlow}: IReduxStoreState) {
+function mapStateToProps({modal, taskFlow, user}: IReduxStoreState) {
     return {
         modal,
-        taskFlow
+        taskFlow,
+        user
     };
 }
 
@@ -37,7 +39,7 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
         dispatch(cleanTaskFlowDetail());
     }
     public render() {
-        const {taskFlow} = this.props;
+        const {taskFlow, user} = this.props;
         return (
             <div className="app-dashboard-task-flow-profile">
                 <Row>
@@ -45,7 +47,7 @@ class DashboardTaskFlowProfilePage extends React.Component<ITaskFlowProfileProps
                         <h1>{localePkg.Client.Title.TaskFlow}</h1>
                     </Col>
                     <Col className="text-right p-t-sm" span={12}>
-                        <TaskFlowBtn status={taskFlow.detail.status} onStart={this.handleStartTask} />
+                        {taskFlow.detail.createdUser === user.owner.id ? <TaskFlowBtn status={taskFlow.detail.status} onStart={this.handleStartTask} /> : null}
                         <Button onClick={this.handleCancel}>
                             <Icon type="left-square" theme="filled" className="m-r-sm" />{localePkg.Client.Action.cancel}
                         </Button>

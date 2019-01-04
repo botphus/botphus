@@ -41,8 +41,8 @@ const schema = new Schema({
         default: 1,
         type: Number
     },
-    userGroupId: {
-        type: Schema.Types.ObjectId
+    userGroups: {
+        type: [Schema.Types.ObjectId]
     },
 });
 

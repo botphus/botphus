@@ -62,7 +62,13 @@ const baseProperties = {
         minLength: strLength[0],
         type: 'string'
     },
-    taskItems: 'taskItems#'
+    taskItems: 'taskItems#',
+    userGroups: {
+        items: {
+            type: 'string'
+        },
+        type: 'array'
+    }
 };
 
 /**

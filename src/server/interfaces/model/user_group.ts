@@ -30,9 +30,17 @@ export interface IUserGroupModel extends IModifyDateModel {
 }
 
 /**
- * User group model with user refer info
+ * User group refer model
  */
 export interface IUserGroupReferModel {
+    _id: Schema.Types.ObjectId;
+    name: string;
+}
+
+/**
+ * User group model with user refer info
+ */
+export interface IUserGroupReferUserModel {
     name: string;
     members: IUserReferModel[];
 }

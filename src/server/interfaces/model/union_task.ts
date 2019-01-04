@@ -4,6 +4,7 @@ import {TaskStatus} from '../../types/task';
 
 import {IModifyDateModel} from './';
 import {IUserReferModel} from './user';
+import {IUserGroupReferModel} from './user_group';
 
 /**
  * Return data
@@ -23,6 +24,7 @@ export interface IUnionTaskListItem {
  */
 export interface IUnionTaskDetailItem extends IUnionTaskListItem {
     members?: IUserReferModel[];
+    userGroups?: IUserGroupReferModel[];
     taskItems?: IUnionTaskClientSaveItem[];
     createdUser?: string;
     createdUserName?: string;
@@ -54,6 +56,7 @@ export interface IUnionTaskClientSaveItem {
 export interface IUnionTaskModel extends IModifyDateModel {
     name: string;
     members: Schema.Types.ObjectId[];
+    userGroups?: Schema.Types.ObjectId[];
     taskItems: IUnionTaskSaveItem[];
     createdUser: Types.ObjectId;
 }
@@ -64,6 +67,7 @@ export interface IUnionTaskModel extends IModifyDateModel {
 export interface IUnionTaskUserModel extends IModifyDateModel {
     name: string;
     members?: IUserReferModel[];
+    userGroups?: IUserGroupReferModel[];
     taskItems: IUnionTaskSaveItem[];
     createdUser: Schema.Types.ObjectId;
     createdUserName?: string;
@@ -75,6 +79,7 @@ export interface IUnionTaskUserModel extends IModifyDateModel {
 export interface IUnionTaskSearchModel {
     name?: string;
     userId?: Schema.Types.ObjectId;
+    userGroups?: Schema.Types.ObjectId[];
     status?: TaskStatus;
 }
 
@@ -85,5 +90,6 @@ export interface IUnionTaskModifyModel {
     name: string;
     status?: TaskStatus;
     members: Schema.Types.ObjectId[];
+    userGroups?: Schema.Types.ObjectId[];
     taskItems: IUnionTaskSaveItem[];
 }

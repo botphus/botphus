@@ -6,6 +6,7 @@ import * as unionTaskSchema from '../../schema/union_task';
 import {TaskStatus} from '../../types/task';
 
 import {createUnionTask, deleteUnionTaskById, modifyUnionTaskById, queryUnionTaskByIdWithUsers, queryUnionTaskList} from '../../services/union_task';
+import {queryUserGroupByUserId} from '../../services/user_group';
 
 import {buildPageInfo, getHttpMsg, getListQueryData} from '../../modules/util';
 
@@ -52,9 +53,17 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         buildPageInfo(request);
         request.query.userId = request.session.user.id;
         request.query.status = TaskStatus.ENABLE;
-        return queryUnionTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
-            .then((data) => {
-                reply.send(getHttpMsg(request, data));
+        return queryUserGroupByUserId(request.session.user.id, '_id')
+            .then((groupList) => {
+                if (groupList && groupList.length > 0) {
+                    request.query.userGroups = groupList.map((item) => {
+                        return item.id;
+                    });
+                }
+                return queryUnionTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
+                    .then((data) => {
+                        reply.send(getHttpMsg(request, data));
+                    });
             });
     });
     // Get union task profile

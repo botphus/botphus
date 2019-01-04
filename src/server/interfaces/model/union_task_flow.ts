@@ -38,6 +38,7 @@ export interface IUnionTaskFlowDetailItem extends IUnionTaskFlowListItem {
     unionTaskDetail?: IUnionTaskDetailItem;
     taskDetailMap?: IIndexMap<ITaskDetailItem>;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
+    createdUser?: string;
 }
 
 /**

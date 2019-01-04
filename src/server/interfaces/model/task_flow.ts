@@ -41,6 +41,7 @@ export interface ITaskFlowDetailItem extends ITaskFlowListItem {
     excludeOption?: ITaskExcludeUnit;
     taskDetail?: ITaskDetailItem;
     taskReportMap?: IIndexMap<ITaskReportDetailItem>;
+    createdUser?: string;
 }
 
 /**
