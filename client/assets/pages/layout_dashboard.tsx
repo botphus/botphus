@@ -50,8 +50,14 @@ class LayoutDashboardPage extends React.Component<ILayoutDashboardPage & RouteCo
                         </Menu.Item>
                         {checkUserPermission(user.owner.permission, UserPermissionCode.SYSTEM) ? (
                             <Menu.Item key="user">
-                                <Icon type="usergroup-add" theme="outlined" />
+                                <Icon type="user-add" theme="outlined" />
                                 <span className="title">{localePkg.Client.Title.User}</span>
+                            </Menu.Item>
+                        ) : null}
+                        {checkUserPermission(user.owner.permission, UserPermissionCode.SYSTEM) ? (
+                            <Menu.Item key="user-group">
+                                <Icon type="usergroup-add" theme="outlined" />
+                                <span className="title">{localePkg.Client.Title.UserGroup}</span>
                             </Menu.Item>
                         ) : null}
                         {checkUserPermission(user.owner.permission, UserPermissionCode.SYSTEM) ? (

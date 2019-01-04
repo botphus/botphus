@@ -45,6 +45,7 @@ mongoose.connect(config.db, {
 
 export default mongoose;
 export * from './user';
+export * from './user_group';
 export * from './connection';
 export * from './task';
 export * from './task_flow';

@@ -7,6 +7,7 @@ const {Option} = Select;
 import {IIndexMap, IModifyFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
 import {ITaskRuleSaveItem} from '../../interfaces/task';
 import {TaskPageType} from '../../types/common';
+import {RequestAction} from '../../types/request';
 
 import {formItemLayout, formValidRules, localePkg, tailFormItemLayout} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
@@ -14,6 +15,7 @@ import {validRuleItems} from '../../lib/task';
 import {filterEmptyFields, getNumEnumsList, sortItems} from '../../lib/util';
 
 import MemberMultiSelect from '../form_item/member_multi_select';
+import SearchSelect from '../form_item/search_select';
 import TaskRule from '../form_item/task_rule';
 import Loading from '../loading';
 import TaskRuleModifyForm from './task_rule_modify';
@@ -52,6 +54,7 @@ class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfi
         const nameError = isFieldTouched('name') && getFieldError('name');
         const pageTypeError = isFieldTouched('pageType') && getFieldError('pageType');
         const membersError = isFieldTouched('members') && getFieldError('members');
+        const userGroupError = isFieldTouched('userGroup') && getFieldError('userGroup');
         getFieldDecorator('ruleItems', {
             initialValue: defaultValue.ruleItems || [],
             rules: [{
@@ -132,6 +135,27 @@ class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfi
                                 <MemberMultiSelect />
                             )}
                         </Item>
+                        <Item
+                            validateStatus={userGroupError ? 'error' : 'success'}
+                            help={userGroupError || ''}
+                            label={localePkg.Model.Task.userGroupId}
+                            {...formItemLayout}
+                        >
+                            {getFieldDecorator('userGroup', {
+                                initialValue: defaultValue.userGroupId ? {
+                                    key: defaultValue.userGroupId, label: defaultValue.userGroupName
+                                } : undefined,
+                            })(
+                                <SearchSelect
+                                    autoLoad={defaultValue.taskId ? false : true}
+                                    apiAction={RequestAction.USER_GROUP}
+                                    listName={localePkg.Model.Task.userGroupId}
+                                    searchField="name"
+                                    listNameKey="name"
+                                    listValueKey="_id"
+                                />
+                            )}
+                        </Item>
                         <Item className="text-right" {...tailFormItemLayout}>
                             <Button type="primary" loading={loading} onClick={() => this.handleChangeTab('rule')}>
                                 {localePkg.Client.Action.next}
@@ -194,6 +218,10 @@ class TaskProfileModifyForm extends React.Component<IModifyFormProps, ITaskProfi
                 const ruleItemValidResult = validRuleItems(result.ruleItems);
                 if (ruleItemValidResult) {
                     return message.error(ruleItemValidResult);
+                }
+                if (result.userGroup && result.userGroup.key) {
+                    result.userGroupId = result.userGroup.key;
+                    delete result.userGroup;
                 }
                 onSubmit(filterEmptyFields(result));
             }

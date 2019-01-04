@@ -69,7 +69,9 @@ class ConnectionSearchForm extends React.Component<IFormProps> {
                 </Row>
                 <Row>
                     <Item className="text-right">
-                        <Button className="m-r-sm" type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>搜索</Button>
+                        <Button className="m-r-sm" type="primary" htmlType="submit" disabled={formHasErrors(getFieldsError())} loading={loading}>
+                            {localePkg.Client.Action.search}
+                        </Button>
                     </Item>
                 </Row>
             </Form>

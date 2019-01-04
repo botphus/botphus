@@ -6,6 +6,7 @@ import {ITaskFlowDetailItem, ITaskFlowListItem} from '../../../src/server/interf
 import {IUnionTaskDetailItem, IUnionTaskListItem} from '../../../src/server/interfaces/model/union_task';
 import {IUnionTaskFlowDetailItem, IUnionTaskFlowListItem} from '../../../src/server/interfaces/model/union_task_flow';
 import {IUserDetailItem, IUserListItem, IUserSession} from '../../../src/server/interfaces/model/user';
+import {IUserGroupDetailItem, IUserGroupListItem} from '../../../src/server/interfaces/model/user_group';
 import {ActionType} from '../types/redux';
 
 /**
@@ -61,6 +62,11 @@ export interface IUserContentData extends IContentData<IUserListItem, IUserDetai
 }
 
 /**
+ * User group content data
+ */
+export type IUserGroupContentData = IContentData<IUserGroupListItem, IUserGroupDetailItem>;
+
+/**
  * Connection content data
  */
 export type IConnectionContentData = IContentData<IConnectionListItem, IConnectionDetailItem>;
@@ -100,6 +106,7 @@ export interface IReduxStoreState {
     modal: IModalData;
     task: ITaskContentData;
     user: IUserContentData;
+    userGroup: IUserGroupContentData;
     taskFlow: ITaskFlowContentData;
     unionTask: IUnionTaskContentData;
     unionTaskFlow: IUnionTaskFlowContentData;

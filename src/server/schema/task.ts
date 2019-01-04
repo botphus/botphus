@@ -92,7 +92,10 @@ const baseProperties = {
         }),
         type: 'integer'
     },
-    ruleItems: 'taskRuleItems#'
+    ruleItems: 'taskRuleItems#',
+    userGroupId: {
+        type: 'string'
+    }
 };
 
 /**

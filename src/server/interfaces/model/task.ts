@@ -25,6 +25,8 @@ export interface ITaskListItem {
  */
 export interface ITaskDetailItem extends ITaskListItem {
     members?: IUserReferModel[];
+    userGroupId?: string;
+    userGroupName?: string;
     ruleItems?: ITaskRuleSaveItem[];
     createdUserName?: string;
 }
@@ -57,6 +59,7 @@ export interface ITaskModel extends IModifyDateModel {
     name: string;
     pageType: TaskPageType;
     members: Schema.Types.ObjectId[];
+    userGroupId?: Schema.Types.ObjectId;
     ruleItems: ITaskRuleSaveItem[];
     createdUser: Types.ObjectId;
 }
@@ -68,6 +71,8 @@ export interface ITaskUserModel extends IModifyDateModel {
     name: string;
     pageType: TaskPageType;
     members?: IUserReferModel[];
+    userGroupId?: Schema.Types.ObjectId;
+    userGroupName: string;
     ruleItems: ITaskRuleSaveItem[];
     createdUser: Schema.Types.ObjectId;
     createdUserName?: string;
@@ -80,6 +85,7 @@ export interface ITaskSearchModel {
     name?: string;
     pageType?: TaskPageType;
     userId?: Schema.Types.ObjectId;
+    userGroupId?: Schema.Types.ObjectId;
     status?: TaskStatus;
 }
 
@@ -91,5 +97,6 @@ export interface ITaskModifyModel {
     status?: TaskStatus;
     pageType?: TaskPageType;
     members?: Schema.Types.ObjectId[];
+    userGroupId?: Schema.Types.ObjectId;
     ruleItems?: ITaskRuleSaveItem[];
 }

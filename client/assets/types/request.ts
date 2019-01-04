@@ -14,6 +14,8 @@ export enum RequestAction {
     'USER' = '/api/user/',
     'USER_PROFILE' = '/api/user/profile/',
     'USER_SELF_PROFILE' = '/api/user/profile/my/',
+    'USER_GROUP' = '/api/user-group/',
+    'USER_GROUP_PROFILE' = '/api/user-group/profile/',
     'CONNECTION' = '/api/connection/',
     'CONNECTION_PROFILE' = '/api/connection/profile/',
     'TASK' = '/api/task/',

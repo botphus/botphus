@@ -112,6 +112,11 @@ export default interface ILocalePackage {
             password: string;
             enable: string;
         };
+        // User group fields name
+        UserGroup: {
+            name: string;
+            members: string;
+        };
         // Connection fields name
         Connection: {
             name: string;
@@ -134,6 +139,7 @@ export default interface ILocalePackage {
             name: string;
             pageType: string;
             members: string;
+            userGroupId: string;
             ruleItems: string;
             ruleItem: {
                 name: string;
@@ -270,6 +276,7 @@ export default interface ILocalePackage {
             TaskFlowConnection: string;
             TaskReport: string;
             User: string;
+            UserGroup: string;
             UnionTask: string;
             UnionTaskFlow: string;
         };
@@ -281,6 +288,7 @@ export default interface ILocalePackage {
             TaskFlow: string;
             TaskReport: string;
             User: string;
+            UserGroup: string;
             UnionTask: string;
             UnionTaskFlow: string;
         };
@@ -314,7 +322,10 @@ export default interface ILocalePackage {
             UnionTaskFlow: {
                 suffixDomain: string;
                 excludeTaskItem: string;
-            }
+            };
+            UserGroup: {
+                members: string;
+            };
         }
     };
 }

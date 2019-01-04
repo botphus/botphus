@@ -152,32 +152,39 @@ export function createUser(userData: IUserCreateModel): Promise<IUserModel> {
     });
     return user.save();
 }
-
 /**
  * Modify user's data by user id
- * @param  {string}              userId   User ID
- * @param  {string}              userData Update user data
- * @return {Promise<IUserModel>}          Promise with user info
+ * @param  {string}           userId               User ID
+ * @param  {string}           modifyUserId         Modify user ID
+ * @param  {number}           modifyUserPermission Modify user permission
+ * @param  {IUserModifyModel} userData             Update user data
+ * @return {Promise<any>}                          Promise with update info
  */
 export function modifyUserById(userId: string, modifyUserId: string, modifyUserPermission: number, userData: IUserModifyModel): Promise<any> {
-    // Check permission for profile edit & special field
-    if ((modifyUserId !== userId || userData.permission >= 0 || typeof userData.enable === 'boolean')
-        && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
-        return Promise.reject(createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN));
-    }
-    // Check permission, root permission can't change
-    // 1. Current user is root
-    // 2. Update permission has root
-    if (userData.permission > 0 && ((modifyUserPermission & UserPermissionCode.ROOT) || (userData.permission & UserPermissionCode.ROOT))) {
-        return Promise.reject(createSystemError(localePkg.Service.User.rootPermissionError, SystemCode.FORBIDDEN));
-    }
-    // Update password
-    if (userData.password) {
-        userData.password = translatePassword(userData.password);
-    }
-    return User.updateOne({
-        _id: userId
-    }, userData).exec();
+    return queryUserById(userId)
+        .then((user) => {
+            // Check permission for profile edit & special field
+            // 1. Not modify self profile
+            // 2. Has permission change
+            // 3. enable or disable data
+            if ((modifyUserId !== userId || userData.permission >= 0 || typeof userData.enable === 'boolean')
+                && !checkUserPermission(modifyUserPermission, UserPermissionCode.SYSTEM)) {
+                return Promise.reject(createSystemError(localePkg.SystemCode.permissionForbidden, SystemCode.FORBIDDEN));
+            }
+            // Check permission, root permission can't change
+            // 1. Modify user is root
+            // 3. Update permission has root
+            if (userData.permission > 0 && (checkUserPermission(user.permission, UserPermissionCode.ROOT) || checkUserPermission(userData.permission, UserPermissionCode.ROOT))) {
+                return Promise.reject(createSystemError(localePkg.Service.User.rootPermissionError, SystemCode.FORBIDDEN));
+            }
+            // Update password
+            if (userData.password) {
+                userData.password = translatePassword(userData.password);
+            }
+            return User.updateOne({
+                _id: userId
+            }, userData).exec();
+        });
 }
 
 /**

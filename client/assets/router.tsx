@@ -35,6 +35,8 @@ export default (
                                 <Route exact path="/dashboard/profile/" component={asyncLoadComponent('dashboard/profile')}/>
                                 <Route exact path="/dashboard/user/" component={asyncLoadComponent('dashboard/user/index')}/>
                                 <Route exact path="/dashboard/user/profile/:id" component={asyncLoadComponent('dashboard/user/profile')}/>
+                                <Route exact path="/dashboard/user-group/" component={asyncLoadComponent('dashboard/user_group/index')}/>
+                                <Route exact path="/dashboard/user-group/profile/:id" component={asyncLoadComponent('dashboard/user_group/profile')}/>
                                 <Route exact path="/dashboard/connection/" component={asyncLoadComponent('dashboard/connection/index')}/>
                                 <Route exact path="/dashboard/connection/profile/:id" component={asyncLoadComponent('dashboard/connection/profile')}/>
                                 <Route exact path="/dashboard/task/" component={asyncLoadComponent('dashboard/task/index')}/>

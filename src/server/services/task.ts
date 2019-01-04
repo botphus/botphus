@@ -53,6 +53,15 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
             }
         ];
     }
+    if (query.userGroupId) {
+        if (condition.$or) {
+            condition.$or.push({
+                userGroupId: query.userGroupId
+            });
+        } else {
+            condition.userGroupId = query.userGroupId;
+        }
+    }
     if (query.pageType) {
         condition.pageType = query.pageType;
     }

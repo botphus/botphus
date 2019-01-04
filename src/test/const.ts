@@ -86,3 +86,6 @@ export const taskFlowStartPage = 'https://cn.bing.com/';
 
 // Union task data
 export const unionTaskName = 'test-union-task';
+
+// User Group data
+export const userGroupName = 'test-user-group-name';

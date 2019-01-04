@@ -9,6 +9,7 @@ import taskFlow from './task_flow';
 import unionTask from './union_task';
 import unionTaskFlow from './union_task_flow';
 import user from './user';
+import userGroup from './user_group';
 
 export default combineReducers<IReduxStoreState>({
     connection,
@@ -17,5 +18,6 @@ export default combineReducers<IReduxStoreState>({
     taskFlow,
     unionTask,
     unionTaskFlow,
-    user
+    user,
+    userGroup
 });

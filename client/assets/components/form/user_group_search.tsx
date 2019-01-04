@@ -1,23 +1,14 @@
-import {Button, Col, Form, Input, Row, Select} from 'antd';
+import {Button, Col, Form, Input, Row} from 'antd';
 import * as React from 'react';
 const {Item} = Form;
-const {Option} = Select;
 
-import {IFormProps, INumEnumValueWithLabel} from '../../interfaces/common';
-import {TaskPageType} from '../../types/common';
+import {IFormProps} from '../../interfaces/common';
 
 import {formInlineItemLayout, formValidRules, localePkg} from '../../lib/const';
 import {formHasErrors, getFormFieldErrorMsg, getFormFieldPlaceholder} from '../../lib/form';
-import {filterEmptyFields, getNumEnumsList} from '../../lib/util';
+import {filterEmptyFields} from '../../lib/util';
 
-const pageTypeList: INumEnumValueWithLabel[] = getNumEnumsList(TaskPageType).map((item) => {
-    return {
-        ...item,
-        label: localePkg.Enum.TaskPageType[item.key]
-    };
-});
-
-class TaskSearchForm extends React.Component<IFormProps> {
+class UserGroupSearchForm extends React.Component<IFormProps> {
     public componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
@@ -30,14 +21,14 @@ class TaskSearchForm extends React.Component<IFormProps> {
                 <Row>
                     <Col span={8}>
                         <Item
-                            label={localePkg.Model.Task.name}
+                            label={localePkg.Model.UserGroup.name}
                             {...formInlineItemLayout}
                         >
                             {getFieldDecorator('name', {
                                 initialValue: defaultValue.name || '',
                                 rules: [{
                                     max: formValidRules.strLength[1],
-                                    message: getFormFieldErrorMsg(localePkg.Model.Task.name, [
+                                    message: getFormFieldErrorMsg(localePkg.Model.UserGroup.name, [
                                         {
                                             args: formValidRules.strLength,
                                             type: 'length',
@@ -46,23 +37,7 @@ class TaskSearchForm extends React.Component<IFormProps> {
                                     min: formValidRules.strLength[0]
                                 }],
                             })(
-                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.Task.name)} />
-                            )}
-                        </Item>
-                    </Col>
-                    <Col span={8}>
-                        <Item
-                            label={localePkg.Model.Task.pageType}
-                            {...formInlineItemLayout}
-                        >
-                            {getFieldDecorator('pageType', {
-                                initialValue: defaultValue.pageType,
-                            })(
-                                <Select placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Select, localePkg.Model.Task.pageType)} allowClear>
-                                    {pageTypeList.map((item, index) => {
-                                        return <Option key={index.toString()} value={item.value}>{item.label}</Option>;
-                                    })}
-                                </Select>
+                                <Input placeholder={getFormFieldPlaceholder(localePkg.Placehoder.Input, localePkg.Model.UserGroup.name)} />
                             )}
                         </Item>
                     </Col>
@@ -89,4 +64,4 @@ class TaskSearchForm extends React.Component<IFormProps> {
     }
 }
 
-export default Form.create()(TaskSearchForm);
+export default Form.create()(UserGroupSearchForm);

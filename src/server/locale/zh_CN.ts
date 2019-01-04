@@ -110,6 +110,10 @@ const localeData: ILocalePackage = {
             password: '密码',
             enable: '是否可用'
         },
+        UserGroup: {
+            name: '组名称',
+            members: '组成员'
+        },
         Connection: {
             name: '名称',
             type: '类型',
@@ -130,6 +134,7 @@ const localeData: ILocalePackage = {
             name: '名称',
             pageType: '页面类型',
             members: '成员',
+            userGroupId: '所属用户组',
             ruleItems: '规则列表',
             ruleItem: {
                 name: '规则名称',
@@ -254,6 +259,7 @@ const localeData: ILocalePackage = {
             TaskFlowConnection: '连接配置',
             TaskReport: '测试任务报告',
             User: '用户管理',
+            UserGroup: '用户组管理',
             UnionTask: '联合任务',
             UnionTaskFlow: '联合任务流水'
         },
@@ -264,6 +270,7 @@ const localeData: ILocalePackage = {
             TaskFlow: '测试任务成员按任务生成测试流水',
             TaskReport: '测试流水执行并生成测试报告',
             User: '管理所有平台用户',
+            UserGroup: '可以设置一批用户到用户组中,方便进行管理',
             UnionTask: '(可选)多个任务合并形成联合任务,覆盖测试完整功能',
             UnionTaskFlow: '执行联合任务流水并生成联合任务报告'
         },
@@ -297,6 +304,9 @@ const localeData: ILocalePackage = {
             UnionTaskFlow: {
                 suffixDomain: '配置该选项,用于替换联合任务配置中的${suffixDomain},配置方法请询问联合任务管理者',
                 excludeTaskItem: '该任务已被过滤执行'
+            },
+            UserGroup: {
+                members: '配置用户组后,成员需要重新登录才会生效'
             }
         }
     }

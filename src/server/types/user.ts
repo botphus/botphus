@@ -24,6 +24,11 @@ export const userPermissionMap: {
     'get:/user/': UserPermissionCode.LOGIN,
     'get:/user/profile/my/': UserPermissionCode.LOGIN,
     'get:/user/profile/': UserPermissionCode.SYSTEM,
+    // User group
+    'post:/user-group/': UserPermissionCode.SYSTEM,
+    'patch:/user-group/': UserPermissionCode.SYSTEM,
+    'get:/user-group/': UserPermissionCode.LOGIN,
+    'get:/user-group/profile/': UserPermissionCode.SYSTEM,
     // Connection
     'post:/connection/': UserPermissionCode.SYSTEM,
     'patch:/connection/': UserPermissionCode.SYSTEM,
