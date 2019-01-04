@@ -11,6 +11,7 @@ import {createSystemError, localePkg} from '../modules/util';
 
 import {modifyTaskFlows} from './task_flow';
 import {queryUserByIdsWithReferMap} from './user';
+import {queryUserGroupById} from './user_group';
 
 /**
  * Default user find fields
@@ -53,13 +54,17 @@ export function queryTaskList(query: ITaskSearchModel, page: number, pageSize: n
             }
         ];
     }
-    if (query.userGroupId) {
+    if (query.userGroupIds) {
         if (condition.$or) {
             condition.$or.push({
-                userGroupId: query.userGroupId
+                userGroupId: {
+                    $in: query.userGroupIds
+                }
             });
         } else {
-            condition.userGroupId = query.userGroupId;
+            condition.userGroupId = {
+                $in: query.userGroupIds
+            };
         }
     }
     if (query.pageType) {
@@ -120,14 +125,17 @@ export function queryTaskByIdWithUsers(taskId: Schema.Types.ObjectId, userId: st
     return verifyTaskOwner(taskId, userId)
         .then((task) => {
             const taskInfo: ITaskUserModel = Object.assign({}, task.toObject());
-            return queryUserByIdsWithReferMap(task.members.concat([taskInfo.createdUser]))
-                .then((userMap) => {
+            return Promise.all([queryUserByIdsWithReferMap(task.members.concat([taskInfo.createdUser])), task.userGroupId ? queryUserGroupById(task.userGroupId) : null])
+                .then(([userMap, userGroup]) => {
                     taskInfo.members = task.members.map((taskUserId) => {
                         return userMap[taskUserId.toString()];
                     }).filter((userInfo) => {
                         return !!userInfo;
                     });
                     taskInfo.createdUserName = userMap[taskInfo.createdUser.toString()].nickname;
+                    if (userGroup) {
+                        taskInfo.userGroupName = userGroup.name;
+                    }
                     return taskInfo;
                 });
         });
@@ -146,6 +154,18 @@ export function verifyTaskOwner(taskId: Schema.Types.ObjectId, userId: string): 
                 return memberId.toString() === userId;
             }))) {
                 return task;
+            }
+            // If has user group ID, check member
+            if (task.userGroupId) {
+                return queryUserGroupById(task.userGroupId)
+                    .then((userGroup) => {
+                        if (userGroup.members.some((memberId) => {
+                            return memberId.toString() === userId;
+                        })) {
+                            return task;
+                        }
+                        throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
+                    });
             }
             throw createSystemError(localePkg.Service.Common.visitForbidden, SystemCode.FORBIDDEN);
         });

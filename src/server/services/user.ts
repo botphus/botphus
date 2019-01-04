@@ -44,6 +44,9 @@ export function queryUserByIds(userIds: Schema.Types.ObjectId[], fields: string 
  * @return {Promise<IUserReferMap>}          User refer map
  */
 export function queryUserByIdsWithReferMap(userIds: Schema.Types.ObjectId[]): Promise<IUserReferMap> {
+    if (userIds.length === 0) {
+        return Promise.resolve({});
+    }
     return queryUserByIds(userIds, '_id nickname')
         .then((users) => {
             const userReferMap: IUserReferMap = {};

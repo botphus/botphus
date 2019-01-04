@@ -6,6 +6,7 @@ import * as taskSchema from '../../schema/task';
 import {TaskStatus} from '../../types/task';
 
 import {createTask, deleteTaskById, modifyTaskById, queryTaskByIdWithUsers, queryTaskList} from '../../services/task';
+import {queryUserGroupByUserId} from '../../services/user_group';
 
 import {buildPageInfo, getHttpMsg, getListQueryData} from '../../modules/util';
 
@@ -52,9 +53,15 @@ module.exports = (app: fastify.FastifyInstance, _opts: any, next: any) => {
         buildPageInfo(request);
         request.query.userId = request.session.user.id;
         request.query.status = TaskStatus.ENABLE;
-        return queryTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
-            .then((data) => {
-                reply.send(getHttpMsg(request, data));
+        return queryUserGroupByUserId(request.session.user.id, '_id')
+            .then((groupList) => {
+                request.query.userGroupIds = groupList.map((item) => {
+                    return item.id;
+                });
+                return queryTaskList(getListQueryData(request.query), request.query.page, request.query.pageSize)
+                    .then((data) => {
+                        reply.send(getHttpMsg(request, data));
+                    });
             });
     });
     // Get task profile

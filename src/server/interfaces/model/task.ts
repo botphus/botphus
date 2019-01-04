@@ -85,7 +85,7 @@ export interface ITaskSearchModel {
     name?: string;
     pageType?: TaskPageType;
     userId?: Schema.Types.ObjectId;
-    userGroupId?: Schema.Types.ObjectId;
+    userGroupIds?: Schema.Types.ObjectId[];
     status?: TaskStatus;
 }
 
